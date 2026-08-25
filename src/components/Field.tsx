@@ -46,6 +46,7 @@ function FieldFrame({
 export function TextField({ description, error, id, label, ...props }: TextFieldProps) {
   const generatedId = useId();
   const fieldId = id ?? generatedId;
+  const className = props.className;
   const describedBy = [description && `${fieldId}-description`, error && `${fieldId}-error`]
     .filter(Boolean)
     .join(' ');
@@ -55,7 +56,7 @@ export function TextField({ description, error, id, label, ...props }: TextField
       <input
         {...props}
         id={fieldId}
-        className="lui-field__control"
+        className={`lui-field__control ${className ?? ''}`.trim()}
         aria-describedby={describedBy || undefined}
         aria-invalid={Boolean(error)}
       />
@@ -66,6 +67,7 @@ export function TextField({ description, error, id, label, ...props }: TextField
 export function TextAreaField({ description, error, id, label, ...props }: TextAreaFieldProps) {
   const generatedId = useId();
   const fieldId = id ?? generatedId;
+  const className = props.className;
   const describedBy = [description && `${fieldId}-description`, error && `${fieldId}-error`]
     .filter(Boolean)
     .join(' ');
@@ -75,7 +77,7 @@ export function TextAreaField({ description, error, id, label, ...props }: TextA
       <textarea
         {...props}
         id={fieldId}
-        className="lui-field__control"
+        className={`lui-field__control ${className ?? ''}`.trim()}
         aria-describedby={describedBy || undefined}
         aria-invalid={Boolean(error)}
       />
@@ -86,19 +88,25 @@ export function TextAreaField({ description, error, id, label, ...props }: TextA
 export function SelectField({ description, error, id, label, ...props }: SelectFieldProps) {
   const generatedId = useId();
   const fieldId = id ?? generatedId;
+  const className = props.className;
   const describedBy = [description && `${fieldId}-description`, error && `${fieldId}-error`]
     .filter(Boolean)
     .join(' ');
 
   return (
     <FieldFrame id={fieldId} label={label} description={description} error={error}>
-      <select
-        {...props}
-        id={fieldId}
-        className="lui-field__control"
-        aria-describedby={describedBy || undefined}
-        aria-invalid={Boolean(error)}
-      />
+      <span className="lui-field__select">
+        <select
+          {...props}
+          id={fieldId}
+          className={`lui-field__control ${className ?? ''}`.trim()}
+          aria-describedby={describedBy || undefined}
+          aria-invalid={Boolean(error)}
+        />
+        <svg aria-hidden="true" viewBox="0 0 16 16">
+          <path d="m4.5 6 3.5 3.5L11.5 6" />
+        </svg>
+      </span>
     </FieldFrame>
   );
 }

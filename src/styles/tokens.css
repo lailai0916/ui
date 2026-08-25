@@ -44,6 +44,12 @@
   --lui-radius-feature: 16px;
   --lui-radius-overlay: 20px;
 
+  --lui-control-height: 40px;
+  --lui-control-height-compact: 32px;
+  --lui-header-height: 56px;
+  --lui-icon-size-small: 16px;
+  --lui-icon-size-medium: 20px;
+
   --lui-shadow-overlay: 0 20px 48px rgba(0, 0, 0, 0.18), 0 3px 12px rgba(0, 0, 0, 0.08);
   --lui-focus-ring: 0 0 0 3px color-mix(in srgb, var(--lui-color-focus) 24%, transparent);
   --lui-motion-control: 140ms cubic-bezier(0.2, 0, 0, 1);
