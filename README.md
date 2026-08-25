@@ -11,7 +11,7 @@ features remain inside their own repositories.
 Until the public API reaches `1.0`, consumers install a pinned Git tag:
 
 ```bash
-npm install github:lailai0916/ui#v0.1.0
+npm install github:lailai0916/ui#v0.1.1
 ```
 
 Import the global styles once at the application entry point:
