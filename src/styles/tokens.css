@@ -53,7 +53,7 @@
   --lui-icon-size-small: 16px;
   --lui-icon-size-medium: 20px;
 
-  --lui-shadow-overlay: 0 20px 48px rgba(0, 0, 0, 0.18), 0 3px 12px rgba(0, 0, 0, 0.08);
+  --lui-shadow-overlay: 0 12px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
   --lui-focus-ring: 0 0 0 3px color-mix(in srgb, var(--lui-color-focus) 24%, transparent);
   --lui-motion-control: 140ms cubic-bezier(0.2, 0, 0, 1);
   --lui-motion-surface: 220ms cubic-bezier(0.2, 0, 0, 1);
@@ -86,7 +86,7 @@
   --lui-color-danger: #ff453a;
   --lui-color-danger-soft: #551d1b;
   --lui-color-focus: #0a84ff;
-  --lui-shadow-overlay: 0 24px 56px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.32);
+  --lui-shadow-overlay: 0 14px 36px rgba(0, 0, 0, 0.34), 0 2px 10px rgba(0, 0, 0, 0.22);
 }
 
 @media (prefers-reduced-motion: reduce) {
