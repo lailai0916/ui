@@ -1,0 +1,83 @@
+:root {
+  color-scheme: light;
+
+  --lui-color-canvas: #f5f5f7;
+  --lui-color-surface: #ffffff;
+  --lui-color-surface-raised: #fafafc;
+  --lui-color-surface-muted: #eeeef2;
+  --lui-color-label: #1d1d1f;
+  --lui-color-label-secondary: #5f5f66;
+  --lui-color-label-tertiary: #76767e;
+  --lui-color-separator: #d2d2d7;
+  --lui-color-separator-strong: #b7b7bd;
+  --lui-color-accent: #0071e3;
+  --lui-color-accent-hover: #0068d1;
+  --lui-color-accent-pressed: #005ebf;
+  --lui-color-accent-soft: #e6f2ff;
+  --lui-color-success: #248a3d;
+  --lui-color-success-soft: #e7f7eb;
+  --lui-color-warning: #a05a00;
+  --lui-color-warning-soft: #fff3d6;
+  --lui-color-danger: #d70015;
+  --lui-color-danger-soft: #ffe9ec;
+  --lui-color-focus: #0071e3;
+
+  --lui-font-sans:
+    'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --lui-font-mono: 'SF Mono', SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, monospace;
+
+  --lui-space-1: 4px;
+  --lui-space-2: 8px;
+  --lui-space-3: 12px;
+  --lui-space-4: 16px;
+  --lui-space-5: 20px;
+  --lui-space-6: 24px;
+  --lui-space-8: 32px;
+  --lui-space-10: 40px;
+  --lui-space-12: 48px;
+  --lui-space-16: 64px;
+
+  --lui-radius-control: 8px;
+  --lui-radius-panel: 12px;
+  --lui-radius-feature: 16px;
+  --lui-radius-overlay: 20px;
+
+  --lui-shadow-overlay: 0 20px 48px rgba(0, 0, 0, 0.18), 0 3px 12px rgba(0, 0, 0, 0.08);
+  --lui-focus-ring: 0 0 0 3px color-mix(in srgb, var(--lui-color-focus) 24%, transparent);
+  --lui-motion-control: 140ms cubic-bezier(0.2, 0, 0, 1);
+  --lui-motion-surface: 220ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --lui-color-canvas: #1c1c1e;
+  --lui-color-surface: #2c2c2e;
+  --lui-color-surface-raised: #3a3a3c;
+  --lui-color-surface-muted: #242426;
+  --lui-color-label: #f5f5f7;
+  --lui-color-label-secondary: #c7c7cc;
+  --lui-color-label-tertiary: #aeaeb2;
+  --lui-color-separator: #48484a;
+  --lui-color-separator-strong: #636366;
+  --lui-color-accent: #0a84ff;
+  --lui-color-accent-hover: #2994ff;
+  --lui-color-accent-pressed: #0077ed;
+  --lui-color-accent-soft: #123a63;
+  --lui-color-success: #32d74b;
+  --lui-color-success-soft: #183c20;
+  --lui-color-warning: #ffd60a;
+  --lui-color-warning-soft: #4a3b08;
+  --lui-color-danger: #ff453a;
+  --lui-color-danger-soft: #551d1b;
+  --lui-color-focus: #0a84ff;
+  --lui-shadow-overlay: 0 24px 56px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.32);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --lui-motion-control: 0.01ms linear;
+    --lui-motion-surface: 0.01ms linear;
+  }
+}
