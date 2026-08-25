@@ -13,6 +13,9 @@
   --lui-color-accent: #0071e3;
   --lui-color-accent-hover: #0068d1;
   --lui-color-accent-pressed: #005ebf;
+  --lui-color-accent-fill: #0071e3;
+  --lui-color-accent-fill-hover: #0068d1;
+  --lui-color-accent-fill-pressed: #005ebf;
   --lui-color-accent-soft: #e6f2ff;
   --lui-color-accent-label: #005ebf;
   --lui-color-success: #248a3d;
@@ -71,6 +74,9 @@
   --lui-color-accent: #0a84ff;
   --lui-color-accent-hover: #2994ff;
   --lui-color-accent-pressed: #0077ed;
+  --lui-color-accent-fill: #0071e3;
+  --lui-color-accent-fill-hover: #0068d1;
+  --lui-color-accent-fill-pressed: #005ebf;
   --lui-color-accent-soft: #123a63;
   --lui-color-accent-label: #8cc6ff;
   --lui-color-success: #32d74b;

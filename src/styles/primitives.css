@@ -45,16 +45,16 @@
 }
 
 .lui-button--primary {
-  background: var(--lui-color-accent);
+  background: var(--lui-color-accent-fill);
   color: #ffffff;
 }
 
 .lui-button--primary:hover:not(:disabled) {
-  background: var(--lui-color-accent-hover);
+  background: var(--lui-color-accent-fill-hover);
 }
 
 .lui-button--primary:active:not(:disabled) {
-  background: var(--lui-color-accent-pressed);
+  background: var(--lui-color-accent-fill-pressed);
   transform: scale(0.98);
 }
 
@@ -72,15 +72,15 @@
 
 .lui-button--secondary[aria-pressed='true'],
 .lui-button--quiet[aria-pressed='true'] {
-  border-color: var(--lui-color-accent);
-  background: var(--lui-color-accent);
+  border-color: var(--lui-color-accent-fill);
+  background: var(--lui-color-accent-fill);
   color: #ffffff;
 }
 
 .lui-button--secondary[aria-pressed='true']:hover:not(:disabled),
 .lui-button--quiet[aria-pressed='true']:hover:not(:disabled) {
-  border-color: var(--lui-color-accent-hover);
-  background: var(--lui-color-accent-hover);
+  border-color: var(--lui-color-accent-fill-hover);
+  background: var(--lui-color-accent-fill-hover);
 }
 
 .lui-button--quiet {
