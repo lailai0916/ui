@@ -97,6 +97,15 @@
   color: #ffffff;
 }
 
+.lui-button--danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--lui-color-danger) 86%, var(--lui-color-label));
+}
+
+.lui-button:active:not(:disabled),
+.lui-icon-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
 .lui-button:disabled,
 .lui-icon-button:disabled {
   cursor: not-allowed;
@@ -289,6 +298,22 @@
 .lui-field__control::placeholder {
   color: var(--lui-color-label-tertiary);
   opacity: 1;
+}
+
+.lui-field__control:-webkit-autofill {
+  box-shadow: 0 0 0 1000px var(--lui-color-surface) inset;
+  -webkit-text-fill-color: var(--lui-color-label);
+  caret-color: var(--lui-color-accent);
+}
+
+input[type='number'].lui-field__control {
+  appearance: textfield;
+}
+
+input[type='number'].lui-field__control::-webkit-inner-spin-button,
+input[type='number'].lui-field__control::-webkit-outer-spin-button {
+  margin: 0;
+  appearance: none;
 }
 
 .lui-field__control:disabled {
@@ -512,7 +537,7 @@ textarea.lui-field__control {
 }
 
 @media (max-width: 600px), (pointer: coarse) {
-  .lui-button:not(.lui-button--small),
+  .lui-button,
   .lui-icon-button,
   .lui-field__control {
     min-height: 44px;
