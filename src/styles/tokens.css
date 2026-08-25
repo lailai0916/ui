@@ -7,13 +7,14 @@
   --lui-color-surface-muted: #eeeef2;
   --lui-color-label: #1d1d1f;
   --lui-color-label-secondary: #5f5f66;
-  --lui-color-label-tertiary: #76767e;
+  --lui-color-label-tertiary: #6e6e73;
   --lui-color-separator: #d2d2d7;
   --lui-color-separator-strong: #b7b7bd;
   --lui-color-accent: #0071e3;
   --lui-color-accent-hover: #0068d1;
   --lui-color-accent-pressed: #005ebf;
   --lui-color-accent-soft: #e6f2ff;
+  --lui-color-accent-label: #005ebf;
   --lui-color-success: #248a3d;
   --lui-color-success-soft: #e7f7eb;
   --lui-color-warning: #a05a00;
@@ -65,6 +66,7 @@
   --lui-color-accent-hover: #2994ff;
   --lui-color-accent-pressed: #0077ed;
   --lui-color-accent-soft: #123a63;
+  --lui-color-accent-label: #8cc6ff;
   --lui-color-success: #32d74b;
   --lui-color-success-soft: #183c20;
   --lui-color-warning: #ffd60a;
