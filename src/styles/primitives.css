@@ -444,7 +444,7 @@ textarea.lui-field__control {
   box-shadow: inset 0 0 0 1px var(--lui-color-separator);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 600px), (pointer: coarse) {
   .lui-button:not(.lui-button--small),
   .lui-icon-button,
   .lui-field__control {
