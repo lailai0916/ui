@@ -1,6 +1,8 @@
 .lui-button,
 .lui-icon-button,
-.lui-theme-control__button {
+.lui-theme-control__button,
+.lui-theme-picker__trigger,
+.lui-theme-picker__option {
   appearance: none;
   border: 0;
   font: inherit;
@@ -103,6 +105,110 @@
 .lui-theme-control__button:focus-visible {
   outline: 2px solid var(--lui-color-focus);
   outline-offset: 2px;
+}
+
+.lui-theme-picker {
+  position: relative;
+  display: inline-flex;
+}
+
+.lui-theme-picker__trigger {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--lui-color-label-secondary);
+  transition:
+    background-color var(--lui-motion-control),
+    border-color var(--lui-motion-control),
+    color var(--lui-motion-control),
+    transform var(--lui-motion-control);
+}
+
+.lui-theme-picker__trigger:hover,
+.lui-theme-picker__trigger[aria-expanded='true'] {
+  border-color: var(--lui-color-separator);
+  background: var(--lui-color-surface-muted);
+  color: var(--lui-color-label);
+}
+
+.lui-theme-picker__trigger:active {
+  transform: scale(0.94);
+}
+
+.lui-theme-picker__trigger:focus-visible,
+.lui-theme-picker__option:focus-visible {
+  outline: 2px solid var(--lui-color-focus);
+  outline-offset: 2px;
+}
+
+.lui-theme-picker svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.75;
+}
+
+.lui-theme-picker__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 100;
+  display: grid;
+  width: 148px;
+  gap: 2px;
+  padding: 5px;
+  border: 1px solid var(--lui-color-separator);
+  border-radius: 10px;
+  background: var(--lui-color-surface);
+  box-shadow: var(--lui-shadow-overlay);
+  transform-origin: top right;
+  animation: lui-theme-menu-enter var(--lui-motion-control) both;
+}
+
+.lui-theme-picker__option {
+  display: grid;
+  min-height: 36px;
+  grid-template-columns: 20px minmax(0, 1fr) 8px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 9px;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--lui-color-label);
+  text-align: left;
+  font-size: 13px;
+  font-weight: 550;
+}
+
+.lui-theme-picker__option:hover,
+.lui-theme-picker__option[aria-checked='true'] {
+  background: var(--lui-color-surface-muted);
+}
+
+.lui-theme-picker__check {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.lui-theme-picker__option[aria-checked='true'] .lui-theme-picker__check {
+  background: var(--lui-color-accent);
+}
+
+@keyframes lui-theme-menu-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(-2px);
+  }
 }
 
 .lui-panel {
@@ -347,6 +453,11 @@ textarea.lui-field__control {
 
   .lui-icon-button {
     width: 44px;
+  }
+
+  .lui-theme-picker__trigger {
+    width: 44px;
+    height: 44px;
   }
 
   .lui-page-container {
