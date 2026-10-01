@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { useLaikit } from '../../provider.js';
-import { Icon } from '@iconify/react';
+import Icon from '../Icon/index.js';
 import Card from '../Card/index.js';
 import Skeleton from '../Skeleton/index.js';
 import { useImageStatus } from '../../hooks/useImageStatus.js';

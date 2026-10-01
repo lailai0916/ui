@@ -1,6 +1,6 @@
 import { type CSSProperties, type ReactNode } from 'react';
 import clsx from 'clsx';
-import { Icon } from '@iconify/react';
+import Icon from '../Icon/index.js';
 import Card from '../Card/index.js';
 import IconBlock from '../IconBlock/index.js';
 import styles from './styles.module.css';

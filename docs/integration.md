@@ -88,6 +88,10 @@ browsers. The reduced-motion rule targets the package's prefixed CSS Module clas
 
 ## Component contracts
 
+- `Icon` reserves the same SVG box during server rendering, loading, and failure. It defaults to a
+  `1em` square; setting one dimension sets both, while non-square icons need explicit width and height
+  or fixed CSS dimensions. Avoid `auto` sizing. Use this component for Iconify rendering in hosts.
+
 - `Card` supplies a surface; `TitleCard` adds a header (`md`, `sm`, or `plain`). Use plain `Card`
   when there is no title. Cards deliberately do not clip focus rings; a full-bleed child may need
   a clipping wrapper owned by the caller.

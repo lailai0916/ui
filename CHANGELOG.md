@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1
+
+- Add a shared `Icon` that preserves SVG dimensions and styling before icon data arrives or fails.
+- Use stable icon slots in badges, segmented controls, card headers, pagination, and other shared components.
+- Add loading-state regression checks and reject direct Iconify renderer imports outside the shared component.
+
 ## 0.2.0
 
 - Unify the 16 additional visual components from the former `@lailai/ui` package, bringing the library to 42 components.

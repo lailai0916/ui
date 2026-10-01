@@ -17,15 +17,18 @@ import {
   ThemeProvider,
   ThemeControl,
   Card,
+  Badge,
   Chart,
   DataCard,
   Donut,
   GitHub,
+  Icon,
   LaikitProvider,
   MDTitle,
   PageTitle,
   Quote,
   Segmented,
+  TitleCard,
   Tooltip,
   WindowPanel,
   formatBytes,
@@ -34,6 +37,41 @@ import {
 } from '../dist/index.js';
 
 const render = (node, props = {}) => renderToStaticMarkup(h(LaikitProvider, props, node));
+
+test('async icons reserve their SVG slot during server rendering', () => {
+  for (const node of [
+    h(Badge, { icon: 'lucide:flag' }, 'Country'),
+    h(Segmented, { value: 'a', items: [{ value: 'a', label: 'A', icon: 'lucide:sun' }] }),
+    h(TitleCard, { title: 'Views', icon: 'lucide:eye', size: 'sm' }, 'Content'),
+  ]) {
+    const html = render(node);
+    assert.match(html, /<svg[^>]*class="[^"]+"[^>]*width="1em"[^>]*height="1em"/);
+    assert.doesNotMatch(html, /<span><\/span>/);
+  }
+});
+
+test('icon slots retain explicit dimensions, styling, and accessible attributes', () => {
+  const html = render(
+    h(Icon, {
+      icon: 'flag:cn-4x3',
+      width: 20,
+      height: 15,
+      className: 'country-flag',
+      style: { position: 'absolute', color: 'red' },
+      'aria-hidden': false,
+      'aria-label': 'China',
+    })
+  );
+  assert.match(html, /<svg/);
+  assert.match(html, /width="20" height="15"/);
+  assert.match(html, /class="country-flag"/);
+  assert.match(html, /position:absolute/);
+  assert.match(html, /aria-label="China"/);
+  assert.doesNotMatch(html, /aria-hidden="true"/);
+  for (const dimensions of [{ width: 18 }, { height: 18 }]) {
+    assert.match(render(h(Icon, { icon: 'lucide:eye', ...dimensions })), /width="18" height="18"/);
+  }
+});
 
 test('renders standalone links and delegates routing without introducing a wrapper', () => {
   assert.match(render(h(Card, { to: '/docs' }, 'Docs')), /href="\/docs"/);
@@ -258,6 +296,7 @@ test('new public component subpaths are available and old global styling is abse
     'Brand',
     'EmptyState',
     'Field',
+    'Icon',
     'IconButton',
     'Layout',
     'Panel',

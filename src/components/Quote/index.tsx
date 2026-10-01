@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import clsx from 'clsx';
 import { useLaikit } from '../../provider.js';
-import { Icon } from '@iconify/react';
+import Icon from '../Icon/index.js';
 import styles from './styles.module.css';
 
 export interface QuoteProps {

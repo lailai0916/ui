@@ -26,6 +26,7 @@ import {
   DataState,
   Donut,
   GitHub,
+  Icon,
   IconBlock,
   LaikitProvider,
   LinkCard,
@@ -277,7 +278,8 @@ function App() {
               <Card>
                 <div className="row">
                   <IconBlock icon="lucide:check" />
-                  <Badge>Badge</Badge>
+                  <Icon icon="lucide:check" width={20} />
+                  <Badge icon="lucide:flag">Badge</Badge>
                   <Badge active>{copy.active}</Badge>
                 </div>
                 <p>{copy.note}</p>

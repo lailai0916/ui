@@ -1,4 +1,4 @@
-import { Icon } from '@iconify/react';
+import Icon from '../Icon/index.js';
 import Card from '../Card/index.js';
 import { useImageStatus } from '../../hooks/useImageStatus.js';
 import styles from './styles.module.css';

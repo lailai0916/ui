@@ -16,7 +16,7 @@ published files. See `docs/releasing.md` for releases. Run checks before committ
 
 ## Architecture
 
-- `src/components/*/` contains each component's `index.tsx` and CSS Module.
+- `src/components/*/` contains component entries and their CSS Modules where needed.
 - `src/provider.tsx` connects native defaults to host routing, headings, and localization.
 - `src/theme.css` owns shared variables, light/dark palettes, and reduced motion.
 - `src/components/ThemeProvider/` owns optional standalone theme state; framework hosts may keep their own manager.
@@ -44,6 +44,8 @@ environment. Keep that binding aligned with workflow changes. Do not add npm tok
 - Import CSS separately; mark CSS as side effects. Avoid global resets and arbitrary page styling.
 - Keep native defaults useful. Provider adapters add no DOM wrapper; labels remain configurable.
 - Preserve typography, surfaces, keyboard semantics, focus rings, overflow behavior, and reduced motion.
+- Render Iconify icons through the shared `Icon`. Its empty SVG preserves dimensions and CSS before
+  data arrives; only that component imports Iconify's renderer. Non-square slots need explicit dimensions.
 - No whole-card hover lift. Press feedback is brief; cards do not clip focus rings by default.
 - Charts keep loading, empty, failure, and retained-data notices distinct. Callers format date labels.
 - Keep English/Chinese examples and documentation aligned; update the inventory for public API changes.

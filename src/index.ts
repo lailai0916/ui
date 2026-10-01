@@ -18,6 +18,8 @@ export * from './components/EmptyState/index.js';
 export * from './components/Field/index.js';
 export { default as GitHub } from './components/GitHub/index.js';
 export * from './components/GitHub/index.js';
+export { default as Icon } from './components/Icon/index.js';
+export * from './components/Icon/index.js';
 export { default as IconBlock } from './components/IconBlock/index.js';
 export * from './components/IconBlock/index.js';
 export * from './components/IconButton/index.js';

@@ -1,7 +1,7 @@
 import { useRef, type CSSProperties, type KeyboardEvent } from 'react';
 import clsx from 'clsx';
 import { Link } from '../../provider.js';
-import { Icon } from '@iconify/react';
+import Icon from '../Icon/index.js';
 import styles from './styles.module.css';
 
 export interface SegmentedItem<T> {

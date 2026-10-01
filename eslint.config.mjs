@@ -19,6 +19,22 @@ export default tseslint.config(
       ],
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@iconify/react',
+              importNames: ['Icon', 'InlineIcon'],
+              message: 'Use the shared Icon component to reserve layout during loading.',
+            },
+          ],
+        },
+      ],
     },
+  },
+  {
+    files: ['src/components/Icon/index.tsx'],
+    rules: { 'no-restricted-imports': 'off' },
   }
 );
