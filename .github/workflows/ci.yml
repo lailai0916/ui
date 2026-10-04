@@ -95,6 +95,9 @@ jobs:
             echo "$tag already exists; skipping."
             exit 0
           fi
+          git fetch --no-tags origin "$target"
+          git diff --exit-code "$target" "$GITHUB_SHA" -- src package.json package-lock.json \
+            README.md README.zh-Hans.md LICENSE 'tsconfig*.json' 'vite*.ts' scripts/copy-theme.mjs
           node --input-type=module <<'JS'
           import { readFileSync, writeFileSync } from 'node:fs';
           const { version } = JSON.parse(readFileSync('package.json', 'utf8'));
@@ -103,5 +106,6 @@ jobs:
           if (!notes) throw new Error(`Missing changelog for ${version}`);
           writeFileSync(`${process.env.RUNNER_TEMP}/release-notes.md`, notes + '\n');
           JS
-          gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$target" \
+          # GITHUB_TOKEN can tag the workflow commit without extra workflow-write credentials.
+          gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
             --title "$tag" --notes-file "$RUNNER_TEMP/release-notes.md"

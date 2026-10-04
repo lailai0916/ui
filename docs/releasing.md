@@ -5,7 +5,8 @@ The `CI` workflow in `.github/workflows/ci.yml` validates pushes and pull reques
 then publishes an unpublished stable version automatically through npm Trusted Publishing (OIDC).
 The publish job also runs when the maintainer manually dispatches `CI` on `main`.
 After npm succeeds, a separate job creates the matching tag and GitHub release from the changelog.
-The tag points to npm's recorded source commit; existing GitHub releases are skipped.
+The tag points to the validated workflow commit after comparing package inputs with npm's recorded
+source commit; existing GitHub releases are skipped.
 An existing npm version is skipped; failed checks, registry errors, or an unpublished version older than
 `latest` stop the release. Tags and pull requests only run validation.
 

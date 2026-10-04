@@ -36,7 +36,8 @@ publish. Bump `package.json` and `package-lock.json` together and update `CHANGE
 The npm connection names `lailai0916/ui` and `ci.yml`, with direct publishing allowed and no
 environment. Keep that binding aligned with workflow changes. Do not add npm tokens to CI.
 After npm succeeds, a separate job creates the matching tag and GitHub release from the changelog,
-using npm's recorded source commit. Only that job has `contents: write`; existing releases are skipped.
+after comparing package inputs with npm's recorded source commit. The tag points to the validated
+workflow commit. Only that job has `contents: write`; existing releases are skipped.
 
 ## Conventions
 
