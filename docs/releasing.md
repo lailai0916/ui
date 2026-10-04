@@ -4,7 +4,9 @@ The public npm package is `@lailai0916/ui`; GitHub source is `lailai0916/ui`.
 The `CI` workflow in `.github/workflows/ci.yml` validates pushes and pull requests. A push to `main`
 then publishes an unpublished stable version automatically through npm Trusted Publishing (OIDC).
 The publish job also runs when the maintainer manually dispatches `CI` on `main`.
-An existing version is skipped; failed checks, registry errors, or an unpublished version older than
+After npm succeeds, a separate job creates the matching tag and GitHub release from the changelog.
+The tag points to npm's recorded source commit; existing GitHub releases are skipped.
+An existing npm version is skipped; failed checks, registry errors, or an unpublished version older than
 `latest` stop the release. Tags and pull requests only run validation.
 
 ## Release a version
@@ -13,10 +15,10 @@ An existing version is skipped; failed checks, registry errors, or an unpublishe
    `CHANGELOG.md`. Until 1.0, use a minor bump for breaking changes and a patch for compatible fixes.
 2. Run `npm run check`, then `npm pack --dry-run`. Confirm the package includes only `dist/`, package
    metadata, README, and license. Install the tarball into a consumer and verify its build and UI.
-3. Commit and push the release source to `main`. Wait for both `validate` and `publish` in the
+3. Commit and push the release source to `main`. Wait for `validate`, `publish`, and `release` in the
    [CI workflow](https://github.com/lailai0916/ui/actions/workflows/ci.yml) to succeed.
    Publishing uses a fresh dependency install; `prepublishOnly` reruns the complete package checks.
-4. Verify `npm view @lailai0916/ui version`, create the matching `vX.Y.Z` tag and GitHub release,
+4. Verify `npm view @lailai0916/ui version` and the matching `vX.Y.Z` tag and GitHub release,
    and install the registry version in each consumer. Commit consumer lockfiles and run their checks.
 
 An npm version is immutable: fix a published defect with another version. Keep the website on an
@@ -50,6 +52,7 @@ The package's npm Settings → Trusted Publisher connection must match:
 Only the publish job has `id-token: write`; it runs on a GitHub-hosted runner with Node.js 24 and
 npm 11.5.1 or later. npm supplies a short-lived publishing credential and records provenance for this
 public repository and package. No `NPM_TOKEN` secret or saved registry credential is needed.
+Only the separate GitHub release job has `contents: write`; it uses the workflow's `GITHUB_TOKEN`.
 
 If the repository or workflow filename changes, replace the npm connection before releasing.
 See [npm's Trusted Publishing documentation](https://docs.npmjs.com/trusted-publishers/).
