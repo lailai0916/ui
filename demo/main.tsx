@@ -1,7 +1,20 @@
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
+  Alert,
   Avatar,
+  ButtonLink,
+  Checkbox,
+  CopyButton,
+  Dialog,
+  Input,
+  PasswordField,
+  PasswordInput,
+  Radio,
+  Select,
+  Table,
+  Tabs,
+  TextArea,
   Brand,
   Cluster,
   EmptyState,
@@ -138,6 +151,7 @@ function App() {
   const [enabled, setEnabled] = useState(true);
   const [value, setValue] = useState(40);
   const [clicks, setClicks] = useState(0);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const months = chinese
     ? ['1 月', '2 月', '3 月', '4 月', '5 月', '6 月']
     : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
@@ -221,6 +235,137 @@ function App() {
               </div>
             </PageContainer>
           </section>
+          <section aria-labelledby="application">
+            <h2 id="application">{chinese ? '通用应用组件' : 'Application Components'}</h2>
+            <div className="grid">
+              <TitleCard title="Field">
+                <Stack>
+                  <Input aria-label={copy.name} placeholder={copy.name} />
+                  <TextArea
+                    aria-label={copy.descriptionLabel}
+                    placeholder={copy.descriptionLabel}
+                    monospace
+                  />
+                  <Select aria-label={copy.view} defaultValue="overview">
+                    <option value="overview">{copy.tabOne}</option>
+                    <option value="details">{copy.tabTwo}</option>
+                  </Select>
+                  <PasswordInput aria-label={chinese ? '密码' : 'Password'} defaultValue="laikit" />
+                  <PasswordField
+                    label={chinese ? '带标签的密码' : 'Password field'}
+                    autoComplete="new-password"
+                  />
+                  <Checkbox
+                    label={copy.enabled}
+                    checked={enabled}
+                    onChange={(event) => setEnabled(event.target.checked)}
+                  />
+                  <div role="group" aria-label={copy.view}>
+                    <Radio
+                      label={copy.tabOne}
+                      name="demo-radio"
+                      value="overview"
+                      checked={selected === 'overview'}
+                      onChange={() => setSelected('overview')}
+                    />
+                    <Radio
+                      label={copy.tabTwo}
+                      name="demo-radio"
+                      value="details"
+                      checked={selected === 'details'}
+                      onChange={() => setSelected('details')}
+                    />
+                  </div>
+                </Stack>
+              </TitleCard>
+              <TitleCard title="Tabs / Dialog">
+                <Stack>
+                  <Tabs
+                    ariaLabel={copy.view}
+                    size="sm"
+                    value={selected}
+                    onChange={setSelected}
+                    items={[
+                      {
+                        value: 'overview',
+                        label: copy.tabOne,
+                        id: 'demo-tab-overview',
+                        panelId: 'demo-panel-overview',
+                      },
+                      { value: 'disabled', label: copy.disabled, disabled: true },
+                      {
+                        value: 'details',
+                        label: copy.tabTwo,
+                        id: 'demo-tab-details',
+                        panelId: 'demo-panel-details',
+                      },
+                    ]}
+                  />
+                  <div
+                    role="tabpanel"
+                    id={`demo-panel-${selected}`}
+                    aria-labelledby={`demo-tab-${selected}`}
+                    tabIndex={0}
+                  >
+                    {selected === 'overview' ? copy.tabOne : copy.tabTwo}
+                  </div>
+                  <Button onClick={() => setDialogOpen(true)}>
+                    {chinese ? '打开对话框' : 'Open dialog'}
+                  </Button>
+                  <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} label={copy.forms}>
+                    <Stack>
+                      <TextField label={copy.name} autoFocus />
+                      <Button onClick={() => setDialogOpen(false)}>
+                        {chinese ? '关闭对话框' : 'Close dialog'}
+                      </Button>
+                    </Stack>
+                  </Dialog>
+                  <CopyButton value="https://lailai.one" />
+                  <ButtonLink href="https://lailai.one">{copy.source}</ButtonLink>
+                </Stack>
+              </TitleCard>
+              <TitleCard title="Alert / Badge">
+                <Stack>
+                  <Alert>{copy.note}</Alert>
+                  <Alert variant="success">{copy.active}</Alert>
+                  <Alert variant="warning">{copy.note}</Alert>
+                  <Alert variant="danger">{copy.error}</Alert>
+                  <Cluster>
+                    <Badge variant="primary">{copy.active}</Badge>
+                    <Badge variant="success">{copy.enabled}</Badge>
+                    <Badge variant="warning">{copy.note}</Badge>
+                    <Badge variant="danger">{copy.error}</Badge>
+                  </Cluster>
+                </Stack>
+              </TitleCard>
+              <TitleCard title="Table / DataCard">
+                <Stack>
+                  <Table>
+                    <caption>{copy.value}</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">{copy.name}</th>
+                        <th scope="col">{copy.value}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">laikit UI</th>
+                        <td>{value}</td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                  <DataCard
+                    value={`${value}%`}
+                    label={copy.value}
+                    icon="lucide:chart-column"
+                    description={copy.note}
+                  />
+                  <Progress label={copy.value} value={value} showLabel={false} showValue={false} />
+                </Stack>
+              </TitleCard>
+            </div>
+          </section>
           <section aria-labelledby="controls">
             <h2 id="controls">{copy.controls}</h2>
             <div className="grid">
@@ -245,6 +390,18 @@ function App() {
                   items={[
                     { value: 'overview', label: copy.tabOne },
                     { value: 'details', label: copy.tabTwo },
+                  ]}
+                />
+                <Segmented
+                  size="sm"
+                  orientation="horizontal"
+                  stackAt={0}
+                  value={selected}
+                  onChange={setSelected}
+                  ariaLabel={copy.view}
+                  items={[
+                    { value: 'overview', label: copy.tabOne, icon: 'lucide:grid-2x2' },
+                    { value: 'details', label: copy.tabTwo, icon: 'lucide:list' },
                   ]}
                 />
                 <output>{selected === 'overview' ? copy.tabOne : copy.tabTwo}</output>

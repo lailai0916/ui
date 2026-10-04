@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0
+
+- Add shared native inputs, password reveal controls, checkboxes, and radios; forward field refs and support wrapper layout classes.
+- Add ButtonLink, localized CopyButton, accessible Tabs, native Dialog, semantic Alert, and scrollable Table for consumer applications.
+- Extend Badge with semantic tones, DataCard with formatted string values and descriptions, Card with semantic containers, and Progress with optional metadata. Existing defaults retain their appearance.
+- Add bilingual application examples and component contracts for Tools and Academy integration.
+
+- Add a compact `Segmented` size with the shared selected surface, focus ring, and touch targets.
+- Support `stackAt={0}` to keep short segmented choices horizontal on narrow screens.
+- Expose stable segmented group and item hooks for host layouts, with bilingual examples and documentation.
+
 ## 0.2.1
 
 - Add a shared `Icon` that preserves SVG dimensions and styling before icon data arrives or fails.

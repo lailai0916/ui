@@ -148,3 +148,8 @@
   align-items: center;
   gap: inherit;
 }
+
+.buttonLink,
+.buttonLink:hover {
+  text-decoration: none;
+}

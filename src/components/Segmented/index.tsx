@@ -22,9 +22,10 @@ export interface SegmentedProps<T> {
   items: SegmentedItem<T>[];
   /** Required only when at least one item is button-style (no href). */
   onChange?: (value: T) => void;
+  size?: 'sm' | 'md';
   orientation?: 'vertical' | 'horizontal';
-  /** Viewport width in pixels at which horizontal items stack vertically. */
-  stackAt?: 360 | 480;
+  /** Viewport width at which horizontal items stack. Use 0 to keep them horizontal. */
+  stackAt?: 0 | 360 | 480;
   className?: string;
   /**
    * Accessible name for the group. Applied to the radiogroup in button mode;
@@ -37,6 +38,7 @@ export default function Segmented<T>({
   value,
   items,
   onChange,
+  size = 'md',
   orientation = 'vertical',
   stackAt = 480,
   className,
@@ -64,10 +66,14 @@ export default function Segmented<T>({
     <div
       className={clsx(
         styles.segmented,
+        size === 'sm' && styles.small,
         orientation === 'horizontal' && styles.horizontal,
         orientation === 'horizontal' && stackAt === 360 && styles.stackNarrow,
+        orientation === 'horizontal' && stackAt === 0 && styles.keepHorizontal,
         className
       )}
+      data-lk="segmented"
+      data-size={size}
       role={isNav ? undefined : 'radiogroup'}
       aria-label={isNav ? undefined : ariaLabel}
       aria-orientation={isNav ? undefined : orientation}
@@ -90,6 +96,7 @@ export default function Segmented<T>({
               to={item.href}
               className={itemClass}
               style={item.style}
+              data-lk="segmented-item"
               aria-current={isActive ? 'page' : undefined}
             >
               {inner}
@@ -106,6 +113,7 @@ export default function Segmented<T>({
             type="button"
             className={itemClass}
             style={item.style}
+            data-lk="segmented-item"
             onClick={() => onChange?.(item.value)}
             onKeyDown={(e) => moveFocus(e, index)}
             role="radio"

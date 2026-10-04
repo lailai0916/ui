@@ -100,7 +100,10 @@ browsers. The reduced-motion rule targets the package's prefixed CSS Module clas
   `error`, and retained-data `notice` remain separate states. Pass accessible empty/error labels.
 - `Segmented` button mode uses radio semantics, roving tab order, and arrow keys. Items with `href`
   navigate instead of calling `onChange`. Do not mix navigation and radio items in one group.
-  Horizontal groups stack at 480 px, or 360 px with `stackAt={360}`.
+  Horizontal groups stack at 480 px, or 360 px with `stackAt={360}`. Set `stackAt={0}` to keep
+  short choices in one row. `size="sm"` uses compact text and 32 px items, increasing to 44 px
+  on small screens or coarse pointers; the default `md` size retains the original appearance.
+  The `segmented` and `segmented-item` data hooks support host layout customization.
 - `WindowPanel` owns tabs and collapse behavior. Supply translated collapse/expand labels;
   content and optional toolbar belong to the caller.
 - `GitHub` fetches public GitHub repository metadata in the browser; API failures and rate limits
@@ -152,3 +155,18 @@ after a selection. Tab leaves the menu normally.
   Generated CSS Module classes are private. Load host overrides after package CSS.
 
 See [Migrating from ui](migrating-from-ui.md) for the previous GitHub package's API and token mappings.
+
+## Application controls
+
+Use shared components as the visual source of truth. Host CSS should position components and arrange content, rather than restyle their borders, colors, or control geometry.
+
+- `Input`, `TextArea`, and `Select` retain native props, events, and refs. Framed fields add labels, descriptions, and errors. Use `wrapperClassName` for layout and `monospace` for code. `PasswordInput` / `PasswordField` localize reveal labels, preserve autocomplete, and never submit the form from their toggle.
+- `Checkbox` and `Radio` require a visible `label`; native checked, name, value, disabled, and change behavior remain intact. Description IDs join caller-provided `aria-describedby`.
+- `ButtonLink` uses the configured router with the existing Button variants and sizes. `CopyButton` takes a `value`, localizes feedback, reports failure, and restores focus after its fallback.
+- `Tabs` requires controlled `value`, `onChange`, `ariaLabel`, and items with optional `id` / `panelId`. Hosts render matching tab panels. Arrows, Home, and End skip disabled items; filters without panels use `Segmented`.
+- `Dialog` requires `open`, `onClose`, and `label`. Native modality traps focus; Escape and backdrop clicks request closure. The component restores focus and body scrolling. Give its content a visible heading and close action.
+- `Alert` supports info, success, warning, and danger with optional title, icon, and action. Danger/warning default to alert; other tones default to status. Hosts can override role.
+- `Table` preserves native table markup and props inside a horizontally scrollable wrapper. Supply captions and scoped headers; use `wrapperClassName` for placement.
+- `Badge` adds optional semantic variants; `DataCard` accepts formatted strings and descriptions; `Card` accepts `as="article"` / `"section"`. `Progress` can hide visual labels while retaining its accessible name.
+
+Stable application hooks include `data-lk="field-control"`, `"checkbox"`, `"radio"`, `"tabs"`, `"tab"`, `"dialog"`, `"alert"`, `"table"`, and `"table-scroll"`. Do not target generated CSS Module class names.

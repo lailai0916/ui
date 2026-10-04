@@ -129,3 +129,131 @@ textarea.fieldControl {
     min-height: 44px;
   }
 }
+
+.monospace {
+  font-family: var(--lk-font-mono);
+}
+
+.fieldSelect,
+.password {
+  min-width: 0;
+  width: 100%;
+}
+
+.password {
+  position: relative;
+  display: block;
+}
+
+.passwordControl {
+  padding-right: 52px;
+}
+
+.passwordToggle {
+  position: absolute;
+  inset-block: 0;
+  right: 6px;
+  margin-block: auto;
+}
+
+input[type='color'].fieldControl {
+  width: var(--lk-control-height);
+  padding: var(--lk-space-1);
+  cursor: pointer;
+}
+
+input[type='color'].fieldControl::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type='color'].fieldControl::-webkit-color-swatch,
+input[type='color'].fieldControl::-moz-color-swatch {
+  border: 0;
+  border-radius: var(--lk-radius-sm);
+}
+
+.choice {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  gap: var(--lk-space-2);
+  color: var(--lk-font-color-base);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.choiceCopy {
+  display: grid;
+  min-width: 0;
+  gap: var(--lk-space-1);
+}
+
+.choiceControl {
+  display: grid;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  margin: 0;
+  padding: 0;
+  place-content: center;
+  appearance: none;
+  border: 1px solid var(--lk-color-emphasis-400);
+  border-radius: 4px;
+  background: var(--lk-card-background-color);
+  cursor: inherit;
+}
+
+.choiceControl::before {
+  width: 8px;
+  height: 5px;
+  border-bottom: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  content: '';
+  transform: translateY(-1px) rotate(-45deg) scale(0);
+}
+
+.choiceControl:checked {
+  border-color: var(--lk-color-primary);
+  background: var(--lk-color-primary);
+}
+
+.choiceControl:checked::before {
+  transform: translateY(-1px) rotate(-45deg) scale(1);
+}
+
+.choiceControl[type='radio'] {
+  border-radius: 50%;
+}
+
+.choiceControl[type='radio']::before {
+  width: 6px;
+  height: 6px;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffff;
+  transform: scale(0);
+}
+
+.choiceControl[type='radio']:checked::before {
+  transform: scale(1);
+}
+
+.choiceControl:hover:not(:disabled) {
+  border-color: var(--lk-color-primary);
+}
+
+.choiceControl:focus-visible {
+  outline: none;
+  box-shadow: var(--lk-focus-ring);
+}
+
+.choice:has(:disabled) {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+@media (max-width: 600px), (pointer: coarse) {
+  .choice {
+    min-height: 44px;
+  }
+}

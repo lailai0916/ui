@@ -4,7 +4,20 @@ import { test } from 'node:test';
 import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import {
+  Alert,
   Button,
+  ButtonLink,
+  Checkbox,
+  CopyButton,
+  Dialog,
+  Input,
+  PasswordField,
+  PasswordInput,
+  Radio,
+  Select,
+  Table,
+  Tabs,
+  TextArea,
   IconButton,
   TextField,
   TextAreaField,
@@ -130,25 +143,28 @@ test('nested providers inherit routing and localization', () => {
 
 test('controls preserve disabled state, accessible names, and roving tab order', () => {
   assert.match(render(h(Button, { disabled: true }, 'Save')), /disabled=""/);
-  const html = render(
-    h(Segmented, {
-      value: 'b',
-      ariaLabel: 'View',
-      items: [
-        { value: 'a', label: 'A' },
-        { value: 'b', label: 'B' },
-      ],
-    })
-  );
-  assert.match(html, /role="radiogroup" aria-label="View"/);
-  assert.match(html, /aria-checked="false" tabindex="-1"/);
-  assert.match(html, /aria-checked="true" tabindex="0"/);
-  const navigation = render(
-    h(Segmented, { value: 'a', items: [{ value: 'a', label: 'A', href: '/a' }] })
-  );
-  assert.match(navigation, /href="\/a"/);
-  assert.match(navigation, /aria-current="page"/);
-  assert.doesNotMatch(navigation, /role="radio"/);
+  for (const options of [{}, { size: 'sm', orientation: 'horizontal', stackAt: 0 }]) {
+    const html = render(
+      h(Segmented, {
+        ...options,
+        value: 'b',
+        ariaLabel: 'View',
+        items: [
+          { value: 'a', label: 'A' },
+          { value: 'b', label: 'B' },
+        ],
+      })
+    );
+    assert.match(html, /role="radiogroup" aria-label="View"/);
+    assert.match(html, /aria-checked="false" tabindex="-1"/);
+    assert.match(html, /aria-checked="true" tabindex="0"/);
+    const navigation = render(
+      h(Segmented, { ...options, value: 'a', items: [{ value: 'a', label: 'A', href: '/a' }] })
+    );
+    assert.match(navigation, /href="\/a"/);
+    assert.match(navigation, /aria-current="page"/);
+    assert.doesNotMatch(navigation, /role="radio"/);
+  }
 });
 
 test('charts distinguish loading, empty, error, and successful data', () => {
@@ -236,7 +252,7 @@ test('migrated buttons share variants, sizes, and explicit toggle semantics', ()
 });
 
 test('fields preserve host accessibility metadata alongside descriptions and errors', () => {
-  for (const Field of [TextField, TextAreaField, SelectField]) {
+  for (const Field of [TextField, TextAreaField, SelectField, PasswordField]) {
     const html = render(
       h(Field, {
         id: 'name',
@@ -317,4 +333,108 @@ test('new public component subpaths are available and old global styling is abse
   for (const [, token] of css.matchAll(/var\((--lk-[\w-]+)/g)) {
     assert.ok(definitions.has(token) || withFallback.has(token), `Undefined token: ${token}`);
   }
+});
+
+test('unframed controls preserve native form attributes and accessible metadata', () => {
+  for (const Control of [Input, TextArea, Select]) {
+    const html = render(
+      h(Control, {
+        name: 'answer',
+        disabled: true,
+        'aria-label': 'Answer',
+        'aria-describedby': 'help',
+        invalid: true,
+      })
+    );
+    assert.match(html, /name="answer"/);
+    assert.match(html, /disabled=""/);
+    assert.match(html, /aria-label="Answer"/);
+    assert.match(html, /aria-describedby="help"/);
+    assert.match(html, /aria-invalid="true"/);
+  }
+  for (const [Control, type] of [
+    [Checkbox, 'checkbox'],
+    [Radio, 'radio'],
+  ]) {
+    const html = render(
+      h(Control, {
+        id: 'choice',
+        label: 'Remember',
+        name: 'choice',
+        description: 'Help',
+        'aria-describedby': 'external',
+        defaultChecked: true,
+      })
+    );
+    assert.match(html, new RegExp(`type="${type}"`));
+    assert.match(html, /for="choice"/);
+    assert.match(html, /checked=""/);
+    assert.match(html, /aria-describedby="external choice-description"/);
+  }
+});
+
+test('password and copy controls render localized labels without browser globals', () => {
+  assert.match(render(h(PasswordInput, { 'aria-label': 'Password' })), /type="password"/);
+  assert.match(
+    render(h(PasswordField, { label: '密码', name: 'password' }), { locale: 'zh-Hans' }),
+    /aria-label="显示密码"/
+  );
+  assert.match(render(h(CopyButton, { value: 'text' }), { locale: 'zh-Hans' }), />复制</);
+  assert.match(render(h(CopyButton, { value: '' })), /disabled=""/);
+  assert.match(render(h(CopyButton, { value: 'text', label: 'Copy answer' })), />Copy answer</);
+});
+
+test('tabs retain panel associations and skip disabled choices in the tab order', () => {
+  const html = render(
+    h(Tabs, {
+      value: 'missing',
+      ariaLabel: 'Sections',
+      onChange() {},
+      items: [
+        { value: 'disabled', label: 'Unavailable', disabled: true },
+        { value: 'overview', label: 'Overview', id: 'overview-tab', panelId: 'overview-panel' },
+      ],
+    })
+  );
+  assert.match(html, /role="tablist" aria-label="Sections"/);
+  assert.match(html, /aria-controls="overview-panel" tabindex="0"/);
+  assert.match(html, /id="overview-tab"/);
+  assert.match(html, /tabindex="-1" disabled=""/);
+});
+
+test('application surfaces preserve semantic roles and host routing', () => {
+  assert.match(render(h(Alert, { variant: 'danger' }, 'Failed')), /role="alert"/);
+  assert.match(render(h(Alert, { variant: 'success' }, 'Saved')), /role="status"/);
+  assert.match(render(h(Alert, { role: 'note' }, 'Read this')), /role="note"/);
+  assert.match(
+    render(h(Dialog, { open: true, onClose() {}, label: 'Search' }, 'Body')),
+    /<dialog[^>]*aria-label="Search"[^>]*aria-modal="true"/
+  );
+  assert.match(
+    render(h(Table, null, h('caption', null, 'Results'))),
+    /<table[^>]*>[\s\S]*<caption>Results<\/caption>/
+  );
+  assert.match(render(h(Card, { as: 'article' }, 'Content')), /^<article/);
+  assert.match(
+    render(h(ButtonLink, { to: '/learn' }, 'Learn'), {
+      linkComponent: ({ to, ...props }) => h('a', { ...props, href: to, 'data-router': 'host' }),
+    }),
+    /data-router="host"/
+  );
+  const hiddenMeta = render(
+    h(Progress, { label: 'Mastery', value: 25, showLabel: false, showValue: false })
+  );
+  assert.match(hiddenMeta, /aria-label="Mastery"/);
+  assert.doesNotMatch(hiddenMeta, /<span/);
+  assert.match(
+    render(
+      h(DataCard, {
+        value: '75%',
+        label: 'Mastery',
+        icon: 'lucide:target',
+        description: 'After 24 hours',
+      })
+    ),
+    /75%[\s\S]*After 24 hours/
+  );
 });

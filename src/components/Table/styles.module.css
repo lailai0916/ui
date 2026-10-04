@@ -1,0 +1,40 @@
+.scroll {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--lk-font-color-base);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.table caption {
+  padding-block: var(--lk-space-3);
+  color: var(--lk-font-color-secondary);
+  font-weight: 600;
+  text-align: left;
+}
+
+.table th,
+.table td {
+  padding: var(--lk-space-3);
+  border-bottom: 1px solid var(--lk-color-emphasis-300);
+  text-align: inherit;
+  vertical-align: top;
+}
+
+.table th {
+  color: var(--lk-font-color-secondary);
+  font-weight: 600;
+}
+
+.table tbody tr:hover {
+  background: var(--lk-color-emphasis-100);
+}

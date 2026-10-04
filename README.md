@@ -20,7 +20,7 @@ The former GitHub package `@lailai/ui` has been merged into this library; the re
 
 ## Project Features
 
-🧩 **Shared Components** — 43 components cover cards, forms, controls, charts, navigation, and window panels, with TypeScript declarations and per-component imports.
+🧩 **Shared Components** — 56 components cover cards, forms, controls, charts, navigation, and window panels, with TypeScript declarations and per-component imports.
 
 🎨 **One Theme** — Shared CSS variables, light and dark palettes, and reduced-motion support keep multiple websites consistent.
 
@@ -73,14 +73,14 @@ ui/
 
 ## Components
 
-| Category   | Exports                                                                                                                                                                                     |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Layout     | `Card`, `TitleCard`, `LinkCard`, `DataCard`, `ShareCard`, `PageHeader`, `PageTitle`, `PageContent`, `PageContainer`, `Stack`, `Cluster`, `Panel`, `PanelHeader`, `PanelBody`, `PanelFooter` |
-| Controls   | `Button`, `IconButton`, `Segmented`, `Slider`, `Switch`, `ThemeControl`                                                                                                                     |
-| Charts     | `Chart`, `Donut`, `Progress`                                                                                                                                                                |
-| Display    | `Badge`, `Icon`, `IconBlock`, `Tooltip`, `Skeleton`, `DataState`, `TrafficLights`, `WindowBar`, `WindowPanel`, `MDTitle`, `Quote`, `GitHub`, `Avatar`, `Brand`, `EmptyState`                |
-| Forms      | `TextField`, `TextAreaField`, `SelectField`                                                                                                                                                 |
-| Navigation | `Paginator`                                                                                                                                                                                 |
+| Category   | Exports                                                                                                                                                                                         |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Layout     | `Card`, `TitleCard`, `LinkCard`, `DataCard`, `ShareCard`, `PageHeader`, `PageTitle`, `PageContent`, `PageContainer`, `Stack`, `Cluster`, `Panel`, `PanelHeader`, `PanelBody`, `PanelFooter`     |
+| Controls   | `Button`, `ButtonLink`, `CopyButton`, `IconButton`, `Segmented`, `Tabs`, `Slider`, `Switch`, `ThemeControl`                                                                                     |
+| Charts     | `Chart`, `Donut`, `Progress`, `Table`                                                                                                                                                           |
+| Display    | `Alert`, `Dialog`, `Badge`, `Icon`, `IconBlock`, `Tooltip`, `Skeleton`, `DataState`, `TrafficLights`, `WindowBar`, `WindowPanel`, `MDTitle`, `Quote`, `GitHub`, `Avatar`, `Brand`, `EmptyState` |
+| Forms      | `Input`, `TextArea`, `Select`, `TextField`, `TextAreaField`, `SelectField`, `PasswordInput`, `PasswordField`, `Checkbox`, `Radio`                                                               |
+| Navigation | `Paginator`                                                                                                                                                                                     |
 
 The count excludes `LaikitProvider`, `ThemeProvider`, routing helpers, hooks, and `Tooltip.Label` / `Tooltip.Value`. Shared utilities include `useImageStatus`, `useMeasuredHeight`, `formatCompact`, and `formatBytes`.
 

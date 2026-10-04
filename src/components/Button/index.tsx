@@ -1,5 +1,6 @@
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import clsx from 'clsx';
+import { Link, type LinkProps } from '../../provider.js';
 import styles from './styles.module.css';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -54,3 +55,41 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
 });
 
 export default Button;
+
+export type ButtonLinkProps = LinkProps & {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  rounded?: boolean;
+  fullWidth?: boolean;
+  leftIcon?: ReactNode;
+};
+
+export function ButtonLink({
+  children,
+  className,
+  variant = 'secondary',
+  size = 'md',
+  rounded,
+  fullWidth,
+  leftIcon,
+  ...props
+}: ButtonLinkProps) {
+  return (
+    <Link
+      {...props}
+      data-lk="button"
+      className={clsx(
+        styles.button,
+        styles.buttonLink,
+        styles[`variant_${variant}`],
+        styles[`size_${size}`],
+        rounded && styles.rounded,
+        fullWidth && styles.fullWidth,
+        className
+      )}
+    >
+      {leftIcon != null && <span className={styles.icon}>{leftIcon}</span>}
+      {children != null && <span className={styles.label}>{children}</span>}
+    </Link>
+  );
+}

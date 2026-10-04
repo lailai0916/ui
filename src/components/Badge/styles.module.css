@@ -61,3 +61,27 @@
   color: var(--lk-color-emphasis-600);
   font-variant-numeric: tabular-nums;
 }
+
+.primary {
+  border-color: color-mix(in srgb, var(--lk-color-primary) 24%, transparent);
+  background: var(--lk-color-primary-soft);
+  color: var(--lk-color-primary-label);
+}
+
+.success {
+  border-color: color-mix(in srgb, var(--lk-color-success) 24%, transparent);
+  background: var(--lk-color-success-soft);
+  color: var(--lk-color-success);
+}
+
+.warning {
+  border-color: color-mix(in srgb, var(--lk-color-warning) 24%, transparent);
+  background: var(--lk-color-warning-soft);
+  color: var(--lk-color-warning);
+}
+
+.danger {
+  border-color: color-mix(in srgb, var(--lk-color-danger) 24%, transparent);
+  background: var(--lk-color-danger-soft);
+  color: var(--lk-color-danger);
+}

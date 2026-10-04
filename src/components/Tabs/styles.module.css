@@ -1,0 +1,8 @@
+.tabs {
+  max-width: 100%;
+}
+
+.tab:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
