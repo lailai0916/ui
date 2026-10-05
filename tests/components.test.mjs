@@ -256,6 +256,37 @@ test('migrated buttons share variants, sizes, and explicit toggle semantics', ()
   assert.match(render(h(IconButton, { label: 'Close', size: 'sm' }, '×')), /aria-label="Close"/);
 });
 
+test('header icon buttons retain native button and accessibility contracts', () => {
+  const html = render(
+    h(
+      IconButton,
+      {
+        variant: 'header',
+        label: 'Search',
+        title: 'Search tools (Ctrl+K)',
+        disabled: true,
+        name: 'search',
+        'aria-describedby': 'search-help',
+        'aria-haspopup': 'dialog',
+        'aria-keyshortcuts': 'Control+K',
+        className: 'host-button',
+      },
+      h('svg', { width: 17, height: 17 })
+    )
+  );
+  assert.match(html, /^<button\b/);
+  assert.match(html, /type="button"/);
+  assert.match(html, /data-lk="button"/);
+  assert.match(html, /aria-label="Search"/);
+  assert.match(html, /disabled=""/);
+  assert.match(html, /name="search"/);
+  assert.match(html, /aria-describedby="search-help"/);
+  assert.match(html, /aria-haspopup="dialog"/);
+  assert.match(html, /aria-keyshortcuts="Control\+K"/);
+  assert.match(html, /host-button/);
+  assert.doesNotMatch(html, /title=|variant=|hint=|<span/);
+});
+
 test('fields preserve host accessibility metadata alongside descriptions and errors', () => {
   for (const Field of [TextField, TextAreaField, SelectField, PasswordField]) {
     const html = render(

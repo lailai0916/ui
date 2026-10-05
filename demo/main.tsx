@@ -189,12 +189,13 @@ function App() {
           }
           mobileAction={
             <IconButton
+              variant="header"
               label={copy.navigation}
               aria-haspopup="dialog"
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen(true)}
             >
-              <Icon icon="lucide:menu" />
+              <Icon icon="lucide:menu" width={17} />
             </IconButton>
           }
           navigation={

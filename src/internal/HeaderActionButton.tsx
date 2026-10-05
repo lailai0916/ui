@@ -5,21 +5,22 @@ import styles from './header-action.module.css';
 
 type HeaderActionButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   label: string;
-  kind: 'language' | 'theme';
+  kind?: 'language' | 'theme';
+  hint?: boolean;
 };
 
 export const HeaderActionButton = forwardRef<HTMLButtonElement, HeaderActionButtonProps>(
   function HeaderActionButton(
-    { label, kind, className, children, type = 'button', ...props },
+    { label, kind, className, children, type = 'button', title, hint = true, ...props },
     ref
   ) {
     return (
-      <Hint label={label} data-lk="action-hint">
+      <Hint label={title ?? label} disabled={!hint} data-lk="action-hint">
         <button
           {...props}
           ref={ref}
           type={type}
-          data-lk={`${kind}-button`}
+          data-lk={kind ? `${kind}-button` : 'button'}
           className={clsx(styles.button, kind === 'language' && styles.language, className)}
           aria-label={label}
         >

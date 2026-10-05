@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.4
+
+- Add IconButton's header variant, reusing the same primitive as LanguageButton and ThemeButton for shared surfaces, borders, focus, press feedback, icon strokes, and responsive touch targets.
+- Preserve ordinary icon button defaults, native attributes, refs, Hint opt-outs, and distinct accessible names and hint text.
+
 ## 0.3.3
 
 - Add public Hint for short action descriptions on buttons, links, and fields, using Base UI tooltip interactions, keyboard focus, hover delay, Escape dismissal, viewport collision handling, and modal-aware portals.

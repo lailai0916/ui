@@ -163,6 +163,12 @@ consuming a surrounding dialog's Escape. Desktop targets are 32 px, increasing t
 up to 980 px or with a coarse pointer. Motion respects reduced-motion settings. Supported hooks
 are `language-button`, `theme-button`, and `action-hint`.
 
+Use `IconButton variant="header"` for adjacent search, documentation actions, or mobile menu
+triggers. It uses the same surface, border, focus ring, press feedback, icon strokes, and 32/44 px
+geometry as LanguageButton and ThemeButton. Supply a 17 px icon. `size` applies to the default
+`ghost` variant; header sizing follows the shared desktop/touch rules. Native button props, refs,
+`label`, `title`, and `hint` work in both variants. The trigger retains `data-lk="button"`.
+
 ```tsx
 function HeaderActions() {
   const { resolvedTheme, setPreference } = useTheme();
