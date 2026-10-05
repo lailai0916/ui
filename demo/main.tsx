@@ -19,6 +19,9 @@ import {
   Cluster,
   EmptyState,
   IconButton,
+  LanguageButton,
+  ThemeButton,
+  useTheme,
   PageContainer,
   SiteHeader,
   SkipLink,
@@ -149,6 +152,7 @@ const copy = chinese
     };
 
 function App() {
+  const { resolvedTheme, setPreference } = useTheme();
   const [selected, setSelected] = useState('overview');
   const [enabled, setEnabled] = useState(true);
   const [value, setValue] = useState(40);
@@ -195,9 +199,20 @@ function App() {
             </nav>
           }
           actions={
-            <ButtonLink href="https://github.com/lailai0916/ui" size="sm">
-              GitHub
-            </ButtonLink>
+            <>
+              <LanguageButton
+                locale={locale}
+                onLocaleChange={(next) => {
+                  const url = new URL(window.location.href);
+                  url.searchParams.set('lang', next);
+                  window.location.assign(url);
+                }}
+              />
+              <ThemeButton theme={resolvedTheme} onThemeChange={setPreference} />
+              <ButtonLink href="https://github.com/lailai0916/ui" size="sm">
+                GitHub
+              </ButtonLink>
+            </>
           }
         />
         <Dialog open={menuOpen} onClose={() => setMenuOpen(false)} label={copy.navigation}>

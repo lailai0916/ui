@@ -1,0 +1,113 @@
+.button {
+  appearance: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--lk-radius-sm);
+  background: transparent;
+  color: var(--lk-font-color-secondary);
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    border-color var(--lk-transition),
+    background-color var(--lk-transition),
+    color var(--lk-transition),
+    transform var(--lk-transition);
+}
+
+.button:hover:not(:disabled) {
+  border-color: var(--lk-color-emphasis-300);
+  background: var(--lk-color-emphasis-100);
+  color: var(--lk-font-color-base);
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--lk-color-primary);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.language {
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.language[data-locale='en'] {
+  font-size: 13px;
+}
+
+.button > svg {
+  animation: iconEnter var(--lk-transition) both;
+}
+
+.button > svg [stroke-width] {
+  stroke-width: 1.75;
+}
+
+.hint {
+  position: fixed;
+  z-index: 120;
+  box-sizing: border-box;
+  max-width: min(260px, calc(100vw - 16px));
+  padding: 6px 9px;
+  border: 1px solid var(--lk-color-emphasis-300);
+  border-radius: 6px;
+  background: var(--lk-card-background-color);
+  color: var(--lk-font-color-base);
+  box-shadow: var(--lk-shadow-sm);
+  font-family: var(--lk-font-family);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  animation: hintEnter var(--lk-transition) both;
+}
+
+@keyframes iconEnter {
+  from {
+    opacity: 0;
+    transform: rotate(-25deg) scale(0.8);
+  }
+}
+
+@keyframes hintEnter {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 980px), (pointer: coarse) {
+  .button {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .button > svg,
+  .hint {
+    animation: none;
+    transition: none;
+  }
+}

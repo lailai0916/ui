@@ -19,6 +19,7 @@ export interface ThemeContextValue {
 
 export interface ThemeProviderProps {
   children: ReactNode;
+  mode?: 'preference' | 'system';
   storageKey?: string;
   themeColors?: Record<ResolvedTheme, string>;
 }
@@ -37,6 +38,7 @@ function readPreference(storageKey: string): ThemePreference {
 
 export function ThemeProvider({
   children,
+  mode = 'preference',
   storageKey = 'lailai.theme',
   themeColors = defaultColors,
 }: ThemeProviderProps) {
@@ -47,25 +49,28 @@ export function ThemeProvider({
 
   useEffect(() => {
     const query = window.matchMedia('(prefers-color-scheme: dark)');
-    const syncSystem = () => setSystemTheme(query.matches ? 'dark' : 'light');
+    const syncSystem = () => {
+      setSystemTheme(query.matches ? 'dark' : 'light');
+      if (mode === 'system') setPreferenceState('system');
+    };
     const syncPreference = (event: StorageEvent) => {
       if (event.key === storageKey || event.key === null) {
         setPreferenceState(readPreference(storageKey));
       }
     };
-    setPreferenceState(readPreference(storageKey));
+    setPreferenceState(mode === 'system' ? 'system' : readPreference(storageKey));
     syncSystem();
     setReady(true);
     query.addEventListener('change', syncSystem);
-    window.addEventListener('storage', syncPreference);
+    if (mode === 'preference') window.addEventListener('storage', syncPreference);
     return () => {
       query.removeEventListener('change', syncSystem);
       window.removeEventListener('storage', syncPreference);
     };
-  }, [storageKey]);
+  }, [storageKey, mode]);
 
   useEffect(() => {
-    // Preserve the host's pre-paint theme until saved preferences have been read.
+    // Preserve the host's pre-paint theme until the selected mode has initialized.
     if (!ready) return;
     document.documentElement.dataset.theme = resolvedTheme;
     document.documentElement.dataset.themePreference = preference;
@@ -78,13 +83,14 @@ export function ThemeProvider({
   const setPreference = useCallback(
     (next: ThemePreference) => {
       setPreferenceState(next);
+      if (mode === 'system') return;
       try {
         window.localStorage.setItem(storageKey, next);
       } catch {
         // Theme selection still works when the browser blocks persistent storage.
       }
     },
-    [storageKey]
+    [storageKey, mode]
   );
 
   const value = useMemo(

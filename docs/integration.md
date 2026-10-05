@@ -142,6 +142,43 @@ independently and can be used alongside either theme owner.
 item, supports arrows, Home/End and Escape, closes on outside focus/click, and restores trigger focus
 after a selection. Tab leaves the menu normally.
 
+For a one-click appearance button, render controlled `ThemeButton` with `theme={resolvedTheme}`
+and `onThemeChange={setPreference}`. Its sun/moon icon shows the current resolved theme; clicking
+requests the other theme. Labels follow `LaikitProvider.locale`, or use `label` to override them.
+Hosts with an existing theme manager pass their own state and callback without adding a provider.
+
+`ThemeProvider mode="system"` follows the operating system on mount and every system-theme change.
+Manual changes apply to the current page until the next system change or reload. This mode neither
+reads nor writes saved preferences and ignores cross-tab theme storage events. The default
+`mode="preference"` keeps the existing persistent three-mode behavior. Match the selected mode in
+the host's pre-paint script to avoid flashing an obsolete saved theme.
+
+`LanguageButton` accepts controlled `locale="en" | "zh-Hans"` and `onLocaleChange`. It displays
+the current `EN` / `中` label and requests the other language on click. The host owns translation,
+storage and navigation. `label` overrides its localized current/next-language description.
+Both buttons forward native attributes and refs, default to `type="button"`, and let a caller's
+`onClick` prevent the change with `event.preventDefault()`. Disabled buttons do not activate.
+Pointer hover and keyboard focus show a viewport-clamped hint; Escape dismisses it without
+consuming a surrounding dialog's Escape. Desktop targets are 32 px, increasing to 44 px at widths
+up to 980 px or with a coarse pointer. Motion respects reduced-motion settings. Supported hooks
+are `language-button`, `theme-button`, and `action-hint`.
+
+```tsx
+function HeaderActions() {
+  const { resolvedTheme, setPreference } = useTheme();
+  return (
+    <>
+      <LanguageButton locale={locale} onLocaleChange={setLocale} />
+      <ThemeButton theme={resolvedTheme} onThemeChange={setPreference} />
+    </>
+  );
+}
+// Mount once at the application root.
+<ThemeProvider mode="system">
+  <App />
+</ThemeProvider>;
+```
+
 ## Application primitives
 
 - `Button` defaults to `secondary` / `md`; choose `primary`, `ghost`, or `danger` explicitly. Sizes

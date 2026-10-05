@@ -20,7 +20,7 @@ The former GitHub package `@lailai/ui` has been merged into this library; the re
 
 ## Project Features
 
-🧩 **Shared Components** — 58 components cover cards, forms, controls, charts, navigation, and window panels, with TypeScript declarations and per-component imports.
+🧩 **Shared Components** — 60 components cover cards, forms, controls, charts, navigation, and window panels, with TypeScript declarations and per-component imports.
 
 🎨 **One Theme** — Shared CSS variables, light and dark palettes, and reduced-motion support keep multiple websites consistent.
 
@@ -54,7 +54,7 @@ export function App() {
 
 Import the two CSS files once at the application entry, in the order shown. The package does not install a global CSS reset or override the host's body font. Set your base typography and `box-sizing` in the application; the theme exposes `--lk-font-family`, `--lk-font-size`, and `--lk-line-height` defaults.
 
-Set `data-theme="light"` or `data-theme="dark"` on `<html>` to select a theme. Without an explicit theme, the palette follows the system preference. Override `--lk-*` tokens after importing the package to customize colors. Standalone React apps can use `ThemeProvider` and `ThemeControl` to persist preferences; hosts such as Docusaurus keep their existing theme manager.
+Set `data-theme="light"` or `data-theme="dark"` on `<html>` to select a theme. Without an explicit theme, the palette follows the system preference. Override `--lk-*` tokens after importing the package to customize colors. Standalone React apps can use `ThemeProvider` and `ThemeControl` to persist preferences; hosts such as Docusaurus keep their existing theme manager. Use controlled `LanguageButton` and `ThemeButton` for compact header actions; `ThemeProvider mode="system"` follows system changes and reloads while allowing temporary appearance changes.
 
 For a direct component import, use `import Button from '@lailai0916/ui/Button'`. `Page`, `Markdown`, `Field`, `Layout`, and `Panel` subpaths have named exports. All components are also available as named exports from the package root.
 
@@ -76,7 +76,7 @@ ui/
 | Category   | Exports                                                                                                                                                                                                   |
 | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Layout     | `Card`, `TitleCard`, `LinkCard`, `DataCard`, `ShareCard`, `PageHeader`, `PageTitle`, `PageContent`, `PageContainer`, `SiteHeader`, `Stack`, `Cluster`, `Panel`, `PanelHeader`, `PanelBody`, `PanelFooter` |
-| Controls   | `Button`, `ButtonLink`, `CopyButton`, `IconButton`, `Segmented`, `Tabs`, `Slider`, `Switch`, `ThemeControl`                                                                                               |
+| Controls   | `Button`, `ButtonLink`, `CopyButton`, `IconButton`, `LanguageButton`, `ThemeButton`, `Segmented`, `Tabs`, `Slider`, `Switch`, `ThemeControl`                                                              |
 | Charts     | `Chart`, `Donut`, `Progress`, `Table`                                                                                                                                                                     |
 | Display    | `Alert`, `Dialog`, `Badge`, `Icon`, `IconBlock`, `Tooltip`, `Skeleton`, `DataState`, `TrafficLights`, `WindowBar`, `WindowPanel`, `MDTitle`, `Quote`, `GitHub`, `Avatar`, `Brand`, `EmptyState`           |
 | Forms      | `Input`, `TextArea`, `Select`, `TextField`, `TextAreaField`, `SelectField`, `PasswordInput`, `PasswordField`, `Checkbox`, `Radio`                                                                         |

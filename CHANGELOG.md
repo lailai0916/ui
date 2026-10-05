@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.2
+
+- Add controlled LanguageButton and ThemeButton with current-state labels, viewport-clamped hints, shared compact geometry, touch targets, and reduced-motion feedback, based on Prispect’s header controls.
+- Add opt-in ThemeProvider system mode: follow system changes and page loads while allowing temporary one-click appearance changes, without reading or writing stored preferences.
+- Preserve existing ThemeControl variants, persistent provider defaults, and Home component styles.
+
 ## 0.3.1
 
 - Add SiteHeader with shared brand, navigation, mobile action, and application action slots, responsive gutters, compact brand names, and touch targets.

@@ -19,6 +19,8 @@ import {
   Tabs,
   TextArea,
   IconButton,
+  LanguageButton,
+  ThemeButton,
   TextField,
   TextAreaField,
   SelectField,
@@ -336,6 +338,64 @@ test('standalone theme controls render without browser globals', () => {
   );
 });
 
+test('language buttons name the current and next language while preserving native attributes', () => {
+  const html = render(
+    h(LanguageButton, {
+      locale: 'zh-Hans',
+      onLocaleChange() {},
+      disabled: true,
+      name: 'language',
+      'aria-describedby': 'language-help',
+      className: 'host-button',
+    })
+  );
+  assert.match(html, /type="button"/);
+  assert.match(html, /data-lk="language-button"/);
+  assert.match(html, /data-locale="zh-Hans"/);
+  assert.match(html, /当前语言：中文，切换至 English/);
+  assert.match(html, /disabled=""/);
+  assert.match(html, /name="language"/);
+  assert.match(html, /aria-describedby="language-help"/);
+  assert.match(html, /host-button/);
+  assert.match(html, />中<\/button>/);
+  const english = render(h(LanguageButton, { locale: 'en', onLocaleChange() {} }));
+  assert.match(english, /Current language: English. Switch to 中文/);
+  assert.match(english, />EN<\/button>/);
+  assert.match(
+    render(h(LanguageButton, { locale: 'en', onLocaleChange() {}, label: 'Language' })),
+    /aria-label="Language"/
+  );
+});
+
+test('controlled theme buttons support host theme managers and localized accessible names', () => {
+  for (const theme of ['light', 'dark']) {
+    const html = render(
+      h(ThemeButton, { theme, onThemeChange() {}, 'aria-describedby': 'theme-help' }),
+      { locale: 'zh-Hans' }
+    );
+    assert.match(html, new RegExp(`data-theme="${theme}"`));
+    assert.match(html, /data-lk="theme-button"/);
+    assert.match(html, /当前主题：.*切换至/);
+    assert.match(html, /aria-describedby="theme-help"/);
+    assert.match(html, /width="17" height="17"/);
+    assert.doesNotMatch(html, /aria-haspopup|aria-pressed/);
+  }
+  assert.match(
+    render(h(ThemeButton, { theme: 'dark', onThemeChange() {} })),
+    /Current theme: dark. Switch to light/
+  );
+  assert.match(
+    render(
+      h(
+        ThemeProvider,
+        { mode: 'system' },
+        h(ThemeControl, { labels: { system: 'System', light: 'Light', dark: 'Dark' } })
+      )
+    ),
+    /aria-pressed="true">System/
+  );
+});
+
 test('new public component subpaths are available and old global styling is absent', async () => {
   for (const name of [
     'Avatar',
@@ -344,6 +404,8 @@ test('new public component subpaths are available and old global styling is abse
     'Field',
     'Icon',
     'IconButton',
+    'LanguageButton',
+    'ThemeButton',
     'Layout',
     'SiteHeader',
     'SkipLink',

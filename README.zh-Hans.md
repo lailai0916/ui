@@ -20,7 +20,7 @@ laikit UI 是从 [lailai's Home](https://lailai.one) 抽出的共享 React 组�
 
 ## 项目特性
 
-🧩 **共享组件** — 58 个组件覆盖卡片、表单、控件、图表、导航和窗口面板，提供 TypeScript 类型声明与按组件导入入口。
+🧩 **共享组件** — 60 个组件覆盖卡片、表单、控件、图表、导航和窗口面板，提供 TypeScript 类型声明与按组件导入入口。
 
 🎨 **统一主题** — 共用 CSS 变量、深浅配色及减少动画支持，让多个网站保持一致。
 
@@ -54,7 +54,7 @@ export function App() {
 
 在应用入口按上述顺序各导入一次 CSS。组件库不安装全局 CSS reset，也不覆盖宿主的正文字体。请在应用中设置基础排版和 `box-sizing`；主题提供 `--lk-font-family`、`--lk-font-size` 和 `--lk-line-height` 默认值。
 
-在 `<html>` 上设置 `data-theme="light"` 或 `data-theme="dark"` 选择主题；未指定时，配色跟随系统。导入组件库后覆盖 `--lk-*` 变量即可定制颜色。独立 React 应用可使用 `ThemeProvider` 和 `ThemeControl` 保存主题偏好；Docusaurus 等已有主题管理的宿主继续使用自身的管理方式。
+在 `<html>` 上设置 `data-theme="light"` 或 `data-theme="dark"` 选择主题；未指定时，配色跟随系统。导入组件库后覆盖 `--lk-*` 变量即可定制颜色。独立 React 应用可使用 `ThemeProvider` 和 `ThemeControl` 保存主题偏好；Docusaurus 等已有主题管理的宿主继续使用自身的管理方式。 顶部栏可使用受控的 `LanguageButton` 与 `ThemeButton`；`ThemeProvider mode="system"` 在系统变化和重新加载时跟随系统，并允许当前页临时切换。
 
 按组件导入可写为 `import Button from '@lailai0916/ui/Button'`。`Page`、`Markdown`、`Field`、`Layout` 和 `Panel` 子路径使用具名导出；所有组件也都支持从包根入口具名导入。
 
@@ -76,7 +76,7 @@ ui/
 | 分类 | 导出                                                                                                                                                                                                      |
 | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 布局 | `Card`, `TitleCard`, `LinkCard`, `DataCard`, `ShareCard`, `PageHeader`, `PageTitle`, `PageContent`, `PageContainer`, `SiteHeader`, `Stack`, `Cluster`, `Panel`, `PanelHeader`, `PanelBody`, `PanelFooter` |
-| 控件 | `Button`, `ButtonLink`, `CopyButton`, `IconButton`, `Segmented`, `Tabs`, `Slider`, `Switch`, `ThemeControl`                                                                                               |
+| 控件 | `Button`, `ButtonLink`, `CopyButton`, `IconButton`, `LanguageButton`, `ThemeButton`, `Segmented`, `Tabs`, `Slider`, `Switch`, `ThemeControl`                                                              |
 | 图表 | `Chart`, `Donut`, `Progress`, `Table`                                                                                                                                                                     |
 | 展示 | `Alert`, `Dialog`, `Badge`, `Icon`, `IconBlock`, `Tooltip`, `Skeleton`, `DataState`, `TrafficLights`, `WindowBar`, `WindowPanel`, `MDTitle`, `Quote`, `GitHub`, `Avatar`, `Brand`, `EmptyState`           |
 | 表单 | `Input`, `TextArea`, `Select`, `TextField`, `TextAreaField`, `SelectField`, `PasswordInput`, `PasswordField`, `Checkbox`, `Radio`                                                                         |
