@@ -170,3 +170,28 @@ Use shared components as the visual source of truth. Host CSS should position co
 - `Badge` adds optional semantic variants; `DataCard` accepts formatted strings and descriptions; `Card` accepts `as="article"` / `"section"`. `Progress` can hide visual labels while retaining its accessible name.
 
 Stable application hooks include `data-lk="field-control"`, `"checkbox"`, `"radio"`, `"tabs"`, `"tab"`, `"dialog"`, `"alert"`, `"table"`, and `"table-scroll"`. Do not target generated CSS Module class names.
+
+## Site navigation
+
+`SiteHeader` accepts `brand`, optional `navigation`, `mobileAction`, and `actions` React nodes.
+It owns the shared surface, height, spacing, responsive container, and touch targets. Applications
+provide their router links, search, notifications, account actions, and controlled menu behavior.
+
+- The default position is `sticky`, the height is `--lk-header-height`, and the inner container is
+  `PageContainer` with its default width and gutters. `width` is pixels; `fullWidth` fills an app shell
+  and takes precedence over `width`.
+- `position="fixed"` requires the host to reserve the header height above its content. `static` is
+  useful for embedded previews. No slots or popovers are clipped.
+- At 900 px and below, `navigation` is hidden and `mobileAction` becomes visible. Supply a menu action
+  and an accessible drawer/dialog when the navigation contains essential destinations. The host owns
+  expanded state, Escape, focus return, and route changes.
+- At 520 px and below, shared `Brand` names are hidden. Give the brand's link an accessible name.
+  On touch devices or below 600 px, header action buttons have at least 44 px targets.
+- `--lk-header-brand-width` optionally aligns the desktop start column with a host sidebar; the
+  compact layout resets the column at 900 px. Brand widths are otherwise measured from content.
+- Hooks are `site-header`, `header-inner`, `header-start`, `header-brand`, `header-navigation`,
+  `header-mobile-action`, and `header-actions`. Hosts may arrange business content within slots.
+
+`SkipLink` is an ordinary focusable anchor, shown on focus. Its default target is `#main-content`;
+provide localized children and a focusable main region (`id="main-content"`, `tabIndex={-1}`).
+It forwards native link attributes and a ref and respects reduced motion. Its hook is `skip-link`.

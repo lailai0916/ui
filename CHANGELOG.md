@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1
+
+- Add SiteHeader with shared brand, navigation, mobile action, and application action slots, responsive gutters, compact brand names, and touch targets.
+- Add SkipLink for localized keyboard navigation to the main content.
+- Keep application routing, search, notifications, authentication, and menu state in consumer projects; expose stable header hooks and optional application-shell alignment.
+
 ## 0.3.0
 
 - Add shared native inputs, password reveal controls, checkboxes, and radios; forward field refs and support wrapper layout classes.

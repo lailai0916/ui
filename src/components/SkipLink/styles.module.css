@@ -1,0 +1,34 @@
+.link {
+  position: fixed;
+  z-index: 100;
+  top: var(--lk-space-2);
+  left: var(--lk-space-2);
+  display: inline-flex;
+  box-sizing: border-box;
+  min-height: 44px;
+  align-items: center;
+  padding: var(--lk-space-2) var(--lk-space-3);
+  border: 1px solid var(--lk-color-emphasis-300);
+  border-radius: var(--lk-radius-control);
+  background: var(--lk-card-background-color);
+  color: var(--lk-font-color-base);
+  font: 600 0.875rem / var(--lk-line-height) var(--lk-font-family);
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform var(--lk-transition);
+}
+
+.link:focus {
+  transform: translateY(0);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--lk-color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}

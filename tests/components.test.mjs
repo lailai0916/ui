@@ -23,6 +23,8 @@ import {
   TextAreaField,
   SelectField,
   PageContainer,
+  SiteHeader,
+  SkipLink,
   Stack,
   Cluster,
   Panel,
@@ -280,6 +282,34 @@ test('layout dimensions include zero and panels retain customization hooks', () 
   assert.match(render(h(Panel, { feature: true, tone: 'muted' }, 'Content')), /data-lk="panel"/);
 });
 
+test('site headers preserve host navigation, actions, and native attributes', () => {
+  const html = render(
+    h(SiteHeader, {
+      brand: h('a', { href: '/' }, 'Academy'),
+      mobileAction: h('button', { 'aria-expanded': false }, 'Menu'),
+      navigation: h('nav', { 'aria-label': 'Main' }, h('a', { href: '/learn' }, 'Learn')),
+      actions: h('button', { disabled: true }, 'Account'),
+      position: 'fixed',
+      fullWidth: true,
+      width: 960,
+      'aria-label': 'Application header',
+    })
+  );
+  assert.match(html, /<header[^>]*aria-label="Application header"/);
+  assert.match(html, /data-position="fixed"/);
+  assert.doesNotMatch(html, /--lk-container-width:960px/);
+  assert.match(render(h(SiteHeader, { brand: 'Tools', width: 960 })), /--lk-container-width:960px/);
+  assert.match(html, /data-lk="header-mobile-action"[^>]*><button aria-expanded="false"/);
+  assert.match(html, /<nav aria-label="Main"><a href="\/learn">Learn<\/a><\/nav>/);
+  assert.match(html, /<button disabled="">Account<\/button>/);
+  const minimal = render(h(SiteHeader, { brand: 'Tools' }));
+  assert.doesNotMatch(minimal, /header-navigation|header-actions|header-mobile-action/);
+  const skip = render(h(SkipLink, { href: '#content', 'aria-label': 'Skip navigation' }, 'Skip'));
+  assert.match(skip, /href="#content"/);
+  assert.match(skip, /data-lk="skip-link"/);
+  assert.match(render(h(SkipLink, null, 'Skip')), /href="#main-content"/);
+});
+
 test('progress clamps invalid and out-of-range data', () => {
   for (const [value, max, expected, percent] of [
     [25, 50, 25, 50],
@@ -315,6 +345,8 @@ test('new public component subpaths are available and old global styling is abse
     'Icon',
     'IconButton',
     'Layout',
+    'SiteHeader',
+    'SkipLink',
     'Panel',
     'Progress',
     'ThemeControl',
@@ -329,7 +361,12 @@ test('new public component subpaths are available and old global styling is abse
   const definitions = new Set(
     [...`${css}\n${theme}`.matchAll(/(--lk-[\w-]+)\s*:/g)].map((match) => match[1])
   );
-  const withFallback = new Set(['--lk-container-width', '--lk-stack-gap', '--lk-cluster-gap']);
+  const withFallback = new Set([
+    '--lk-container-width',
+    '--lk-stack-gap',
+    '--lk-cluster-gap',
+    '--lk-header-brand-width',
+  ]);
   for (const [, token] of css.matchAll(/var\((--lk-[\w-]+)/g)) {
     assert.ok(definitions.has(token) || withFallback.has(token), `Undefined token: ${token}`);
   }

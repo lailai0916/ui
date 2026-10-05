@@ -28,6 +28,8 @@ export { default as IconBlock } from './components/IconBlock/index.js';
 export * from './components/IconBlock/index.js';
 export * from './components/IconButton/index.js';
 export * from './components/Layout/index.js';
+export * from './components/SiteHeader/index.js';
+export * from './components/SkipLink/index.js';
 export { default as LinkCard } from './components/LinkCard/index.js';
 export * from './components/LinkCard/index.js';
 export * from './components/Markdown/index.js';

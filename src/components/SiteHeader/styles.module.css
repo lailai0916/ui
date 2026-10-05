@@ -1,0 +1,133 @@
+.header {
+  position: sticky;
+  z-index: 40;
+  top: 0;
+  box-sizing: border-box;
+  height: var(--lk-header-height);
+  border-bottom: 1px solid var(--lk-color-emphasis-300);
+  background: var(--lk-card-background-color);
+  color: var(--lk-font-color-base);
+  font-family: var(--lk-font-family);
+}
+
+.header[data-position='fixed'] {
+  position: fixed;
+  inset: 0 0 auto;
+}
+
+.header[data-position='static'] {
+  position: static;
+}
+
+.inner {
+  display: grid;
+  height: 100%;
+  grid-template-columns: var(--lk-header-brand-width, max-content) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--lk-space-4);
+}
+
+.fullWidth .inner {
+  --lk-container-width: 100%;
+}
+
+.withoutNavigation {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.start,
+.brand {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--lk-space-1);
+}
+
+.brand > a {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  border-radius: var(--lk-radius-control);
+  text-decoration: none;
+}
+
+.brand > a:focus-visible {
+  outline: 2px solid var(--lk-color-primary);
+  outline-offset: 2px;
+}
+
+.navigation {
+  min-width: 0;
+}
+
+.navigation > nav {
+  display: flex;
+  align-items: center;
+  gap: var(--lk-space-6);
+}
+
+.navigation > nav > a {
+  display: inline-flex;
+  min-height: var(--lk-control-height);
+  align-items: center;
+  padding-inline: var(--lk-space-1);
+  border-radius: var(--lk-radius-sm);
+  color: var(--lk-font-color-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.navigation > nav > a:hover,
+.navigation > nav > a[aria-current] {
+  color: var(--lk-color-primary-label);
+}
+
+.navigation > nav > a:focus-visible {
+  outline: 2px solid var(--lk-color-primary);
+  outline-offset: 2px;
+}
+
+.actions {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--lk-space-1);
+}
+
+.mobileAction {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--lk-space-2);
+  }
+
+  .navigation {
+    display: none;
+  }
+
+  .mobileAction {
+    display: flex;
+  }
+}
+
+@media (max-width: 520px) {
+  .brand :global([data-lk='brand'] > span:last-child) {
+    display: none;
+  }
+}
+
+@media (max-width: 600px), (pointer: coarse) {
+  .actions > :global([data-lk='button']),
+  .actions > * > :global([data-lk='button']),
+  .actions > * > button[aria-haspopup='menu'],
+  .mobileAction > :global([data-lk='button']) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
