@@ -47,6 +47,7 @@ import {
   Segmented,
   TitleCard,
   Tooltip,
+  Hint,
   WindowPanel,
   formatBytes,
   formatCompact,
@@ -277,6 +278,36 @@ test('fields preserve host accessibility metadata alongside descriptions and err
   }
 });
 
+test('action hints preserve native trigger semantics and render no wrapper or popup on the server', () => {
+  for (const [tag, props] of [
+    ['button', { type: 'submit', name: 'save', 'aria-label': 'Save' }],
+    ['input', { type: 'text', name: 'answer', 'aria-label': 'Answer' }],
+    ['a', { href: '/settings', 'aria-label': 'Settings' }],
+    ['span', { className: 'host-label' }],
+  ]) {
+    const html = render(
+      h(
+        Hint,
+        { label: 'Help' },
+        h(tag, { ...props, title: 'Native help', 'aria-describedby': 'external' })
+      )
+    );
+    assert.match(html, new RegExp(`^<${tag}\\b`));
+    assert.match(html, /aria-describedby="external"/);
+    assert.doesNotMatch(html, /title=|role="tooltip"|tabindex=|aria-haspopup/);
+    for (const [key, value] of Object.entries(props)) {
+      const attribute = key === 'className' ? 'class' : key;
+      assert.match(html, new RegExp(`${attribute}="${value}"`));
+    }
+  }
+  assert.doesNotMatch(
+    render(h(IconButton, { label: 'Close', title: 'Close dialog' }, '×')),
+    /title=/
+  );
+  assert.doesNotMatch(render(h(Button, { title: 'Help' }, 'Save')), /title=/);
+  assert.doesNotMatch(render(h(ButtonLink, { to: '/docs', title: 'Help' }, 'Docs')), /title=/);
+});
+
 test('layout dimensions include zero and panels retain customization hooks', () => {
   assert.match(render(h(PageContainer, { width: 720 }, 'Content')), /--lk-container-width:720px/);
   assert.match(render(h(Stack, { gap: 0 }, 'Content')), /--lk-stack-gap:0px/);
@@ -404,6 +435,7 @@ test('new public component subpaths are available and old global styling is abse
     'Field',
     'Icon',
     'IconButton',
+    'Hint',
     'LanguageButton',
     'ThemeButton',
     'Layout',

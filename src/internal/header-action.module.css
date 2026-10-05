@@ -63,34 +63,10 @@
   stroke-width: 1.75;
 }
 
-.hint {
-  position: fixed;
-  z-index: 120;
-  box-sizing: border-box;
-  max-width: min(260px, calc(100vw - 16px));
-  padding: 6px 9px;
-  border: 1px solid var(--lk-color-emphasis-300);
-  border-radius: 6px;
-  background: var(--lk-card-background-color);
-  color: var(--lk-font-color-base);
-  box-shadow: var(--lk-shadow-sm);
-  font-family: var(--lk-font-family);
-  font-size: 13px;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-  animation: hintEnter var(--lk-transition) both;
-}
-
 @keyframes iconEnter {
   from {
     opacity: 0;
     transform: rotate(-25deg) scale(0.8);
-  }
-}
-
-@keyframes hintEnter {
-  from {
-    opacity: 0;
   }
 }
 
@@ -105,8 +81,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .button,
-  .button > svg,
-  .hint {
+  .button > svg {
     animation: none;
     transition: none;
   }

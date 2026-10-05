@@ -1,6 +1,7 @@
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import clsx from 'clsx';
 import { Link, type LinkProps } from '../../provider.js';
+import Hint from '../Hint/index.js';
 import styles from './styles.module.css';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -27,11 +28,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
     leftIcon,
     type = 'button',
     className,
+    title,
     ...rest
   },
   ref
 ) {
-  return (
+  const button = (
     <button
       ref={ref}
       type={type}
@@ -52,6 +54,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
       {children != null && <span className={styles.label}>{children}</span>}
     </button>
   );
+  return title ? <Hint label={title}>{button}</Hint> : button;
 });
 
 export default Button;
@@ -72,9 +75,10 @@ export function ButtonLink({
   rounded,
   fullWidth,
   leftIcon,
+  title,
   ...props
 }: ButtonLinkProps) {
-  return (
+  const link = (
     <Link
       {...props}
       data-lk="button"
@@ -92,4 +96,5 @@ export function ButtonLink({
       {children != null && <span className={styles.label}>{children}</span>}
     </Link>
   );
+  return title ? <Hint label={title}>{link}</Hint> : link;
 }

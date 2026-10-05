@@ -62,6 +62,8 @@ export { default as TitleCard } from './components/TitleCard/index.js';
 export * from './components/TitleCard/index.js';
 export { default as Tooltip } from './components/Tooltip/index.js';
 export * from './components/Tooltip/index.js';
+export { default as Hint } from './components/Hint/index.js';
+export * from './components/Hint/index.js';
 export { default as TrafficLights } from './components/TrafficLights/index.js';
 export * from './components/TrafficLights/index.js';
 export { default as WindowBar } from './components/WindowBar/index.js';

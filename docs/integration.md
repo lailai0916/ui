@@ -179,6 +179,39 @@ function HeaderActions() {
 </ThemeProvider>;
 ```
 
+## Action hints and data tooltips
+
+`Hint` explains an action or adds short supplementary help. Pass a string `label` and one
+React element as its child; native controls or custom components must forward their ref and
+native event / accessibility props to one DOM element. No wrapper is added around the trigger,
+so its layout and styles stay intact. Existing `aria-describedby` IDs and refs are preserved.
+The trigger's native `title` is removed to avoid two overlapping popups.
+
+Hover opens after `delay={500}` milliseconds; keyboard focus opens immediately. The popup remains
+open while hovered, closes on click or blur, and Escape dismisses it while still reaching a
+surrounding dialog. Touch does not produce hover hints. `side` defaults to `bottom` and also accepts
+`top`, `left`, or `right`; viewport collisions can flip it. `disabled` suppresses the hint without
+disabling the child. Native popup props and `className` are supported; `data-lk="hint"` is the
+public customization hook. Header controls retain their existing `data-lk="action-hint"` hook.
+`--lk-z-index-hint` controls the popup layer above fixed headers and menus.
+Portals from native dialog controls stay inside the dialog's top layer.
+
+```tsx
+<Hint label="Search by course title or keyword">
+  <Input aria-label="Search" aria-describedby="search-help" />
+</Hint>
+```
+
+`IconButton` uses Hint automatically, with `title ?? label` as the text; use `hint={false}` or
+`title=""` to suppress it. `Button` and `ButtonLink` use Hint when given a nonempty `title`.
+LanguageButton and ThemeButton use the same primitive. Keep field labels, errors, and essential
+instructions visible using field `description` / `error` props.
+
+`Tooltip` remains a passive, structured data surface with `leftPct`, `Tooltip.Label`, and
+`Tooltip.Value`. Chart, heartbeat, or map code owns its visibility and data-point positioning.
+It does not add a trigger or a portal. Its existing appearance and API are unchanged.
+Interactive cards with links or buttons need a separate dialog or popover pattern.
+
 ## Application primitives
 
 - `Button` defaults to `secondary` / `md`; choose `primary`, `ghost`, or `danger` explicitly. Sizes

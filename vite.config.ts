@@ -8,7 +8,7 @@ export default defineConfig({
     minify: false,
     cssMinify: true,
     rollupOptions: {
-      external: (id) => /^(react|react-dom|@iconify\/react|clsx)(\/|$)/.test(id),
+      external: (id) => /^(react|react-dom|@iconify\/react|@base-ui\/react|clsx)(\/|$)/.test(id),
       output: {
         preserveModules: true,
         preserveModulesRoot: 'src',

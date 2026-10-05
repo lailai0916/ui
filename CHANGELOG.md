@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.3
+
+- Add public Hint for short action descriptions on buttons, links, and fields, using Base UI tooltip interactions, keyboard focus, hover delay, Escape dismissal, viewport collision handling, and modal-aware portals.
+- Reuse Hint in LanguageButton, ThemeButton, IconButton, titled buttons and links, and repository metadata. Preserve trigger appearance, native attributes, refs, and existing descriptions; replace native title popups.
+- Keep Tooltip as the structured data presentation layer for charts, heartbeats, and maps, preserving its API and styles. Add bilingual examples and guidance for both types of hint.
+
 ## 0.3.2
 
 - Add controlled LanguageButton and ThemeButton with current-state labels, viewport-clamped hints, shared compact geometry, touch targets, and reduced-motion feedback, based on Prispect’s header controls.

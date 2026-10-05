@@ -6,6 +6,7 @@ import Card from '../Card/index.js';
 import Skeleton from '../Skeleton/index.js';
 import { useImageStatus } from '../../hooks/useImageStatus.js';
 import { formatCompact } from '../../utils/format.js';
+import Hint from '../Hint/index.js';
 import styles from './styles.module.css';
 
 // GitHub linguist colors for common primary languages; unknown ones keep the neutral dot.
@@ -226,37 +227,45 @@ export default function GitHub({ repo, className }: GitHubProps) {
           <div className={styles.meta}>
             {data ? (
               <>
-                <span className={styles.metaItem} title={messages.githubStars}>
-                  <Icon icon="octicon:star-16" className={styles.metaIcon} aria-hidden="true" />
-                  {formatCompact(data.stars, currentLocale)}
-                  <span className={styles.srOnly}>{messages.githubStars}</span>
-                </span>
-                <span className={styles.metaItem} title={messages.githubForks}>
-                  <Icon
-                    icon="octicon:repo-forked-16"
-                    className={styles.metaIcon}
-                    aria-hidden="true"
-                  />
-                  {formatCompact(data.forks, currentLocale)}
-                  <span className={styles.srOnly}>{messages.githubForks}</span>
-                </span>
-                {data.license && (
-                  <span className={styles.metaItem} title={messages.githubLicense}>
-                    <Icon icon="octicon:law-16" className={styles.metaIcon} aria-hidden="true" />
-                    {data.license}
-                    <span className={styles.srOnly}>{messages.githubLicense}</span>
+                <Hint label={messages.githubStars}>
+                  <span className={styles.metaItem}>
+                    <Icon icon="octicon:star-16" className={styles.metaIcon} aria-hidden="true" />
+                    {formatCompact(data.stars, currentLocale)}
+                    <span className={styles.srOnly}>{messages.githubStars}</span>
                   </span>
-                )}
-                {data.language && (
-                  <span className={styles.metaItem} title={messages.githubLanguage}>
-                    <span
-                      className={styles.languageDot}
-                      style={languageColor ? { backgroundColor: languageColor } : undefined}
+                </Hint>
+                <Hint label={messages.githubForks}>
+                  <span className={styles.metaItem}>
+                    <Icon
+                      icon="octicon:repo-forked-16"
+                      className={styles.metaIcon}
                       aria-hidden="true"
                     />
-                    <span className={styles.languageName}>{data.language}</span>
-                    <span className={styles.srOnly}>{messages.githubLanguage}</span>
+                    {formatCompact(data.forks, currentLocale)}
+                    <span className={styles.srOnly}>{messages.githubForks}</span>
                   </span>
+                </Hint>
+                {data.license && (
+                  <Hint label={messages.githubLicense}>
+                    <span className={styles.metaItem}>
+                      <Icon icon="octicon:law-16" className={styles.metaIcon} aria-hidden="true" />
+                      {data.license}
+                      <span className={styles.srOnly}>{messages.githubLicense}</span>
+                    </span>
+                  </Hint>
+                )}
+                {data.language && (
+                  <Hint label={messages.githubLanguage}>
+                    <span className={styles.metaItem}>
+                      <span
+                        className={styles.languageDot}
+                        style={languageColor ? { backgroundColor: languageColor } : undefined}
+                        aria-hidden="true"
+                      />
+                      <span className={styles.languageName}>{data.language}</span>
+                      <span className={styles.srOnly}>{messages.githubLanguage}</span>
+                    </span>
+                  </Hint>
                 )}
               </>
             ) : (

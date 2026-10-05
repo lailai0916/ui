@@ -61,6 +61,7 @@ import {
   Switch,
   TitleCard,
   Tooltip,
+  Hint,
   TrafficLights,
   WindowBar,
   WindowPanel,
@@ -110,6 +111,8 @@ const copy = chinese
       light: '浅色',
       dark: '深色',
       delete: '删除',
+      hint: '操作提示',
+      hintDescription: '输入用于展示的名称，不会更改账户资料。',
     }
   : {
       description: 'React components and design tokens for consistent websites.',
@@ -149,6 +152,8 @@ const copy = chinese
       light: 'Light',
       dark: 'Dark',
       delete: 'Delete',
+      hint: 'Action Hint',
+      hintDescription: 'Enter a display name; this does not change your account profile.',
     };
 
 function App() {
@@ -569,6 +574,16 @@ function App() {
                   <Quote author="lailai">{copy.quote}</Quote>
                 </Card>
                 <GitHub repo="lailai0916/ui" />
+                <Card>
+                  <Stack>
+                    <Hint label={copy.note}>
+                      <Button>{copy.hint}</Button>
+                    </Hint>
+                    <Hint label={copy.hintDescription}>
+                      <TextField label={copy.name} />
+                    </Hint>
+                  </Stack>
+                </Card>
                 <Card>
                   <div className="tooltipPreview">
                     <Tooltip>
