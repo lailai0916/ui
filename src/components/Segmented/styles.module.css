@@ -177,6 +177,13 @@ html[data-theme='dark'] .itemActive:hover {
 
 .small .label {
   font-size: inherit;
+}
+
+.small .label:only-child {
+  line-height: 1.25;
+}
+
+.small .icon + .label {
   /* Center the visible glyphs with the icon, accounting for font ascent. */
   transform: translateY(0.08em);
 }

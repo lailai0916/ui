@@ -18,6 +18,8 @@ export { default as Dialog } from './components/Dialog/index.js';
 export * from './components/Dialog/index.js';
 export { default as Donut } from './components/Donut/index.js';
 export * from './components/Donut/index.js';
+export { default as DropdownSelect } from './components/DropdownSelect/index.js';
+export * from './components/DropdownSelect/index.js';
 export * from './components/EmptyState/index.js';
 export * from './components/Field/index.js';
 export { default as GitHub } from './components/GitHub/index.js';

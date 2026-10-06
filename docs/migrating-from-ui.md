@@ -41,6 +41,31 @@ Home and Tools behavior. `primary`, `secondary`, and `danger` retain their meani
 `IconButton` 尺寸为 `sm` 和 `md`。统一后的 Button 默认使用 `secondary`，保留 Home 和 Tools
 原有行为。其余同名变体含义不变；图标、整行宽度、选中状态和圆角可通过组件属性设置。
 
+## Dropdown selection / 下拉选择
+
+Existing `Select` and `SelectField` remain native controls with option children, `onChange(event)`,
+and `HTMLSelectElement` refs. No migration is required for those controls. To adopt the themed
+popup, use `DropdownSelect` or `DropdownSelectField` with the following API changes:
+
+现有 `Select` 和 `SelectField` 保留原生选项子节点、`onChange(event)` 和
+`HTMLSelectElement` ref，无需迁移。改用主题化弹层时，使用 `DropdownSelect` 或
+`DropdownSelectField`，并同步以下 API：
+
+| Native Select / 原生选择器                           | DropdownSelect / 下拉选择器                      |
+| ---------------------------------------------------- | ------------------------------------------------ |
+| `<option value="tools">Tools</option>`               | `options={[{ value: 'tools', label: 'Tools' }]}` |
+| `onChange={(event) => setValue(event.target.value)}` | `onValueChange={setValue}`                       |
+| `ref: HTMLSelectElement`                             | `ref: HTMLButtonElement`                         |
+
+String values include `''`; each option value must be unique. `name`, `disabled`, and `required`
+retain form behavior. Uncontrolled selects reset to `defaultValue`; controlled hosts handle
+`onReset`. Field labels, descriptions, errors, and `wrapperClassName` keep their existing roles.
+See the [dropdown contract](integration.md#dropdown-selection--下拉选择) for keyboard, dialog, and SSR behavior.
+
+字符串值支持 `''`，各选项值必须唯一。`name`、`disabled` 和 `required` 保留表单语义。
+非受控选择重置为 `defaultValue`，受控宿主处理 `onReset`。字段标签、说明、错误和
+`wrapperClassName` 的用途不变。键盘、对话框和服务端渲染行为见上述契约文档。
+
 ## Tokens / 主题变量
 
 All tokens now use `--lk-`. The renamed suffixes are listed below; other old suffixes retain their

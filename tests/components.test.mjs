@@ -463,6 +463,7 @@ test('new public component subpaths are available and old global styling is abse
     'Avatar',
     'Brand',
     'EmptyState',
+    'DropdownSelect',
     'Field',
     'Icon',
     'IconButton',

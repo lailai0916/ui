@@ -1,0 +1,150 @@
+.root {
+  display: block;
+  min-width: 0;
+}
+
+.trigger {
+  composes: fieldControl from '../Field/styles.module.css';
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--lk-space-3);
+  box-sizing: border-box;
+  cursor: default;
+  text-align: left;
+  appearance: none;
+}
+
+/* Buttons match :read-only, while this control remains interactive. */
+.root .trigger:read-only {
+  background: var(--lk-card-background-color);
+}
+
+.value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.placeholder {
+  color: var(--lk-font-color-tertiary);
+}
+
+.icon,
+.indicator {
+  display: grid;
+  width: var(--lk-icon-size-small);
+  height: var(--lk-icon-size-small);
+  flex: none;
+  place-items: center;
+  font-size: var(--lk-icon-size-small);
+}
+
+.icon {
+  color: var(--lk-font-color-secondary);
+}
+
+.positioner {
+  z-index: var(--lk-z-index-hint);
+  width: var(--anchor-width);
+  max-width: var(--available-width);
+}
+
+.popup {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--lk-space-1);
+  overflow: hidden;
+  border: 1px solid var(--lk-color-emphasis-300);
+  border-radius: var(--lk-radius-control);
+  background: var(--lk-card-background-color);
+  color: var(--lk-font-color-base);
+  box-shadow: var(--lk-shadow-md);
+  transform-origin: var(--transform-origin);
+  transition:
+    opacity var(--lk-transition),
+    transform var(--lk-transition);
+}
+
+.popup[data-starting-style],
+.popup[data-ending-style] {
+  opacity: 0;
+  transform: scale(0.98);
+}
+
+.list {
+  max-height: min(20rem, calc(var(--available-height) - var(--lk-space-2) - 2px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-padding-block: var(--lk-space-1);
+  scrollbar-width: thin;
+}
+
+.option {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--lk-space-3);
+  box-sizing: border-box;
+  padding: var(--lk-space-2) var(--lk-space-3);
+  border-radius: var(--lk-radius-sm);
+  outline: 0;
+  cursor: default;
+  font-family: var(--lk-font-family);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.option[data-highlighted] {
+  background: var(--lk-color-primary-soft);
+}
+
+.option[data-disabled] {
+  color: var(--lk-font-color-tertiary);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.optionText {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.indicator {
+  color: var(--lk-color-primary-label);
+}
+
+.indicator:not([data-selected]) {
+  visibility: hidden;
+}
+
+.field {
+  composes: field from '../Field/styles.module.css';
+  min-width: 0;
+}
+
+.label {
+  composes: fieldLabel from '../Field/styles.module.css';
+}
+
+.description {
+  composes: fieldDescription from '../Field/styles.module.css';
+}
+
+.error {
+  composes: fieldError from '../Field/styles.module.css';
+}
+
+@media (pointer: coarse) {
+  .trigger {
+    min-height: max(44px, var(--lk-control-height));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popup {
+    transition: none;
+  }
+}

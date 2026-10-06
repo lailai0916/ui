@@ -20,7 +20,7 @@ The former GitHub package `@lailai/ui` has been merged into this library; the re
 
 ## Project Features
 
-🧩 **Shared Components** — 61 components cover cards, forms, controls, charts, navigation, and window panels, with TypeScript declarations and per-component imports.
+🧩 **Shared Components** — 63 components cover cards, forms, controls, charts, navigation, and window panels, with TypeScript declarations and per-component imports.
 
 🎨 **One Theme** — Shared CSS variables, light and dark palettes, and reduced-motion support keep multiple websites consistent.
 
@@ -79,10 +79,12 @@ ui/
 | Controls   | `Button`, `ButtonLink`, `CopyButton`, `IconButton`, `LanguageButton`, `ThemeButton`, `Segmented`, `Tabs`, `Slider`, `Switch`, `ThemeControl`                                                              |
 | Charts     | `Chart`, `Donut`, `Progress`, `Table`                                                                                                                                                                     |
 | Display    | `Alert`, `Dialog`, `Badge`, `Icon`, `IconBlock`, `Hint`, `Tooltip`, `Skeleton`, `DataState`, `TrafficLights`, `WindowBar`, `WindowPanel`, `MDTitle`, `Quote`, `GitHub`, `Avatar`, `Brand`, `EmptyState`   |
-| Forms      | `Input`, `TextArea`, `Select`, `TextField`, `TextAreaField`, `SelectField`, `PasswordInput`, `PasswordField`, `Checkbox`, `Radio`                                                                         |
+| Forms      | `Input`, `TextArea`, `Select`, `DropdownSelect`, `TextField`, `TextAreaField`, `SelectField`, `DropdownSelectField`, `PasswordInput`, `PasswordField`, `Checkbox`, `Radio`                                |
 | Navigation | `Paginator`, `SkipLink`                                                                                                                                                                                   |
 
 The count excludes `LaikitProvider`, `ThemeProvider`, routing helpers, hooks, and `Tooltip.Label` / `Tooltip.Value`. Shared utilities include `useImageStatus`, `useMeasuredHeight`, `formatCompact`, and `formatBytes`.
+
+`Select` / `SelectField` retain native `<select>` props and option children. `DropdownSelect` / `DropdownSelectField` provide a themed popup from string-valued `options`, with keyboard navigation, form submission, and dialog support. See the [dropdown contract](docs/integration.md#dropdown-selection--下拉选择) and [bilingual demo](demo/DropdownSelectDemo.tsx).
 
 The [usage documentation](https://lailai.one/docs/project/ui) includes component previews, API guides, theming, and maintenance.
 

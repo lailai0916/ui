@@ -20,7 +20,7 @@ laikit UI 是从 [lailai's Home](https://lailai.one) 抽出的共享 React 组�
 
 ## 项目特性
 
-🧩 **共享组件** — 61 个组件覆盖卡片、表单、控件、图表、导航和窗口面板，提供 TypeScript 类型声明与按组件导入入口。
+🧩 **共享组件** — 63 个组件覆盖卡片、表单、控件、图表、导航和窗口面板，提供 TypeScript 类型声明与按组件导入入口。
 
 🎨 **统一主题** — 共用 CSS 变量、深浅配色及减少动画支持，让多个网站保持一致。
 
@@ -79,10 +79,14 @@ ui/
 | 控件 | `Button`, `ButtonLink`, `CopyButton`, `IconButton`, `LanguageButton`, `ThemeButton`, `Segmented`, `Tabs`, `Slider`, `Switch`, `ThemeControl`                                                              |
 | 图表 | `Chart`, `Donut`, `Progress`, `Table`                                                                                                                                                                     |
 | 展示 | `Alert`, `Dialog`, `Badge`, `Icon`, `IconBlock`, `Hint`, `Tooltip`, `Skeleton`, `DataState`, `TrafficLights`, `WindowBar`, `WindowPanel`, `MDTitle`, `Quote`, `GitHub`, `Avatar`, `Brand`, `EmptyState`   |
-| 表单 | `Input`, `TextArea`, `Select`, `TextField`, `TextAreaField`, `SelectField`, `PasswordInput`, `PasswordField`, `Checkbox`, `Radio`                                                                         |
+| 表单 | `Input`, `TextArea`, `Select`, `DropdownSelect`, `TextField`, `TextAreaField`, `SelectField`, `DropdownSelectField`, `PasswordInput`, `PasswordField`, `Checkbox`, `Radio`                                |
 | 导航 | `Paginator`, `SkipLink`                                                                                                                                                                                   |
 
 数量不含 `LaikitProvider`、`ThemeProvider`、路由辅助组件、hooks 及 `Tooltip.Label` / `Tooltip.Value`。共享工具包括 `useImageStatus`、`useMeasuredHeight`、`formatCompact` 和 `formatBytes`。
+
+`Select` 和 `SelectField` 保留原生 `<select>` 属性与选项子节点。`DropdownSelect` 和
+`DropdownSelectField` 根据字符串值的 `options` 提供主题化弹层，支持键盘操作、表单提交和对话框。
+具体行为见[下拉选择契约](docs/integration.md#dropdown-selection--下拉选择)和[双语示例](demo/DropdownSelectDemo.tsx)。
 
 [接入指南](docs/integration.md) 说明路由适配、服务端渲染、主题定制和组件约定。[交互示例](demo/main.tsx) 在不依赖 Docusaurus 的环境中展示全部组件。
 

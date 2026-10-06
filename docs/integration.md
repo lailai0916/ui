@@ -3,7 +3,7 @@
 ## Package boundaries
 
 The package supports React 18.3.1 and 19, with ESM JavaScript and TypeScript declarations.
-React and React DOM are peer dependencies. Iconify and clsx are runtime dependencies.
+React and React DOM are peer dependencies. Base UI, Iconify, and clsx are runtime dependencies.
 Import `theme.css`, then `styles.css`, once in your application. JavaScript entries preserve
 module boundaries so bundlers can remove unused components; the shared stylesheet contains all
 component styles. Extracting a package reduces duplicated source maintenance, not necessarily the
@@ -15,6 +15,8 @@ Root exports are named. Most component subpaths export a default component; `Pag
 `Stack`, and `Cluster`; `Panel` exports `Panel`, `PanelHeader`, `PanelBody`, and `PanelFooter`.
 `Tooltip.Label` and `Tooltip.Value` are compound children. Prop declarations ship in `dist/`;
 the complete working examples are in `demo/main.tsx`.
+`DropdownSelect` has a default and named export at its component subpath; that subpath also exports
+`DropdownSelectField` and their public prop and option types.
 
 ## Host routing and translation
 
@@ -246,6 +248,78 @@ Use shared components as the visual source of truth. Host CSS should position co
 - `Badge` adds optional semantic variants; `DataCard` accepts formatted strings and descriptions; `Card` accepts `as="article"` / `"section"`. `Progress` can hide visual labels while retaining its accessible name.
 
 Stable application hooks include `data-lk="field-control"`, `"checkbox"`, `"radio"`, `"tabs"`, `"tab"`, `"dialog"`, `"alert"`, `"table"`, and `"table-scroll"`. Do not target generated CSS Module class names.
+
+## Dropdown selection / 下拉选择
+
+`Select` and `SelectField` keep their native `<select>` API. For a themed popup, use
+`DropdownSelect` or `DropdownSelectField`. Each option has `{ value: string, label: string, disabled?: boolean }`;
+values must be unique. Empty strings are valid option values. Use `value` and `onValueChange(value)`
+for a controlled selection, or `defaultValue` for an uncontrolled selection. `placeholder` appears
+when no matching option is selected. Keep option labels, placeholder, and field copy translated in the host.
+
+`Select` 和 `SelectField` 继续使用原生 `<select>` API。需要主题化弹层时，使用
+`DropdownSelect` 或 `DropdownSelectField`。选项格式为
+`{ value: string, label: string, disabled?: boolean }`，值必须唯一，允许空字符串。
+受控选择使用 `value` 和 `onValueChange(value)`，非受控选择使用 `defaultValue`。
+没有匹配选项时显示 `placeholder`；选项、占位提示和字段文案由宿主翻译。
+
+```tsx
+import { DropdownSelectField, type DropdownSelectOption } from '@lailai0916/ui';
+
+const options: DropdownSelectOption[] = [
+  { value: '', label: 'All projects' },
+  { value: 'tools', label: 'Tools' },
+  { value: 'archived', label: 'Archived', disabled: true },
+];
+
+<DropdownSelectField
+  label="Project"
+  name="project"
+  options={options}
+  value={project}
+  onValueChange={setProject}
+  description="Choose the destination."
+/>;
+```
+
+The ref points to the trigger's `HTMLButtonElement`; `id`, native button attributes, ARIA attributes,
+and `className` apply to that trigger. Provide `aria-label` for an unframed select, or use the field's
+visible `label`. Field `description` and `error` join caller `aria-describedby`; errors also set
+`aria-invalid`. `wrapperClassName` belongs to the field wrapper. Hooks are `dropdown-select`,
+`dropdown-select-trigger`, `dropdown-select-popup`, and `dropdown-select-option`.
+
+ref 指向触发器的 `HTMLButtonElement`；`id`、原生按钮属性、ARIA 属性和 `className`
+作用于触发器。不带字段框架时提供 `aria-label`，或通过字段的 `label` 提供可见标签。
+`description` 和 `error` 与调用方的 `aria-describedby` 合并，错误同时设置 `aria-invalid`。
+`wrapperClassName` 作用于字段外层。上述四个 `data-lk` 值是公开样式接口。
+
+`name` submits the selected value through a visually hidden form control; `form` also supports
+association with an external form by ID. `disabled` prevents
+interaction and omits that value from form submission. `required` rejects an empty value and focuses
+the visible trigger. Native form reset restores an uncontrolled select's `defaultValue`; controlled
+hosts restore their state in `onReset`. The trigger is a button, so its change callback receives the
+string value rather than a native select event. Selecting the current value does not invoke
+`onValueChange`. Reset does not invoke it either, and a canceled reset preserves the selection.
+
+`name` 通过视觉隐藏的表单控件提交选中值，`form` 可通过 ID 关联外部表单。
+`disabled` 禁止交互，且不提交该值。
+`required` 拒绝空值，并将焦点移到可见触发器。原生表单重置让非受控选择恢复 `defaultValue`；
+受控宿主在 `onReset` 中恢复状态。触发器是按钮，变化回调接收字符串值。
+重复选择当前值和表单重置均不调用 `onValueChange`；取消重置会保留选中值。
+
+Arrow keys navigate options; Home and End reach the first and last options. Disabled options can
+receive keyboard focus for discoverability but cannot be selected.
+Typing a label finds an option, Enter selects, Escape dismisses, and Tab leaves the popup. Outside
+clicks dismiss it. Long labels wrap in the popup, and long lists scroll within the viewport. Popups
+inside a native `Dialog` portal into that dialog to remain in its modal top layer. Server rendering
+emits the trigger and form value with no open popup; use identical options, locale, and initial value
+for hydration. See [the bilingual examples](../demo/DropdownSelectDemo.tsx).
+
+方向键浏览选项，Home 和 End 移动到首尾选项。禁用项可接收键盘焦点，但不能选中。
+输入名称定位选项，Enter 选择，
+Escape 关闭，Tab 离开弹层，外部点击也会关闭。长标签在弹层内换行，长列表在视口内滚动。
+原生 `Dialog` 中的弹层挂载到该对话框内，保持模态顶层交互。服务端渲染输出触发器和表单值，
+不打开弹层；水合时保持选项、语言和初始值一致。
 
 ## Site navigation
 

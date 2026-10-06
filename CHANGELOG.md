@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.5
+
+- Add DropdownSelect and DropdownSelectField with shared popup styling, keyboard navigation, typeahead, selected indicators, disabled options, form integration, viewport-aware scrolling, and modal-aware portals.
+- Preserve native Select and SelectField APIs and existing Home controls. Center text-only compact Segmented labels without applying icon alignment offsets.
+
 ## 0.3.4
 
 - Add IconButton's header variant, reusing the same primitive as LanguageButton and ThemeButton for shared surfaces, borders, focus, press feedback, icon strokes, and responsive touch targets.
