@@ -87,7 +87,18 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           version="$(node -p 'JSON.parse(require("node:fs").readFileSync("package.json", "utf8")).version')"
-          npm view "@lailai0916/ui@$version" --json > "$RUNNER_TEMP/npm-release.json"
+          # npm may acknowledge publishing before registry processing makes the version readable.
+          for attempt in $(seq 1 15); do
+            if npm view "@lailai0916/ui@$version" --prefer-online --json > "$RUNNER_TEMP/npm-release.json"; then
+              break
+            fi
+            if [ "$attempt" -eq 15 ]; then
+              echo "Published package did not become available in the registry."
+              exit 1
+            fi
+            echo "Waiting for registry processing ($attempt/15)."
+            sleep 20
+          done
           target="$(node -p 'JSON.parse(require("node:fs").readFileSync(process.env.RUNNER_TEMP + "/npm-release.json", "utf8")).gitHead')"
           [[ "$target" =~ ^[0-9a-f]{40}$ ]]
           tag="v$version"

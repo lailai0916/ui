@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.6
+
+- Preserve controlled selections when their options change; ignore internal menu reconciliation while retaining keyboard typeahead and user changes.
+- Wait for npm registry processing before creating the matching GitHub tag and release.
+
 ## 0.3.5
 
 - Add DropdownSelect and DropdownSelectField with shared popup styling, keyboard navigation, typeahead, selected indicators, disabled options, form integration, viewport-aware scrolling, and modal-aware portals.

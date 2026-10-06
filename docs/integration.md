@@ -263,6 +263,13 @@ when no matching option is selected. Keep option labels, placeholder, and field 
 受控选择使用 `value` 和 `onValueChange(value)`，非受控选择使用 `defaultValue`。
 没有匹配选项时显示 `placeholder`；选项、占位提示和字段文案由宿主翻译。
 
+When options depend on another field, update the options and selected value from the same state
+snapshot. Controlled prop changes and opening or dismissing a menu do not invoke `onValueChange`.
+See the [dynamic selection example](../demo/DynamicDropdownSelectDemo.tsx).
+
+选项依赖另一字段时，从同一状态同时更新选项和选中值。受控属性变化、打开菜单和取消菜单
+均不调用 `onValueChange`。具体用法见上述动态选择示例。
+
 ```tsx
 import { DropdownSelectField, type DropdownSelectOption } from '@lailai0916/ui';
 

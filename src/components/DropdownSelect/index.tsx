@@ -60,6 +60,8 @@ export const DropdownSelect = forwardRef<HTMLButtonElement, DropdownSelectProps>
   ) {
     const initialValue = useRef(defaultValue ?? null);
     const selectionRevision = useRef(0);
+    const typeaheadEvent = useRef<KeyboardEvent | null>(null);
+    const inputElement = useRef<HTMLInputElement | null>(null);
     const [uncontrolledValue, setUncontrolledValue] = useState(initialValue.current);
     const [triggerElement, setTriggerElement] = useState<HTMLButtonElement | null>(null);
     const controlled = value !== undefined;
@@ -103,8 +105,27 @@ export const DropdownSelect = forwardRef<HTMLButtonElement, DropdownSelectProps>
         <Select.Root<string>
           items={options}
           value={selectedValue}
-          onValueChange={(nextValue) => {
-            if (typeof nextValue !== 'string') return;
+          inputRef={inputElement}
+          onValueChange={(nextValue, details) => {
+            const keyboardEvent = typeaheadEvent.current;
+            const fromTypeahead =
+              details.reason === 'none' &&
+              details.event.type === 'base-ui' &&
+              keyboardEvent !== null &&
+              keyboardEvent.eventPhase !== 0;
+            const fromInput =
+              details.reason === 'none' &&
+              details.event.target === inputElement.current &&
+              (details.event.type === 'input' || details.event.type === 'change');
+            // Registering dynamic items must not feed an initial value back to the host.
+            if (
+              typeof nextValue !== 'string' ||
+              (details.reason !== 'item-press' && !fromTypeahead && !fromInput)
+            ) {
+              details.cancel();
+              return;
+            }
+            typeaheadEvent.current = null;
             selectionRevision.current += 1;
             if (nextValue === selectedValue) return;
             if (!controlled) setUncontrolledValue(nextValue);
@@ -125,6 +146,17 @@ export const DropdownSelect = forwardRef<HTMLButtonElement, DropdownSelectProps>
             data-lk="dropdown-select-trigger"
             aria-invalid={invalid || props['aria-invalid'] || undefined}
             aria-required={required || undefined}
+            onKeyDownCapture={(event) => {
+              props.onKeyDownCapture?.(event);
+              typeaheadEvent.current =
+                event.key.length === 1 &&
+                !event.ctrlKey &&
+                !event.metaKey &&
+                !event.altKey &&
+                !event.defaultPrevented
+                  ? event.nativeEvent
+                  : null;
+            }}
           >
             <Select.Value
               className={(state) =>

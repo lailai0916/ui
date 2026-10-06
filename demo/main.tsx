@@ -68,6 +68,7 @@ import {
 } from '../src/index';
 import '../src/theme.css';
 import DropdownSelectDemo from './DropdownSelectDemo';
+import DynamicDropdownSelectDemo from './DynamicDropdownSelectDemo';
 import './styles.css';
 
 const chinese = new URLSearchParams(window.location.search).get('lang') === 'zh-Hans';
@@ -307,6 +308,7 @@ function App() {
               </PageContainer>
             </section>
             <DropdownSelectDemo chinese={chinese} />
+            <DynamicDropdownSelectDemo chinese={chinese} />
             <section aria-labelledby="application">
               <h2 id="application">{chinese ? '通用应用组件' : 'Application Components'}</h2>
               <div className="grid">
