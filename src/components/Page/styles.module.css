@@ -36,7 +36,6 @@
 
 .headerSection {
   background-color: var(--lk-background-color);
-  border-bottom: 1px solid var(--lk-color-emphasis-200);
   padding: clamp(2rem, 5vw, 4rem) 0;
 }
 

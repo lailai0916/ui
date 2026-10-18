@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.8
+
+- Remove the PageHeader bottom divider while preserving its spacing and responsive layout.
+
 ## 0.3.7
 
 - Align Segmented and Tabs labels using font metrics instead of a fixed text offset; preserve full glyphs and long-label truncation, with flex centering as the fallback.
