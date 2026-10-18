@@ -72,14 +72,19 @@ html[data-theme='dark'] .segmented {
   }
 }
 
+.horizontal.keepHorizontal {
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+}
+
 .horizontal.keepHorizontal .item {
-  flex: 1;
   min-width: 0;
   justify-content: center;
 }
 
 .horizontal .label {
-  flex: none;
+  flex: 0 1 auto;
 }
 
 @media (max-width: 480px) {
@@ -157,11 +162,22 @@ html[data-theme='dark'] .itemActive:hover {
 
 .label {
   flex: 1;
+  min-width: 0;
   font-size: 0.92rem;
   letter-spacing: 0.005em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+@supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) and
+  (overflow: clip visible) {
+  .icon + .label {
+    /* Use font metrics for alignment without clipping descenders or CJK glyphs. */
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+    overflow: clip visible;
+  }
 }
 
 .segmented.small .item {
@@ -181,11 +197,6 @@ html[data-theme='dark'] .itemActive:hover {
 
 .small .label:only-child {
   line-height: 1.25;
-}
-
-.small .icon + .label {
-  /* Center the visible glyphs with the icon, accounting for font ascent. */
-  transform: translateY(0.08em);
 }
 
 @media (max-width: 600px), (pointer: coarse) {

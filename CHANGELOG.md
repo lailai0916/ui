@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.7
+
+- Align Segmented and Tabs labels using font metrics instead of a fixed text offset; preserve full glyphs and long-label truncation, with flex centering as the fallback.
+- Size equal-width horizontal options from the widest label so short labels remain complete when space is available.
+- Add browser layout regression checks for control alignment across sizes, languages, fonts, and themes.
+
 ## 0.3.6
 
 - Preserve controlled selections when their options change; ignore internal menu reconciliation while retaining keyboard typeahead and user changes.

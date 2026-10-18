@@ -105,6 +105,9 @@ browsers. The reduced-motion rule targets the package's prefixed CSS Module clas
   Horizontal groups stack at 480 px, or 360 px with `stackAt={360}`. Set `stackAt={0}` to keep
   short choices in one row. `size="sm"` uses compact text and 32 px items, increasing to 44 px
   on small screens or coarse pointers; the default `md` size retains the original appearance.
+  One-row groups use equal grid columns sized from the widest label. Host grids that wrap options
+  should explicitly set `grid-auto-flow: row`. Icon labels use cap-height metrics where supported,
+  with flex centering as the fallback; avoid font-specific position offsets.
   The `segmented` and `segmented-item` data hooks support host layout customization.
 - `WindowPanel` owns tabs and collapse behavior. Supply translated collapse/expand labels;
   content and optional toolbar belong to the caller.

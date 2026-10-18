@@ -14,7 +14,7 @@ An existing npm version is skipped; failed checks, registry errors, or an unpubl
 
 1. Update the version in `package.json` and `package-lock.json`, and describe the release in
    `CHANGELOG.md`. Until 1.0, use a minor bump for breaking changes and a patch for compatible fixes.
-2. Run `npm run check`, then `npm pack --dry-run`. Confirm the package includes only `dist/`, package
+2. Run `npm run check` and `npm run test:browser`, then `npm pack --dry-run`. Confirm the package includes only `dist/`, package
    metadata, README, and license. Install the tarball into a consumer and verify its build and UI.
 3. Commit and push the release source to `main`. Wait for `validate`, `publish`, and `release` in the
    [CI workflow](https://github.com/lailai0916/ui/actions/workflows/ci.yml) to succeed.
