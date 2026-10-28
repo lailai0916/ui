@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.9
+
+- Start lazy image timeouts when images enter the viewport, clear pending work when loading settles, and reset image state when the source changes.
+- Add LinkCard's optional imageSlot for host-owned icons within the existing image block.
+
 ## 0.3.8
 
 - Remove the PageHeader bottom divider while preserving its spacing and responsive layout.

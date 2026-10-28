@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const IMAGE_LOAD_TIMEOUT_MS = 3000;
 
@@ -9,34 +9,66 @@ export type ImageStatus = 'loading' | 'loaded' | 'error';
  *
  * If the browser finished loading before React attached its handlers (common on
  * SSR + fast cache hits), `onLoad`/`onError` never fire — so we sync from the
- * DOM via the ref, and time out stuck `loading` states. Attach `imgRef` to the
- * image and wire `onLoad`/`onError` to its handlers.
+ * DOM via the ref. Lazy images start their timeout on entering the viewport.
+ * Attach `imgRef` to the image and wire `onLoad`/`onError` to its handlers.
  */
 export function useImageStatus(image?: string) {
   const imgRef = useRef<HTMLImageElement>(null);
-  const [status, setStatus] = useState<ImageStatus>(image ? 'loading' : 'error');
+  const cleanupRef = useRef<(() => void) | undefined>(undefined);
+  const [state, setState] = useState<{ image?: string; status: ImageStatus }>({
+    image,
+    status: image ? 'loading' : 'error',
+  });
+  const status = state.image === image ? state.status : image ? 'loading' : 'error';
+  const settle = useCallback(
+    (nextStatus: ImageStatus) => {
+      cleanupRef.current?.();
+      setState({ image, status: nextStatus });
+    },
+    [image]
+  );
 
   useEffect(() => {
     if (!image) {
-      setStatus('error');
+      settle('error');
       return;
     }
     const img = imgRef.current;
     if (img?.complete) {
-      setStatus(img.naturalWidth > 0 ? 'loaded' : 'error');
+      settle(img.naturalWidth > 0 ? 'loaded' : 'error');
       return;
     }
-    setStatus('loading');
-    const timer = window.setTimeout(() => {
-      setStatus((s) => (s === 'loading' ? 'error' : s));
-    }, IMAGE_LOAD_TIMEOUT_MS);
-    return () => window.clearTimeout(timer);
-  }, [image]);
+    let timer: number | undefined;
+    let observer: IntersectionObserver | undefined;
+    const cleanup = () => {
+      observer?.disconnect();
+      window.clearTimeout(timer);
+    };
+    cleanupRef.current = cleanup;
+    const startTimeout = () => {
+      observer?.disconnect();
+      timer = window.setTimeout(() => settle('error'), IMAGE_LOAD_TIMEOUT_MS);
+    };
+
+    if (img?.loading === 'lazy' && typeof IntersectionObserver !== 'undefined') {
+      observer = new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) startTimeout();
+      });
+      observer.observe(img);
+    } else {
+      startTimeout();
+    }
+
+    return () => {
+      cleanup();
+      if (cleanupRef.current === cleanup) cleanupRef.current = undefined;
+    };
+  }, [image, settle]);
 
   return {
     imgRef,
     status,
-    onLoad: () => setStatus('loaded'),
-    onError: () => setStatus('error'),
+    onLoad: () => settle('loaded'),
+    onError: () => settle('error'),
   };
 }

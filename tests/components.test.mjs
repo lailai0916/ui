@@ -34,6 +34,7 @@ import {
   ThemeProvider,
   ThemeControl,
   Card,
+  LinkCard,
   Badge,
   Chart,
   DataCard,
@@ -55,6 +56,24 @@ import {
 } from '../dist/index.js';
 
 const render = (node, props = {}) => renderToStaticMarkup(h(LaikitProvider, props, node));
+
+test('link cards accept a host-owned image slot without rendering their default image', () => {
+  const props = {
+    title: 'Example',
+    href: 'https://example.com',
+    image: '/default.png',
+    fallbackIcon: 'lucide:globe',
+  };
+  const custom = render(h(LinkCard, { ...props, imageSlot: h('span', null, 'Custom icon') }));
+  assert.match(custom, /href="https:\/\/example.com"/);
+  assert.match(custom, /<h3[^>]*>Example<\/h3>/);
+  assert.match(custom, /<span>Custom icon<\/span>/);
+  assert.doesNotMatch(custom, /<img|<svg/);
+  const defaults = render(h(LinkCard, props));
+  assert.match(defaults, /<img[^>]*src="\/default.png"/);
+  assert.match(defaults, /loading="lazy"/);
+  assert.match(defaults, /<svg/);
+});
 
 test('async icons reserve their SVG slot during server rendering', () => {
   for (const node of [
