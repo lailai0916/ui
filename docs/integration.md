@@ -88,6 +88,41 @@ runtime accent changes and font preferences. Shadows and focus rings are shared 
 Modern CSS features such as `color-mix`, container queries, and backdrop filters require modern
 browsers. The reduced-motion rule targets the package's prefixed CSS Module classes.
 
+## Dividers / 分割线
+
+`Divider` renders a native `<hr>` with `orientation="horizontal"` by default. Set
+`orientation="vertical"` for a vertical separator, or `decorative` to hide a purely visual line
+from assistive technology. Native attributes, styles, classes, and the `HTMLHRElement` ref are
+forwarded. The stable hooks are `data-lk="divider"` and `data-orientation`.
+
+`Divider` 默认输出横向原生 `<hr>`；`orientation="vertical"` 切换为竖线，`decorative`
+将纯装饰线从辅助技术中隐藏。原生属性、样式、类名和 `HTMLHRElement` ref 保留。
+稳定样式接口为 `data-lk="divider"` 和 `data-orientation`。
+
+The shared tokens are `--lk-divider-color` (defaults to `--lk-color-emphasis-200`, following the
+active palette) and `--lk-divider-width` (defaults to `1px`). `Divider`, `Panel`, `WindowPanel`,
+and `SiteHeader` use these tokens. Applications can use the same tokens for list and container
+borders without adding separator elements:
+
+共享变量为 `--lk-divider-color`（默认引用当前主题的 `--lk-color-emphasis-200`）和
+`--lk-divider-width`（默认 `1px`）。`Divider`、`Panel`、`WindowPanel` 和 `SiteHeader`
+共用这两个变量。应用中的列表和容器可直接引用，无需添加额外分割元素：
+
+```css
+.item + .item {
+  border-block-start: var(--lk-divider-width) solid var(--lk-divider-color);
+}
+```
+
+Dividers have no margin or padding; the host owns surrounding spacing. Vertical dividers stretch
+within a flex row. Give a standalone vertical divider an explicit block size, such as
+`style={{ blockSize: 24 }}`. Keep card outlines, table grids, chart axes, and progress indicators
+on their own styling contracts.
+
+分割线不附带 margin 或 padding，前后间距由宿主布局控制。竖线在 flex 行中拉伸；
+独立放置时指定高度，例如 `style={{ blockSize: 24 }}`。卡片外框、表格网格、图表坐标轴
+和进度指示继续使用各自的样式约定。
+
 ## Component contracts
 
 - `Icon` reserves the same SVG box during server rendering, loading, and failure. It defaults to a

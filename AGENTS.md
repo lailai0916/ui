@@ -48,6 +48,8 @@ workflow commit. Only that job has `contents: write`; existing releases are skip
 - Import CSS separately; mark CSS as side effects. Avoid global resets and arbitrary page styling.
 - Keep native defaults useful. Provider adapters add no DOM wrapper; labels remain configurable.
 - Preserve typography, surfaces, keyboard semantics, focus rings, overflow behavior, and reduced motion.
+- Use `Divider` for standalone separators and the shared `--lk-divider-color` / `--lk-divider-width`
+  tokens for internal borders. Hosts own spacing; card outlines, table grids, and chart axes stay separate.
 - Render Iconify icons through the shared `Icon`. Its empty SVG preserves dimensions and CSS before
   data arrives; only that component imports Iconify's renderer. Non-square slots need explicit dimensions.
 - No whole-card hover lift. Press feedback is brief; cards do not clip focus rings by default.

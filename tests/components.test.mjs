@@ -10,6 +10,7 @@ import {
   Checkbox,
   CopyButton,
   Dialog,
+  Divider,
   Input,
   PasswordField,
   PasswordInput,
@@ -56,6 +57,40 @@ import {
 } from '../dist/index.js';
 
 const render = (node, props = {}) => renderToStaticMarkup(h(LaikitProvider, props, node));
+
+test('dividers expose native separator semantics and a compatible component subpath', async () => {
+  const { default: DividerSubpath, Divider: NamedDivider } = await import('@lailai0916/ui/Divider');
+  assert.equal(DividerSubpath, Divider);
+  assert.equal(NamedDivider, Divider);
+
+  const horizontal = render(
+    h(Divider, {
+      id: 'content-break',
+      className: 'host-divider',
+      'aria-label': 'Next section',
+      style: { marginBlock: 16 },
+    })
+  );
+  assert.match(horizontal, /^<hr\b/);
+  assert.match(horizontal, /id="content-break"/);
+  assert.match(horizontal, /class="[^"]*host-divider"/);
+  assert.match(horizontal, /data-lk="divider"/);
+  assert.match(horizontal, /data-orientation="horizontal"/);
+  assert.match(horizontal, /aria-orientation="horizontal"/);
+  assert.match(horizontal, /aria-label="Next section"/);
+  assert.match(horizontal, /margin-block:16px/);
+  assert.doesNotMatch(horizontal, /aria-hidden|tabindex|<div/);
+
+  const vertical = render(h(Divider, { orientation: 'vertical', style: { blockSize: 24 } }));
+  assert.match(vertical, /data-orientation="vertical"/);
+  assert.match(vertical, /aria-orientation="vertical"/);
+  assert.match(vertical, /block-size:24px/);
+
+  const decorative = render(h(Divider, { decorative: true, orientation: 'vertical' }));
+  assert.match(decorative, /role="presentation"/);
+  assert.match(decorative, /aria-hidden="true"/);
+  assert.doesNotMatch(decorative, /aria-orientation|tabindex/);
+});
 
 test('link cards accept a host-owned image slot without rendering their default image', () => {
   const props = {
@@ -482,6 +517,7 @@ test('new public component subpaths are available and old global styling is abse
     'Avatar',
     'Brand',
     'EmptyState',
+    'Divider',
     'DropdownSelect',
     'Field',
     'Icon',

@@ -20,7 +20,7 @@ laikit UI 是从 [lailai's Home](https://lailai.one) 抽出的共享 React 组�
 
 ## 项目特性
 
-🧩 **共享组件** — 63 个组件覆盖卡片、表单、控件、图表、导航和窗口面板，提供 TypeScript 类型声明与按组件导入入口。
+🧩 **共享组件** — 64 个组件覆盖卡片、表单、控件、图表、导航和窗口面板，提供 TypeScript 类型声明与按组件导入入口。
 
 🎨 **统一主题** — 共用 CSS 变量、深浅配色及减少动画支持，让多个网站保持一致。
 
@@ -73,16 +73,18 @@ ui/
 
 ## 组件清单
 
-| 分类 | 导出                                                                                                                                                                                                      |
-| ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 布局 | `Card`, `TitleCard`, `LinkCard`, `DataCard`, `ShareCard`, `PageHeader`, `PageTitle`, `PageContent`, `PageContainer`, `SiteHeader`, `Stack`, `Cluster`, `Panel`, `PanelHeader`, `PanelBody`, `PanelFooter` |
-| 控件 | `Button`, `ButtonLink`, `CopyButton`, `IconButton`, `LanguageButton`, `ThemeButton`, `Segmented`, `Tabs`, `Slider`, `Switch`, `ThemeControl`                                                              |
-| 图表 | `Chart`, `Donut`, `Progress`, `Table`                                                                                                                                                                     |
-| 展示 | `Alert`, `Dialog`, `Badge`, `Icon`, `IconBlock`, `Hint`, `Tooltip`, `Skeleton`, `DataState`, `TrafficLights`, `WindowBar`, `WindowPanel`, `MDTitle`, `Quote`, `GitHub`, `Avatar`, `Brand`, `EmptyState`   |
-| 表单 | `Input`, `TextArea`, `Select`, `DropdownSelect`, `TextField`, `TextAreaField`, `SelectField`, `DropdownSelectField`, `PasswordInput`, `PasswordField`, `Checkbox`, `Radio`                                |
-| 导航 | `Paginator`, `SkipLink`                                                                                                                                                                                   |
+| 分类 | 导出                                                                                                                                                                                                                 |
+| ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 布局 | `Card`, `TitleCard`, `LinkCard`, `DataCard`, `ShareCard`, `PageHeader`, `PageTitle`, `PageContent`, `PageContainer`, `SiteHeader`, `Stack`, `Cluster`, `Panel`, `PanelHeader`, `PanelBody`, `PanelFooter`, `Divider` |
+| 控件 | `Button`, `ButtonLink`, `CopyButton`, `IconButton`, `LanguageButton`, `ThemeButton`, `Segmented`, `Tabs`, `Slider`, `Switch`, `ThemeControl`                                                                         |
+| 图表 | `Chart`, `Donut`, `Progress`, `Table`                                                                                                                                                                                |
+| 展示 | `Alert`, `Dialog`, `Badge`, `Icon`, `IconBlock`, `Hint`, `Tooltip`, `Skeleton`, `DataState`, `TrafficLights`, `WindowBar`, `WindowPanel`, `MDTitle`, `Quote`, `GitHub`, `Avatar`, `Brand`, `EmptyState`              |
+| 表单 | `Input`, `TextArea`, `Select`, `DropdownSelect`, `TextField`, `TextAreaField`, `SelectField`, `DropdownSelectField`, `PasswordInput`, `PasswordField`, `Checkbox`, `Radio`                                           |
+| 导航 | `Paginator`, `SkipLink`                                                                                                                                                                                              |
 
 数量不含 `LaikitProvider`、`ThemeProvider`、路由辅助组件、hooks 及 `Tooltip.Label` / `Tooltip.Value`。共享工具包括 `useImageStatus`、`useMeasuredHeight`、`formatCompact` 和 `formatBytes`。
+
+`Divider` 提供不附带间距的横向或纵向分割线；列表和容器边框共用其 `--lk-divider-color` 与 `--lk-divider-width` 变量。具体约定见[分割线说明](docs/integration.md#dividers--分割线)。
 
 `Select` 和 `SelectField` 保留原生 `<select>` 属性与选项子节点。`DropdownSelect` 和
 `DropdownSelectField` 根据字符串值的 `options` 提供主题化弹层，支持键盘操作、表单提交和对话框。

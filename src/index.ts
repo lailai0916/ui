@@ -16,6 +16,8 @@ export { default as DataState } from './components/DataState/index.js';
 export * from './components/DataState/index.js';
 export { default as Dialog } from './components/Dialog/index.js';
 export * from './components/Dialog/index.js';
+export { default as Divider } from './components/Divider/index.js';
+export * from './components/Divider/index.js';
 export { default as Donut } from './components/Donut/index.js';
 export * from './components/Donut/index.js';
 export { default as DropdownSelect } from './components/DropdownSelect/index.js';

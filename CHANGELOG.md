@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.11
+
+- Add Divider with horizontal and vertical orientations, native separator semantics, decorative mode, and ref support.
+- Share divider color and width tokens across standalone separators and Panel, WindowPanel, and SiteHeader partitions; keep spacing controlled by the host.
+
 ## 0.3.10
 
 - Reduce PageHeader's bottom spacing on desktop and mobile while preserving its top spacing and typography.

@@ -7,6 +7,7 @@ import {
   Checkbox,
   CopyButton,
   Dialog,
+  Divider,
   Input,
   PasswordField,
   PasswordInput,
@@ -79,6 +80,9 @@ const copy = chinese
       description: '用于统一网站界面的 React 组件与主题变量。',
       controls: '交互控件',
       cards: '卡片与布局',
+      dividers: '分割线',
+      horizontal: '横向',
+      vertical: '纵向',
       charts: '数据图表',
       content: '内容与窗口',
       primary: '主要操作',
@@ -120,6 +124,9 @@ const copy = chinese
       description: 'React components and design tokens for consistent websites.',
       controls: 'Controls',
       cards: 'Cards and Layout',
+      dividers: 'Dividers',
+      horizontal: 'Horizontal',
+      vertical: 'Vertical',
       charts: 'Data Charts',
       content: 'Content and Windows',
       primary: 'Primary Action',
@@ -541,6 +548,25 @@ function App() {
                     message={copy.empty}
                     action={<Button onClick={() => setClicks(0)}>{copy.reset}</Button>}
                   />
+                </TitleCard>
+              </div>
+            </section>
+            <section aria-labelledby="dividers">
+              <h2 id="dividers">{copy.dividers}</h2>
+              <div className="grid charts">
+                <TitleCard title={copy.horizontal}>
+                  <Stack>
+                    <span>{copy.tabOne}</span>
+                    <Divider />
+                    <span>{copy.tabTwo}</span>
+                  </Stack>
+                </TitleCard>
+                <TitleCard title={copy.vertical}>
+                  <Cluster>
+                    <span>{copy.tabOne}</span>
+                    <Divider orientation="vertical" decorative />
+                    <span>{copy.tabTwo}</span>
+                  </Cluster>
                 </TitleCard>
               </div>
             </section>

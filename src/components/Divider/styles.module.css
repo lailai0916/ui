@@ -1,0 +1,19 @@
+.divider {
+  box-sizing: border-box;
+  align-self: stretch;
+  flex-shrink: 0;
+  block-size: 0;
+  inline-size: 100%;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-block-start: var(--lk-divider-width) solid var(--lk-divider-color);
+}
+
+.divider[data-orientation='vertical'] {
+  block-size: auto;
+  inline-size: 0;
+  border-block-start: 0;
+  border-inline-start: var(--lk-divider-width) solid var(--lk-divider-color);
+}

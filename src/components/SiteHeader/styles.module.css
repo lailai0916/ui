@@ -4,7 +4,7 @@
   top: 0;
   box-sizing: border-box;
   height: var(--lk-header-height);
-  border-bottom: 1px solid var(--lk-color-emphasis-300);
+  border-bottom: var(--lk-divider-width) solid var(--lk-divider-color);
   background: var(--lk-card-background-color);
   color: var(--lk-font-color-base);
   font-family: var(--lk-font-family);
