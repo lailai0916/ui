@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.10
+
+- Reduce PageHeader's bottom spacing on desktop and mobile while preserving its top spacing and typography.
+
 ## 0.3.9
 
 - Start lazy image timeouts when images enter the viewport, clear pending work when loading settles, and reset image state when the source changes.
