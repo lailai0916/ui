@@ -133,7 +133,7 @@ export default function Chart({
         <>
           <div
             ref={plotRef}
-            className={styles.plot}
+            className={clsx(styles.plot, loading && styles.plotLoading)}
             onPointerMove={onPointerMove}
             onPointerLeave={onPointerLeave}
             aria-hidden="true"

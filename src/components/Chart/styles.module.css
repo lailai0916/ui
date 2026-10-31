@@ -20,6 +20,10 @@
   }
 }
 
+.plotLoading {
+  border-bottom-color: transparent;
+}
+
 .gridLine {
   position: absolute;
   left: 0;

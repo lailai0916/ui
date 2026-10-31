@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.15
+
+- Hide Chart's baseline while loading, preserving its plot and axis dimensions.
+
 ## 0.3.14
 
 - Make secondary icon actions borderless while preserving neutral hover fills, press feedback, and keyboard focus rings.
