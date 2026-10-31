@@ -1,4 +1,10 @@
-import { useRef, type CSSProperties, type KeyboardEvent } from 'react';
+import {
+  useCallback,
+  useRef,
+  useSyncExternalStore,
+  type CSSProperties,
+  type KeyboardEvent,
+} from 'react';
 import clsx from 'clsx';
 import { Link } from '../../provider.js';
 import Icon from '../Icon/index.js';
@@ -34,6 +40,20 @@ export interface SegmentedProps<T> {
   ariaLabel?: string;
 }
 
+function useStacked(query: string | null): boolean {
+  const subscribe = useCallback(
+    (notify: () => void) => {
+      if (!query) return () => {};
+      const media = window.matchMedia(query);
+      media.addEventListener('change', notify);
+      return () => media.removeEventListener('change', notify);
+    },
+    [query]
+  );
+  const getSnapshot = useCallback(() => !!query && window.matchMedia(query).matches, [query]);
+  return useSyncExternalStore(subscribe, getSnapshot, () => false);
+}
+
 export default function Segmented<T>({
   value,
   items,
@@ -49,10 +69,16 @@ export default function Segmented<T>({
   const isNav = items.some((item) => item.href != null);
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const activeExists = items.some((item) => item.value === value);
+  const stacked = useStacked(
+    orientation === 'horizontal' && stackAt ? `(max-width: ${stackAt}px)` : null
+  );
+  const effectiveOrientation = stacked ? 'vertical' : orientation;
 
   const moveFocus = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     const [next, prev] =
-      orientation === 'horizontal' ? ['ArrowRight', 'ArrowLeft'] : ['ArrowDown', 'ArrowUp'];
+      effectiveOrientation === 'horizontal'
+        ? ['ArrowRight', 'ArrowLeft']
+        : ['ArrowDown', 'ArrowUp'];
     const dir = event.key === next ? 1 : event.key === prev ? -1 : 0;
     if (dir === 0) return;
     event.preventDefault();
@@ -76,7 +102,7 @@ export default function Segmented<T>({
       data-size={size}
       role={isNav ? undefined : 'radiogroup'}
       aria-label={isNav ? undefined : ariaLabel}
-      aria-orientation={isNav ? undefined : orientation}
+      aria-orientation={isNav ? undefined : effectiveOrientation}
     >
       {items.map((item, index) => {
         const isActive = value === item.value;

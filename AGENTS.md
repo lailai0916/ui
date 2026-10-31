@@ -11,7 +11,9 @@ Before style-sensitive work, load the shared `lailai-skill`. Repository and READ
 
 Use Node.js 24 and npm. `npm ci` installs development dependencies. `npm run dev` starts the bilingual
 React demo. `npm run check` runs formatting, lint, types, build, SSR/package tests, and demo build.
-`npm run test:browser` checks built control alignment in Chrome; set `CHROMIUM_PATH` for another Chrome binary.
+`npm run test:browser` checks built control alignment in Chrome. `npm run test:interaction` checks
+responsive keyboard behavior, Slider hit areas, and GitHub request recovery in Chrome. Set
+`CHROMIUM_PATH` for another Chrome binary.
 `npm run format` applies formatting. `npm run build` emits `dist/`; `npm pack --dry-run` inspects the
 published files. See `docs/releasing.md` for releases. Run checks before committing.
 

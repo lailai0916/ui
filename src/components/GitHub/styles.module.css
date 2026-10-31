@@ -1,4 +1,5 @@
 .wrapper {
+  position: relative;
   container-type: inline-size;
   margin: 0.5rem 0;
 }
@@ -126,6 +127,23 @@
 .errorIcon {
   flex: none;
   font-size: 1rem;
+}
+
+.retrySlot {
+  height: var(--lk-control-height-compact);
+  margin-top: 0.5rem;
+}
+
+.retry {
+  position: absolute;
+  inset-inline-start: 1rem;
+  bottom: 1rem;
+}
+
+@media (max-width: 600px), (pointer: coarse) {
+  .retrySlot {
+    height: 44px;
+  }
 }
 
 .description {

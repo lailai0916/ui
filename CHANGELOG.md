@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.12
+
+- Bound GitHub data requests and add localized retries while preserving repository links and keyboard focus.
+- Synchronize Segmented's responsive orientation with ARIA and arrow-key navigation.
+- Expand Slider's native hit area while preserving its track and thumb sizes.
+- Add browser interaction regressions to CI for request recovery, focus, responsive navigation, and Slider commits.
+
 ## 0.3.11
 
 - Add Divider with horizontal and vertical orientations, native separator semantics, decorative mode, and ref support.

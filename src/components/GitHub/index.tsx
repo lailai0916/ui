@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { useLaikit } from '../../provider.js';
 import Icon from '../Icon/index.js';
 import Card from '../Card/index.js';
+import Button from '../Button/index.js';
 import Skeleton from '../Skeleton/index.js';
 import { useImageStatus } from '../../hooks/useImageStatus.js';
 import { formatCompact } from '../../utils/format.js';
@@ -66,6 +67,7 @@ type CachedRepo = {
 
 const CACHE_KEY_PREFIX = 'github_repo_v1:';
 const CACHE_TTL_MS = 60 * 60 * 1000;
+const FETCH_TIMEOUT_MS = 10_000;
 
 // In-flight requests, deduped per repo across every card on the page.
 const pendingRepos = new Map<string, Promise<GitHubRepoData>>();
@@ -113,26 +115,30 @@ function normalizeRepo(api: GitHubRepoApi): GitHubRepoData {
   };
 }
 
-// The unauthenticated GitHub API allows 60 requests/hour per IP, so cache
-// responses for the session (17+ cards across the site) instead of refetching.
+async function requestRepo(repo: string): Promise<GitHubRepoData> {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  try {
+    const res = await fetch(`https://api.github.com/repos/${repo}`, {
+      referrerPolicy: 'no-referrer',
+      signal: controller.signal,
+    });
+    if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+    const data = normalizeRepo((await res.json()) as GitHubRepoApi);
+    writeRepoCache(repo, data);
+    return data;
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
+// Share requests and cache successes to avoid spending the unauthenticated API quota per card.
 function fetchRepo(repo: string): Promise<GitHubRepoData> {
   const cached = readRepoCache(repo);
   if (cached) return Promise.resolve(cached);
   let pending = pendingRepos.get(repo);
   if (!pending) {
-    pending = fetch(`https://api.github.com/repos/${repo}`, { referrerPolicy: 'no-referrer' })
-      .then((res) => {
-        if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
-        return res.json() as Promise<GitHubRepoApi>;
-      })
-      .then((api) => {
-        const data = normalizeRepo(api);
-        writeRepoCache(repo, data);
-        return data;
-      })
-      .finally(() => {
-        pendingRepos.delete(repo);
-      });
+    pending = requestRepo(repo).finally(() => pendingRepos.delete(repo));
     pendingRepos.set(repo, pending);
   }
   return pending;
@@ -141,143 +147,190 @@ function fetchRepo(repo: string): Promise<GitHubRepoData> {
 export default function GitHub({ repo, className }: GitHubProps) {
   const { locale: currentLocale, messages } = useLaikit();
   const [data, setData] = useState<GitHubRepoData | null>(null);
-  const [failed, setFailed] = useState(false);
+  const [status, setStatus] = useState<'loading' | 'retrying' | 'error' | 'success'>('loading');
+  const [attempt, setAttempt] = useState(0);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const retryRef = useRef<HTMLButtonElement>(null);
+  const restoreFocusRef = useRef(false);
+  const requestedRepoRef = useRef(repo);
+  const titleId = useId();
 
   const [owner, repoName = ''] = useMemo(() => repo.split('/'), [repo]);
 
   useEffect(() => {
     if (!owner || !repoName) {
-      setFailed(true);
+      setData(null);
+      setStatus('error');
       return;
     }
     let alive = true;
     setData(null);
-    setFailed(false);
+    setStatus(attempt && requestedRepoRef.current === repo ? 'retrying' : 'loading');
+    requestedRepoRef.current = repo;
     fetchRepo(`${owner}/${repoName}`).then(
-      (result) => alive && setData(result),
-      () => alive && setFailed(true)
+      (result) => {
+        if (!alive) return;
+        restoreFocusRef.current = document.activeElement === retryRef.current;
+        setData(result);
+        setStatus('success');
+      },
+      () => alive && setStatus('error')
     );
     return () => {
       alive = false;
     };
-  }, [owner, repoName]);
+  }, [owner, repoName, repo, attempt]);
+
+  useEffect(() => {
+    if (status === 'success' && restoreFocusRef.current) {
+      restoreFocusRef.current = false;
+      wrapperRef.current?.querySelector('a')?.focus();
+    }
+  }, [status]);
 
   const avatar = useImageStatus(data?.avatarUrl ?? undefined);
 
-  const loading = !data && !failed;
+  const failed = status === 'error' || status === 'retrying';
+  const loading = status === 'loading';
   const languageColor = data?.language ? LANGUAGE_COLORS[data.language] : undefined;
 
   return (
-    <Card
-      href={`https://github.com/${owner}/${repoName}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      wrapperClassName={styles.wrapper}
-      className={clsx(styles.card, className)}
-      aria-busy={loading || undefined}
-    >
-      <div className={styles.titleBar}>
-        <div className={styles.titleLeft}>
-          <span className={styles.owner}>
-            {loading ? (
-              <Skeleton className={styles.avatar} />
-            ) : data?.avatarUrl && avatar.status !== 'error' ? (
-              <img
-                ref={avatar.imgRef}
-                src={data.avatarUrl}
-                alt=""
-                className={clsx(styles.avatar, styles.avatarImg)}
-                onLoad={avatar.onLoad}
-                onError={avatar.onError}
-              />
-            ) : (
-              <span className={clsx(styles.avatar, styles.avatarFallback)} aria-hidden="true">
-                {owner.charAt(0).toUpperCase()}
-              </span>
-            )}
-            <span className={styles.ownerName}>{owner}</span>
-          </span>
-          <span className={styles.divider} aria-hidden="true">
-            /
-          </span>
-          <span className={styles.repo}>{repoName}</span>
-        </div>
-        <Icon icon="octicon:mark-github-16" className={styles.mark} aria-hidden="true" />
-      </div>
-
-      {failed ? (
-        <div className={styles.errorNote}>
-          <Icon icon="octicon:alert-16" className={styles.errorIcon} aria-hidden="true" />
-          {messages.githubError}
-        </div>
-      ) : (
-        <>
-          <div
-            className={clsx(
-              styles.description,
-              data && !data.description && styles.descriptionEmpty
-            )}
-          >
-            {data ? (
-              (data.description ?? messages.githubNoDescription)
-            ) : (
-              <Skeleton className={styles.descriptionGhost} radius={6} />
-            )}
+    <div ref={wrapperRef} className={styles.wrapper} data-lk="github">
+      <Card
+        href={`https://github.com/${owner}/${repoName}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={clsx(styles.card, className)}
+        aria-busy={loading || status === 'retrying' || undefined}
+      >
+        <div id={titleId} className={styles.titleBar}>
+          <div className={styles.titleLeft}>
+            <span className={styles.owner}>
+              {loading ? (
+                <Skeleton className={styles.avatar} />
+              ) : data?.avatarUrl && avatar.status !== 'error' ? (
+                <img
+                  ref={avatar.imgRef}
+                  src={data.avatarUrl}
+                  alt=""
+                  className={clsx(styles.avatar, styles.avatarImg)}
+                  onLoad={avatar.onLoad}
+                  onError={avatar.onError}
+                />
+              ) : (
+                <span className={clsx(styles.avatar, styles.avatarFallback)} aria-hidden="true">
+                  {owner.charAt(0).toUpperCase()}
+                </span>
+              )}
+              <span className={styles.ownerName}>{owner}</span>
+            </span>
+            <span className={styles.divider} aria-hidden="true">
+              /
+            </span>
+            <span className={styles.repo}>{repoName}</span>
           </div>
-          <div className={styles.meta}>
-            {data ? (
-              <>
-                <Hint label={messages.githubStars}>
-                  <span className={styles.metaItem}>
-                    <Icon icon="octicon:star-16" className={styles.metaIcon} aria-hidden="true" />
-                    {formatCompact(data.stars, currentLocale)}
-                    <span className={styles.srOnly}>{messages.githubStars}</span>
-                  </span>
-                </Hint>
-                <Hint label={messages.githubForks}>
-                  <span className={styles.metaItem}>
-                    <Icon
-                      icon="octicon:repo-forked-16"
-                      className={styles.metaIcon}
-                      aria-hidden="true"
-                    />
-                    {formatCompact(data.forks, currentLocale)}
-                    <span className={styles.srOnly}>{messages.githubForks}</span>
-                  </span>
-                </Hint>
-                {data.license && (
-                  <Hint label={messages.githubLicense}>
+          <Icon icon="octicon:mark-github-16" className={styles.mark} aria-hidden="true" />
+        </div>
+
+        {failed ? (
+          <>
+            <div className={styles.errorNote} role="status">
+              <Icon icon="octicon:alert-16" className={styles.errorIcon} aria-hidden="true" />
+              {messages.githubError}
+            </div>
+            <div className={styles.retrySlot} aria-hidden="true" />
+          </>
+        ) : (
+          <>
+            <div
+              className={clsx(
+                styles.description,
+                data && !data.description && styles.descriptionEmpty
+              )}
+            >
+              {data ? (
+                (data.description ?? messages.githubNoDescription)
+              ) : (
+                <Skeleton className={styles.descriptionGhost} radius={6} />
+              )}
+            </div>
+            <div className={styles.meta}>
+              {data ? (
+                <>
+                  <Hint label={messages.githubStars}>
                     <span className={styles.metaItem}>
-                      <Icon icon="octicon:law-16" className={styles.metaIcon} aria-hidden="true" />
-                      {data.license}
-                      <span className={styles.srOnly}>{messages.githubLicense}</span>
+                      <Icon icon="octicon:star-16" className={styles.metaIcon} aria-hidden="true" />
+                      {formatCompact(data.stars, currentLocale)}
+                      <span className={styles.srOnly}>{messages.githubStars}</span>
                     </span>
                   </Hint>
-                )}
-                {data.language && (
-                  <Hint label={messages.githubLanguage}>
+                  <Hint label={messages.githubForks}>
                     <span className={styles.metaItem}>
-                      <span
-                        className={styles.languageDot}
-                        style={languageColor ? { backgroundColor: languageColor } : undefined}
+                      <Icon
+                        icon="octicon:repo-forked-16"
+                        className={styles.metaIcon}
                         aria-hidden="true"
                       />
-                      <span className={styles.languageName}>{data.language}</span>
-                      <span className={styles.srOnly}>{messages.githubLanguage}</span>
+                      {formatCompact(data.forks, currentLocale)}
+                      <span className={styles.srOnly}>{messages.githubForks}</span>
                     </span>
                   </Hint>
-                )}
-              </>
-            ) : (
-              <>
-                <Skeleton className={styles.metaGhost} radius={6} />
-                <Skeleton className={styles.metaGhost} radius={6} />
-                <Skeleton className={clsx(styles.metaGhost, styles.metaGhostWide)} radius={6} />
-              </>
-            )}
-          </div>
-        </>
+                  {data.license && (
+                    <Hint label={messages.githubLicense}>
+                      <span className={styles.metaItem}>
+                        <Icon
+                          icon="octicon:law-16"
+                          className={styles.metaIcon}
+                          aria-hidden="true"
+                        />
+                        {data.license}
+                        <span className={styles.srOnly}>{messages.githubLicense}</span>
+                      </span>
+                    </Hint>
+                  )}
+                  {data.language && (
+                    <Hint label={messages.githubLanguage}>
+                      <span className={styles.metaItem}>
+                        <span
+                          className={styles.languageDot}
+                          style={languageColor ? { backgroundColor: languageColor } : undefined}
+                          aria-hidden="true"
+                        />
+                        <span className={styles.languageName}>{data.language}</span>
+                        <span className={styles.srOnly}>{messages.githubLanguage}</span>
+                      </span>
+                    </Hint>
+                  )}
+                </>
+              ) : (
+                <>
+                  <Skeleton className={styles.metaGhost} radius={6} />
+                  <Skeleton className={styles.metaGhost} radius={6} />
+                  <Skeleton className={clsx(styles.metaGhost, styles.metaGhostWide)} radius={6} />
+                </>
+              )}
+            </div>
+          </>
+        )}
+      </Card>
+      {failed && (
+        <Button
+          ref={retryRef}
+          size="sm"
+          className={styles.retry}
+          disabled={!owner || !repoName}
+          aria-disabled={status === 'retrying' || undefined}
+          aria-busy={status === 'retrying' || undefined}
+          aria-describedby={titleId}
+          onClick={() => {
+            if (status === 'retrying') return;
+            setStatus('retrying');
+            setAttempt((value) => value + 1);
+          }}
+        >
+          {status === 'retrying' ? messages.githubRetrying : messages.githubRetry}
+        </Button>
       )}
-    </Card>
+    </div>
   );
 }

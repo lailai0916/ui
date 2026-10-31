@@ -19,6 +19,8 @@ export interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
 export interface LaikitMessages {
   quoteAttributionDash: string;
   githubError: string;
+  githubRetry: string;
+  githubRetrying: string;
   githubNoDescription: string;
   githubStars: string;
   githubForks: string;
@@ -30,6 +32,8 @@ export interface LaikitMessages {
 export const enMessages: LaikitMessages = {
   quoteAttributionDash: '— ',
   githubError: 'Failed to load GitHub data',
+  githubRetry: 'Retry',
+  githubRetrying: 'Retrying…',
   githubNoDescription: 'No description provided',
   githubStars: 'Stars',
   githubForks: 'Forks',
@@ -41,6 +45,8 @@ export const enMessages: LaikitMessages = {
 export const zhHansMessages: LaikitMessages = {
   quoteAttributionDash: '——',
   githubError: '无法加载 GitHub 数据',
+  githubRetry: '重试',
+  githubRetrying: '正在重试…',
   githubNoDescription: '暂无描述',
   githubStars: '星标',
   githubForks: '复刻',
