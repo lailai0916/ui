@@ -1,5 +1,8 @@
 import {
   cloneElement,
+  createContext,
+  useCallback,
+  useContext,
   useEffect,
   useId,
   useRef,
@@ -21,6 +24,8 @@ export type HintProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
   truncationTarget?: string;
 };
 
+const HintAncestorContext = createContext<(() => void) | null>(null);
+
 export default function Hint({
   label,
   children,
@@ -33,12 +38,17 @@ export default function Hint({
   className,
   ...props
 }: HintProps) {
+  const dismissAncestor = useContext(HintAncestorContext);
   const generatedId = useId();
   const id = providedId ?? generatedId;
   const triggerRef = useRef<HTMLElement | null>(null);
   const actionsRef = useRef<TooltipPrimitive.Root.Actions | null>(null);
   const [open, setOpen] = useState(false);
   const [container, setContainer] = useState<HTMLElement | null>(null);
+  const dismiss = useCallback(() => {
+    setOpen(false);
+    dismissAncestor?.();
+  }, [dismissAncestor]);
   const describedBy = [children.props['aria-describedby'], open ? id : undefined]
     .filter(Boolean)
     .join(' ');
@@ -85,59 +95,65 @@ export default function Hint({
   }, [open, onlyWhenTruncated, truncationTarget, label]);
 
   return (
-    <TooltipPrimitive.Provider delay={delay}>
-      <TooltipPrimitive.Root
-        actionsRef={actionsRef}
-        open={open}
-        disabled={disabled || !label}
-        onOpenChange={(next, details) => {
-          if (next && onlyWhenTruncated && !isTruncated()) {
-            details.cancel();
-            return;
-          }
-          if (details.reason === 'escape-key') {
-            // Leave Escape's default action available to native dialogs as well.
-            details.cancel();
-            details.allowPropagation();
-            actionsRef.current?.close();
-            return;
-          }
-          // Keep hints inside a native dialog's top layer when their trigger is modal.
-          if (next) setContainer(triggerRef.current?.closest('dialog') ?? null);
-          setOpen(next);
-        }}
-      >
-        <TooltipPrimitive.Trigger
-          ref={(element: HTMLElement | null) => {
-            triggerRef.current = element;
+    <HintAncestorContext.Provider value={dismiss}>
+      <TooltipPrimitive.Provider delay={delay}>
+        <TooltipPrimitive.Root
+          actionsRef={actionsRef}
+          open={open}
+          disabled={disabled || !label}
+          onOpenChange={(next, details) => {
+            if (next && onlyWhenTruncated && !isTruncated()) {
+              details.cancel();
+              return;
+            }
+            if (details.reason === 'escape-key') {
+              // Leave Escape's default action available to native dialogs as well.
+              details.cancel();
+              details.allowPropagation();
+              actionsRef.current?.close();
+              return;
+            }
+            if (next) {
+              // A focused row yields when a nested pointer hint opens.
+              dismissAncestor?.();
+              // Keep hints inside a native dialog's top layer when their trigger is modal.
+              setContainer(triggerRef.current?.closest('dialog') ?? null);
+            }
+            setOpen(next);
           }}
-          render={cloneElement(children, {
-            title: undefined,
-            'aria-describedby': describedBy || undefined,
-          })}
-          aria-describedby={describedBy || undefined}
-          closeDelay={100}
-        />
-        <TooltipPrimitive.Portal container={container ?? undefined}>
-          <TooltipPrimitive.Positioner
-            side={side}
-            sideOffset={6}
-            collisionPadding={8}
-            positionMethod="fixed"
-            className={styles.positioner}
-          >
-            <TooltipPrimitive.Popup
-              data-lk="hint"
-              {...props}
-              id={id}
-              role="tooltip"
-              className={clsx(styles.hint, className)}
+        >
+          <TooltipPrimitive.Trigger
+            ref={(element: HTMLElement | null) => {
+              triggerRef.current = element;
+            }}
+            render={cloneElement(children, {
+              title: undefined,
+              'aria-describedby': describedBy || undefined,
+            })}
+            aria-describedby={describedBy || undefined}
+            closeDelay={100}
+          />
+          <TooltipPrimitive.Portal container={container ?? undefined}>
+            <TooltipPrimitive.Positioner
+              side={side}
+              sideOffset={6}
+              collisionPadding={8}
+              positionMethod="fixed"
+              className={styles.positioner}
             >
-              {label}
-            </TooltipPrimitive.Popup>
-          </TooltipPrimitive.Positioner>
-        </TooltipPrimitive.Portal>
-      </TooltipPrimitive.Root>
-    </TooltipPrimitive.Provider>
+              <TooltipPrimitive.Popup
+                data-lk="hint"
+                {...props}
+                id={id}
+                role="tooltip"
+                className={clsx(styles.hint, className)}
+              >
+                {label}
+              </TooltipPrimitive.Popup>
+            </TooltipPrimitive.Positioner>
+          </TooltipPrimitive.Portal>
+        </TooltipPrimitive.Root>
+      </TooltipPrimitive.Provider>
+    </HintAncestorContext.Provider>
   );
 }

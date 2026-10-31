@@ -42,8 +42,14 @@ function App() {
     <Hint label={hintText} onlyWhenTruncated truncationTarget="[data-truncated-title]">
       <a id="hint-long" href="#after" style={{display:'block',width:160}}><span data-truncated-title style={{display:'block',overflow:'hidden',whiteSpace:'nowrap',textOverflow:'ellipsis'}}>{hintText}</span></a>
     </Hint>
+    <Hint label="Nested article title" onlyWhenTruncated truncationTarget="[data-nested-title]" delay={0}>
+      <a id="hint-row" href="#after" style={{display:'block',width:160}}>
+        <span data-nested-title style={{display:'block',overflow:'hidden',whiteSpace:'nowrap',textOverflow:'ellipsis'}}>A long nested article title that does not fit</span>
+        <Hint label="Exact publication date" delay={0}><time id="hint-date" dateTime="2026-10-31">Today</time></Hint>
+      </a>
+    </Hint>
     <Hint label="Short" onlyWhenTruncated><a id="hint-short" href="#after" style={{display:'block',width:160}}>Short</a></Hint>
-    <IconButton id="icon-xs" size="xs" label="Small action" hint={false}><svg viewBox="0 0 24 24"><path strokeWidth="2" d="M6 6L18 18" /></svg></IconButton>
+    <IconButton id="icon-xs" size="xs" label="Small action" hint={false}><span><svg viewBox="0 0 24 24"><path strokeWidth="2" d="M6 6L18 18" /></svg></span></IconButton>
     <IconButton id="icon-sm" size="sm" label="Header action" variant="header" hint={false}><svg viewBox="0 0 24 24"><path strokeWidth="2" d="M6 6L18 18" /></svg></IconButton>
     <TextField id="invalid-field" label="Required" error="Required value" />
     <div id="hint-card" style={{width:280}}><LinkCard href="#after" title="A very long linked card title with ellipsis" description="A descriptive sentence that also overflows" /></div>
@@ -221,8 +227,41 @@ try {
     await evaluate(`document.querySelector('#hint-long').querySelector('[tabindex]') !== null`),
     false
   );
+  await command(
+    'Emulation.setDeviceMetricsOverride',
+    { width: 375, height: 1000, deviceScaleFactor: 1, mobile: false },
+    sessionId
+  );
+  await evaluate(`document.getElementById('hint-row').focus()`);
+  await waitFor(`document.querySelector('[role=tooltip]')?.textContent === 'Nested article title'`);
+  const nestedDatePoint = await evaluate(
+    `(()=>{const r=document.getElementById('hint-date').getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2};})()`
+  );
+  await command('Input.dispatchMouseEvent', { type: 'mouseMoved', ...nestedDatePoint }, sessionId);
+  await waitFor(
+    `document.querySelectorAll('[role=tooltip]').length===1 && document.querySelector('[role=tooltip]').textContent==='Exact publication date'`
+  );
+  assert.equal(
+    await evaluate(`document.getElementById('hint-row').getAttribute('aria-describedby')`),
+    null
+  );
+  const nestedTitlePoint = await evaluate(
+    `(()=>{const r=document.querySelector('[data-nested-title]').getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2};})()`
+  );
+  await command('Input.dispatchMouseEvent', { type: 'mouseMoved', ...nestedTitlePoint }, sessionId);
+  await waitFor(
+    `document.querySelectorAll('[role=tooltip]').length===1 && document.querySelector('[role=tooltip]').textContent==='Nested article title'`
+  );
+  await command('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 350, y: 900 }, sessionId);
+  await evaluate(`document.getElementById('hint-short').focus()`);
+  await waitFor(`!document.querySelector('[role=tooltip]')`);
+  await command(
+    'Emulation.setDeviceMetricsOverride',
+    { width: 1280, height: 1000, deviceScaleFactor: 1, mobile: false },
+    sessionId
+  );
   const iconGeometry = await evaluate(
-    `['icon-xs','icon-sm'].map(id=>{const el=document.getElementById(id),css=getComputedStyle(el);return{width:el.getBoundingClientRect().width,height:el.getBoundingClientRect().height,radius:css.borderRadius,color:css.color,stroke:getComputedStyle(el.querySelector('path')).strokeWidth};})`
+    `['icon-xs','icon-sm'].map(id=>{const el=document.getElementById(id),css=getComputedStyle(el);return{width:el.getBoundingClientRect().width,height:el.getBoundingClientRect().height,radius:css.borderRadius,color:css.color,iconWidth:el.querySelector('svg').getBoundingClientRect().width,stroke:getComputedStyle(el.querySelector('path')).strokeWidth};})`
   );
   assert.deepEqual(
     iconGeometry.map(({ width, height }) => [width, height]),
@@ -234,6 +273,7 @@ try {
   assert.equal(iconGeometry[0].radius, iconGeometry[1].radius);
   assert.equal(iconGeometry[0].color, iconGeometry[1].color);
   assert.equal(iconGeometry[0].stroke, '1.75px');
+  assert.equal(iconGeometry[0].iconWidth, 16);
   await evaluate(`document.getElementById('invalid-field').focus()`);
   await waitFor(
     `getComputedStyle(document.getElementById('invalid-field')).borderColor === 'rgb(215, 0, 21)'`

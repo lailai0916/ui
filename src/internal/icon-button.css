@@ -64,14 +64,14 @@
   cursor: not-allowed;
 }
 
-[data-lk-icon-button] > svg {
+[data-lk-icon-button] svg {
   flex: none;
   width: var(--lk-icon-button-icon-size);
   height: var(--lk-icon-button-icon-size);
   stroke-width: 1.75;
 }
 
-[data-lk-icon-button] > svg [stroke-width] {
+[data-lk-icon-button] svg [stroke-width] {
   stroke-width: inherit;
 }
 
