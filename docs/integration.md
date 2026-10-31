@@ -205,9 +205,16 @@ are `language-button`, `theme-button`, and `action-hint`.
 
 Use `IconButton variant="header"` for adjacent search, documentation actions, or mobile menu
 triggers. It uses the same surface, border, focus ring, press feedback, icon strokes, and 32/44 px
-geometry as LanguageButton and ThemeButton. Supply a 17 px icon. `size` applies to the default
-`ghost` variant; header sizing follows the shared desktop/touch rules. Native button props, refs,
+geometry as LanguageButton and ThemeButton. `size="xs" | "sm" | "md"` applies to the default
+`ghost` variant: 28 / 32 / 40 px targets and 16 / 17 / 20 px icons. Coarse pointers receive at least
+44 px targets; header sizing follows the shared desktop/touch rules. Native button props, refs,
 `label`, `title`, and `hint` work in both variants. The trigger retains `data-lk="button"`.
+
+Native icon-only links and imperative controls can opt into the same state styling with
+`data-lk-icon-button="xs" | "sm" | "md" | "header"`. This public hook owns the neutral hover border,
+fill, icon strokes, press feedback, and focus ring. `--lk-icon-button-size` overrides geometry;
+`--lk-icon-button-background` supplies an optional resting surface over code or media. Use native
+link/button semantics and an accessible name; the styling hook does not add interaction behavior.
 
 ```tsx
 function HeaderActions() {
@@ -241,6 +248,12 @@ disabling the child. Native popup props and `className` are supported; `data-lk=
 public customization hook. Header controls retain their existing `data-lk="action-hint"` hook.
 `--lk-z-index-hint` controls the popup layer above fixed headers and menus.
 Portals from native dialog controls stay inside the dialog's top layer.
+
+Use `onlyWhenTruncated` for an ellipsized label: overflow is measured when the hint would open,
+and an open hint closes when resizing or text changes remove the truncation. If the trigger is a
+larger link row, `truncationTarget="[data-truncated-title]"` selects the overflowing descendant
+without adding a second keyboard stop. `LinkCard` supplies overflow-only hints for its title and
+description and keeps the full text in the link's accessible name.
 
 ```tsx
 <Hint label="Search by course title or keyword">

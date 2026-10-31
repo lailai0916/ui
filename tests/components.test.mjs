@@ -307,7 +307,12 @@ test('migrated buttons share variants, sizes, and explicit toggle semantics', ()
   const danger = render(h(Button, { variant: 'danger', size: 'lg' }, 'Delete'));
   assert.match(danger, /variant_danger/);
   assert.match(danger, /size_lg/);
-  assert.match(render(h(IconButton, { label: 'Close', size: 'sm' }, '×')), /aria-label="Close"/);
+  for (const size of ['xs', 'sm', 'md']) {
+    const html = render(h(IconButton, { label: 'Close', size }, '×'));
+    assert.match(html, /aria-label="Close"/);
+    assert.match(html, new RegExp(`data-lk-icon-button="${size}"`));
+    assert.doesNotMatch(html, /size=/);
+  }
 });
 
 test('header icon buttons retain native button and accessibility contracts', () => {
@@ -373,13 +378,16 @@ test('action hints preserve native trigger semantics and render no wrapper or po
     const html = render(
       h(
         Hint,
-        { label: 'Help' },
+        { label: 'Help', onlyWhenTruncated: true, truncationTarget: '[data-title]' },
         h(tag, { ...props, title: 'Native help', 'aria-describedby': 'external' })
       )
     );
     assert.match(html, new RegExp(`^<${tag}\\b`));
     assert.match(html, /aria-describedby="external"/);
-    assert.doesNotMatch(html, /title=|role="tooltip"|tabindex=|aria-haspopup/);
+    assert.doesNotMatch(
+      html,
+      /title=|role="tooltip"|tabindex=|aria-haspopup|onlyWhenTruncated|truncationTarget/
+    );
     for (const [key, value] of Object.entries(props)) {
       const attribute = key === 'className' ? 'class' : key;
       assert.match(html, new RegExp(`${attribute}="${value}"`));
@@ -547,6 +555,8 @@ test('new public component subpaths are available and old global styling is abse
     '--lk-stack-gap',
     '--lk-cluster-gap',
     '--lk-header-brand-width',
+    '--lk-icon-button-size',
+    '--lk-icon-button-background',
   ]);
   for (const [, token] of css.matchAll(/var\((--lk-[\w-]+)/g)) {
     assert.ok(definitions.has(token) || withFallback.has(token), `Undefined token: ${token}`);

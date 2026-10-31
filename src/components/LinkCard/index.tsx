@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import clsx from 'clsx';
 import Card from '../Card/index.js';
+import Hint from '../Hint/index.js';
 import IconBlock from '../IconBlock/index.js';
 import Icon from '../Icon/index.js';
 import { useImageStatus } from '../../hooks/useImageStatus.js';
@@ -36,12 +37,7 @@ export default function LinkCard({
   const imageLoaded = status === 'loaded';
 
   return (
-    <Card
-      {...linkProps}
-      className={styles.linkCard}
-      wrapperClassName={styles.linkCardWrap}
-      title={title}
-    >
+    <Card {...linkProps} className={styles.linkCard} wrapperClassName={styles.linkCardWrap}>
       <IconBlock variant="muted" size={ICON_BOX_SIZE} className={styles.imageBlock}>
         {imageSlot ?? (
           <>
@@ -73,8 +69,14 @@ export default function LinkCard({
         )}
       </IconBlock>
       <div className={styles.body}>
-        <h3 className={styles.title}>{title}</h3>
-        {description && <p className={styles.description}>{description}</p>}
+        <Hint label={title} onlyWhenTruncated>
+          <h3 className={styles.title}>{title}</h3>
+        </Hint>
+        {description && (
+          <Hint label={description} onlyWhenTruncated>
+            <p className={styles.description}>{description}</p>
+          </Hint>
+        )}
       </div>
     </Card>
   );

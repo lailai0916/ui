@@ -2,6 +2,7 @@ import { forwardRef, type ButtonHTMLAttributes } from 'react';
 import clsx from 'clsx';
 import Hint from '../components/Hint/index.js';
 import styles from './header-action.module.css';
+import './icon-button.css';
 
 type HeaderActionButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   label: string;
@@ -21,6 +22,7 @@ export const HeaderActionButton = forwardRef<HTMLButtonElement, HeaderActionButt
           ref={ref}
           type={type}
           data-lk={kind ? `${kind}-button` : 'button'}
+          data-lk-icon-button="header"
           className={clsx(styles.button, kind === 'language' && styles.language, className)}
           aria-label={label}
         >

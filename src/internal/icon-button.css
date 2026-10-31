@@ -1,0 +1,95 @@
+[data-lk-icon-button] {
+  --lk-icon-button-default-size: 32px;
+  --lk-icon-button-icon-size: 17px;
+  appearance: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--lk-icon-button-size, var(--lk-icon-button-default-size));
+  height: var(--lk-icon-button-size, var(--lk-icon-button-default-size));
+  min-width: var(--lk-icon-button-size, var(--lk-icon-button-default-size));
+  min-height: var(--lk-icon-button-size, var(--lk-icon-button-default-size));
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--lk-radius-sm);
+  background: var(--lk-icon-button-background, transparent);
+  box-shadow: none;
+  color: var(--lk-font-color-secondary);
+  font: inherit;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    border-color var(--lk-transition),
+    background-color var(--lk-transition),
+    color var(--lk-transition),
+    box-shadow var(--lk-transition),
+    opacity var(--lk-transition),
+    transform var(--lk-transition);
+}
+
+[data-lk-icon-button='xs'] {
+  --lk-icon-button-default-size: 28px;
+  --lk-icon-button-icon-size: 16px;
+}
+
+[data-lk-icon-button='md'] {
+  --lk-icon-button-default-size: 40px;
+  --lk-icon-button-icon-size: 20px;
+}
+
+[data-lk-icon-button]:hover:not(:disabled):not([aria-disabled='true']) {
+  border-color: var(--lk-color-emphasis-300);
+  background: var(--lk-color-emphasis-100);
+  color: var(--lk-font-color-base);
+  text-decoration: none;
+}
+
+[data-lk-icon-button]:active:not(:disabled):not([aria-disabled='true']) {
+  transform: scale(0.92);
+}
+
+[data-lk-icon-button]:focus-visible {
+  outline: none;
+  box-shadow: var(--lk-focus-ring);
+}
+
+[data-lk-icon-button]:disabled,
+[data-lk-icon-button][aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+[data-lk-icon-button] > svg {
+  flex: none;
+  width: var(--lk-icon-button-icon-size);
+  height: var(--lk-icon-button-icon-size);
+  stroke-width: 1.75;
+}
+
+[data-lk-icon-button] > svg [stroke-width] {
+  stroke-width: inherit;
+}
+
+@media (max-width: 980px) {
+  [data-lk-icon-button='header'] {
+    --lk-icon-button-default-size: 44px;
+  }
+}
+
+@media (any-pointer: coarse) {
+  [data-lk-icon-button] {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-lk-icon-button] {
+    transition: none;
+  }
+}

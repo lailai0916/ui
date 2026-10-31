@@ -14,7 +14,7 @@ const entry = join(temporary, 'fixture.jsx');
 const source = `
 import React, {useState} from ${JSON.stringify(join(root, 'node_modules/react/index.js'))};
 import {createRoot} from ${JSON.stringify(join(root, 'node_modules/react-dom/client.js'))};
-import {GitHub, LaikitProvider, Segmented, Slider} from ${JSON.stringify(join(root, 'dist/index.js'))};
+import {GitHub, Hint, IconButton, LaikitProvider, LinkCard, Segmented, Slider, TextField} from ${JSON.stringify(join(root, 'dist/index.js'))};
 import ${JSON.stringify(join(root, 'dist/theme.css'))};
 import ${JSON.stringify(join(root, 'dist/styles.css'))};
 window.requests = 0;
@@ -35,8 +35,18 @@ window.commits = [];
 function App() {
   const [selected, setSelected] = useState('a');
   const [value, setValue] = useState(50);
+  const [hintText,setHintText] = useState('A deliberately long title that overflows its compact row');
+  window.setHintText = setHintText;
   const items = [{value: 'a', label: 'Day'}, {value: 'b', label: 'Week'}, {value: 'c', label: 'Month'}];
   return <main style={{width: 'min(100%, 420px)', boxSizing:'border-box', padding:16}}>
+    <Hint label={hintText} onlyWhenTruncated truncationTarget="[data-truncated-title]">
+      <a id="hint-long" href="#after" style={{display:'block',width:160}}><span data-truncated-title style={{display:'block',overflow:'hidden',whiteSpace:'nowrap',textOverflow:'ellipsis'}}>{hintText}</span></a>
+    </Hint>
+    <Hint label="Short" onlyWhenTruncated><a id="hint-short" href="#after" style={{display:'block',width:160}}>Short</a></Hint>
+    <IconButton id="icon-xs" size="xs" label="Small action" hint={false}><svg viewBox="0 0 24 24"><path strokeWidth="2" d="M6 6L18 18" /></svg></IconButton>
+    <IconButton id="icon-sm" size="sm" label="Header action" variant="header" hint={false}><svg viewBox="0 0 24 24"><path strokeWidth="2" d="M6 6L18 18" /></svg></IconButton>
+    <TextField id="invalid-field" label="Required" error="Required value" />
+    <div id="hint-card" style={{width:280}}><LinkCard href="#after" title="A very long linked card title with ellipsis" description="A descriptive sentence that also overflows" /></div>
     <section id="stack-default"><Segmented orientation="horizontal" value={selected} onChange={setSelected} items={items} ariaLabel="Default range" /></section>
     <section id="stack-narrow"><Segmented orientation="horizontal" stackAt={360} value={selected} onChange={setSelected} items={items} ariaLabel="Narrow range" /></section>
     <section id="stack-never"><Segmented orientation="horizontal" stackAt={0} value={selected} onChange={setSelected} items={items} ariaLabel="Fixed range" /></section>
@@ -164,6 +174,94 @@ try {
   await command('Runtime.enable', {}, sessionId);
   await command('Page.navigate', { url: `http://127.0.0.1:${server.address().port}` }, sessionId);
   await waitFor('window.ready && document.querySelector("[role=radiogroup]")');
+  await command(
+    'Emulation.setDeviceMetricsOverride',
+    { width: 1280, height: 1000, deviceScaleFactor: 1, mobile: false },
+    sessionId
+  );
+  await evaluate(
+    `document.documentElement.dataset.theme='light'; document.querySelector('#hint-long').focus()`
+  );
+  await waitFor(
+    `document.querySelector('[role=tooltip]')?.textContent.includes('deliberately long')`
+  );
+  await command(
+    'Input.dispatchKeyEvent',
+    { type: 'keyDown', key: 'Escape', code: 'Escape' },
+    sessionId
+  );
+  await command(
+    'Input.dispatchKeyEvent',
+    { type: 'keyUp', key: 'Escape', code: 'Escape' },
+    sessionId
+  );
+  await waitFor(`!document.querySelector('[role=tooltip]')`);
+  await evaluate(
+    `document.querySelector('#hint-short').focus(); document.querySelector('#hint-long').focus()`
+  );
+  await waitFor(
+    `document.querySelector('[role=tooltip]')?.textContent.includes('deliberately long')`
+  );
+  await evaluate(`document.querySelector('#hint-long').style.width='1200px'`);
+  await waitFor(`!document.querySelector('[role=tooltip]')`);
+  await evaluate(`document.querySelector('#hint-short').focus()`);
+  assert.equal(
+    await evaluate(`document.querySelector('[role=tooltip]')?.textContent ?? null`),
+    null
+  );
+  await evaluate(
+    `document.querySelector('#hint-long').style.width='160px'; document.querySelector('#hint-long').focus()`
+  );
+  await waitFor(
+    `document.querySelector('[role=tooltip]')?.textContent.includes('deliberately long')`
+  );
+  await evaluate(`window.setHintText('Now short')`);
+  await waitFor(`!document.querySelector('[role=tooltip]')`);
+  assert.equal(
+    await evaluate(`document.querySelector('#hint-long').querySelector('[tabindex]') !== null`),
+    false
+  );
+  const iconGeometry = await evaluate(
+    `['icon-xs','icon-sm'].map(id=>{const el=document.getElementById(id),css=getComputedStyle(el);return{width:el.getBoundingClientRect().width,height:el.getBoundingClientRect().height,radius:css.borderRadius,color:css.color,stroke:getComputedStyle(el.querySelector('path')).strokeWidth};})`
+  );
+  assert.deepEqual(
+    iconGeometry.map(({ width, height }) => [width, height]),
+    [
+      [28, 28],
+      [32, 32],
+    ]
+  );
+  assert.equal(iconGeometry[0].radius, iconGeometry[1].radius);
+  assert.equal(iconGeometry[0].color, iconGeometry[1].color);
+  assert.equal(iconGeometry[0].stroke, '1.75px');
+  await evaluate(`document.getElementById('invalid-field').focus()`);
+  await waitFor(
+    `getComputedStyle(document.getElementById('invalid-field')).borderColor === 'rgb(215, 0, 21)'`
+  );
+  const invalidFocus = await evaluate(
+    `({border:getComputedStyle(document.getElementById('invalid-field')).borderColor,shadow:getComputedStyle(document.getElementById('invalid-field')).boxShadow})`
+  );
+  assert.equal(invalidFocus.border, 'rgb(215, 0, 21)');
+  assert.notEqual(invalidFocus.shadow, 'none');
+  await evaluate(`document.documentElement.dataset.theme='dark'`);
+  await waitFor(
+    `getComputedStyle(document.getElementById('invalid-field')).borderColor === 'rgb(255, 69, 58)'`
+  );
+  assert.equal(
+    await evaluate(`getComputedStyle(document.getElementById('invalid-field')).borderColor`),
+    'rgb(255, 69, 58)'
+  );
+  await evaluate(`document.documentElement.dataset.theme='light'`);
+  assert.equal(
+    await evaluate(
+      `document.querySelector('#hint-card a').querySelector('[tabindex="0"],button,[role=button]') !== null`
+    ),
+    false
+  );
+  assert.equal(
+    await evaluate(`document.querySelector('#hint-card a').hasAttribute('title')`),
+    false
+  );
   const orientations = [];
   for (const width of [800, 400, 320, 800]) {
     await command(

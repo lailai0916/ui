@@ -613,6 +613,19 @@ function App() {
                     <Hint label={copy.hintDescription}>
                       <TextField label={copy.name} />
                     </Hint>
+                    <Hint label={copy.hintDescription} onlyWhenTruncated>
+                      <span
+                        style={{
+                          display: 'block',
+                          maxWidth: 180,
+                          overflow: 'hidden',
+                          whiteSpace: 'nowrap',
+                          textOverflow: 'ellipsis',
+                        }}
+                      >
+                        {copy.hintDescription}
+                      </span>
+                    </Hint>
                   </Stack>
                 </Card>
                 <Card>

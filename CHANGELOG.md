@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.13
+
+- Unify secondary icon actions with shared neutral states, compact sizes, focus rings, and a stable styling hook for host controls.
+- Show full-text hints only when titles or descriptions are truncated, including targets inside row links.
+- Align field focus feedback while preserving invalid states and improve light-theme accent text contrast.
+
 ## 0.3.12
 
 - Bound GitHub data requests and add localized retries while preserving repository links and keyboard focus.

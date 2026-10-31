@@ -1,8 +1,3 @@
-.fieldControl:focus-visible {
-  outline: 2px solid var(--lk-color-primary);
-  outline-offset: 2px;
-}
-
 .field {
   display: grid;
   gap: 6px;
@@ -60,10 +55,6 @@ input[type='number'].fieldControl::-webkit-outer-spin-button {
   background: var(--lk-color-emphasis-100);
 }
 
-.fieldControl[aria-invalid='true'] {
-  border-color: var(--lk-color-danger);
-}
-
 .fieldSelect {
   position: relative;
   display: block;
@@ -107,6 +98,16 @@ textarea.fieldControl {
   outline: 0;
   border-color: var(--lk-color-primary);
   box-shadow: var(--lk-focus-ring);
+}
+
+.fieldControl[aria-invalid='true'],
+.fieldControl[aria-invalid='true']:hover,
+.fieldControl[aria-invalid='true']:focus-visible {
+  border-color: var(--lk-color-danger);
+}
+
+.fieldControl[aria-invalid='true']:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--lk-color-danger) 22%, transparent);
 }
 
 .fieldDescription,

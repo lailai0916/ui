@@ -1,5 +1,6 @@
 import {
   cloneElement,
+  useEffect,
   useId,
   useRef,
   useState,
@@ -16,6 +17,8 @@ export type HintProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
   side?: 'top' | 'bottom' | 'left' | 'right';
   delay?: number;
   disabled?: boolean;
+  onlyWhenTruncated?: boolean;
+  truncationTarget?: string;
 };
 
 export default function Hint({
@@ -24,6 +27,8 @@ export default function Hint({
   side = 'bottom',
   delay = 500,
   disabled = false,
+  onlyWhenTruncated = false,
+  truncationTarget,
   id: providedId,
   className,
   ...props
@@ -38,12 +43,58 @@ export default function Hint({
     .filter(Boolean)
     .join(' ');
 
+  const getTruncationElement = () => {
+    const trigger = triggerRef.current;
+    return truncationTarget ? trigger?.querySelector<HTMLElement>(truncationTarget) : trigger;
+  };
+  const isTruncated = () => {
+    const element = getTruncationElement();
+    return (
+      !!element &&
+      (element.scrollWidth > element.clientWidth || element.scrollHeight > element.clientHeight)
+    );
+  };
+
+  useEffect(() => {
+    if (!open || !onlyWhenTruncated) return undefined;
+    const trigger = triggerRef.current;
+    const element = truncationTarget
+      ? trigger?.querySelector<HTMLElement>(truncationTarget)
+      : trigger;
+    if (!element) {
+      setOpen(false);
+      return undefined;
+    }
+    const check = () => {
+      if (
+        element.scrollWidth <= element.clientWidth &&
+        element.scrollHeight <= element.clientHeight
+      ) {
+        setOpen(false);
+      }
+    };
+    check();
+    const resizeObserver = new ResizeObserver(check);
+    const mutationObserver = new MutationObserver(check);
+    resizeObserver.observe(element);
+    mutationObserver.observe(element, { childList: true, characterData: true, subtree: true });
+    return () => {
+      resizeObserver.disconnect();
+      mutationObserver.disconnect();
+    };
+  }, [open, onlyWhenTruncated, truncationTarget, label]);
+
   return (
     <TooltipPrimitive.Provider delay={delay}>
       <TooltipPrimitive.Root
         actionsRef={actionsRef}
+        open={open}
         disabled={disabled || !label}
         onOpenChange={(next, details) => {
+          if (next && onlyWhenTruncated && !isTruncated()) {
+            details.cancel();
+            return;
+          }
           if (details.reason === 'escape-key') {
             // Leave Escape's default action available to native dialogs as well.
             details.cancel();

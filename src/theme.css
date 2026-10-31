@@ -37,7 +37,11 @@
     var(--lk-color-primary) 12%,
     var(--lk-card-background-color)
   );
-  --lk-color-primary-label: var(--lk-color-primary-dark);
+  --lk-color-primary-label: color-mix(
+    in srgb,
+    var(--lk-color-primary) 70%,
+    var(--lk-font-color-base)
+  );
   --lk-background-raised: var(--lk-card-background-color);
   --lk-font-color-tertiary: var(--lk-color-emphasis-700);
   --lk-color-danger-dark: color-mix(in srgb, var(--lk-color-danger) 86%, #000);
