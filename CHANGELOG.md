@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.14
+
+- Make secondary icon actions borderless while preserving neutral hover fills, press feedback, and keyboard focus rings.
+
 ## 0.3.13
 
 - Unify secondary icon actions with shared neutral states, compact sizes, focus rings, and a stable styling hook for host controls.

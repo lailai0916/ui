@@ -13,7 +13,7 @@
   min-height: var(--lk-icon-button-size, var(--lk-icon-button-default-size));
   margin: 0;
   padding: 0;
-  border: 1px solid transparent;
+  border: 0;
   border-radius: var(--lk-radius-sm);
   background: var(--lk-icon-button-background, transparent);
   box-shadow: none;
@@ -24,7 +24,6 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition:
-    border-color var(--lk-transition),
     background-color var(--lk-transition),
     color var(--lk-transition),
     box-shadow var(--lk-transition),
@@ -43,7 +42,6 @@
 }
 
 [data-lk-icon-button]:hover:not(:disabled):not([aria-disabled='true']) {
-  border-color: var(--lk-color-emphasis-300);
   background: var(--lk-color-emphasis-100);
   color: var(--lk-font-color-base);
   text-decoration: none;
