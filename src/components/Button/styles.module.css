@@ -12,12 +12,12 @@
   appearance: none;
   -webkit-tap-highlight-color: transparent;
   transition:
-    background-color 160ms ease,
-    border-color 160ms ease,
-    color 160ms ease,
-    box-shadow 160ms ease,
-    opacity 160ms ease,
-    transform 160ms ease;
+    background-color var(--lk-transition),
+    border-color var(--lk-transition),
+    color var(--lk-transition),
+    box-shadow var(--lk-transition),
+    opacity var(--lk-transition),
+    transform var(--lk-transition);
 }
 
 .button:focus-visible {

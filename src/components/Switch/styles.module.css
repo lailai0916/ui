@@ -16,7 +16,7 @@
   cursor: pointer;
   inset: 0;
   background-color: var(--lk-color-emphasis-300);
-  transition: background-color 160ms ease;
+  transition: background-color var(--lk-transition);
   border-radius: 999px;
 }
 
@@ -28,7 +28,7 @@
   left: 3px;
   bottom: 3px;
   background-color: #fff;
-  transition: transform 160ms ease;
+  transition: transform var(--lk-transition);
   border-radius: 50%;
 }
 

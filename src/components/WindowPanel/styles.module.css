@@ -31,7 +31,7 @@
   appearance: none;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: var(--lk-radius-sm);
   color: rgba(60, 60, 67, 0.7);
   cursor: pointer;
   flex-shrink: 0;
@@ -48,9 +48,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   transition:
-    color 160ms ease,
-    background-color 160ms ease,
-    transform 160ms ease;
+    color var(--lk-transition),
+    background-color var(--lk-transition),
+    transform var(--lk-transition);
 }
 
 [data-theme='dark'] .tab {
@@ -110,9 +110,9 @@
   padding: 0;
   width: 28px;
   transition:
-    color 160ms ease,
-    background-color 160ms ease,
-    transform 160ms ease;
+    color var(--lk-transition),
+    background-color var(--lk-transition),
+    transform var(--lk-transition);
 }
 
 [data-theme='dark'] .toggle {
@@ -139,7 +139,7 @@
 
 .chevron {
   height: 16px;
-  transition: transform 160ms ease;
+  transition: transform var(--lk-transition);
   width: 16px;
 }
 

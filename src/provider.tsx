@@ -27,6 +27,7 @@ export interface LaikitMessages {
   githubLicense: string;
   githubLanguage: string;
   other: string;
+  clearSearch: string;
 }
 
 export const enMessages: LaikitMessages = {
@@ -40,6 +41,7 @@ export const enMessages: LaikitMessages = {
   githubLicense: 'License',
   githubLanguage: 'Primary language',
   other: 'Other',
+  clearSearch: 'Clear search',
 };
 
 export const zhHansMessages: LaikitMessages = {
@@ -53,6 +55,7 @@ export const zhHansMessages: LaikitMessages = {
   githubLicense: '许可证',
   githubLanguage: '主要语言',
   other: '其他',
+  clearSearch: '清除搜索',
 };
 
 function NativeLink({ to, href, ...props }: LinkProps) {

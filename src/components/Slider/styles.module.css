@@ -118,7 +118,7 @@
   -webkit-appearance: none;
   appearance: none;
   cursor: pointer;
-  transition: transform 160ms ease;
+  transition: transform var(--lk-transition);
 }
 
 .input::-webkit-slider-thumb:active {
@@ -141,7 +141,7 @@
   box-shadow: var(--slider-thumb-shadow);
   box-sizing: border-box;
   cursor: pointer;
-  transition: transform 160ms ease;
+  transition: transform var(--lk-transition);
 }
 
 .input::-moz-range-thumb:active {

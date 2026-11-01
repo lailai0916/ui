@@ -11,7 +11,7 @@ browser download size.
 
 Root exports are named. Most component subpaths export a default component; `Page` exports
 `PageHeader`, `PageTitle`, and `PageContent`, and `Markdown` exports `MDTitle`.
-`Field` exports `TextField`, `TextAreaField`, and `SelectField`; `Layout` exports `PageContainer`,
+`Field` exports `InputGroup`, `Input`, `TextField`, `TextAreaField`, and `SelectField`; `Layout` exports `PageContainer`,
 `Stack`, and `Cluster`; `Panel` exports `Panel`, `PanelHeader`, `PanelBody`, and `PanelFooter`.
 `Tooltip.Label` and `Tooltip.Value` are compound children. Prop declarations ship in `dist/`;
 the complete working examples are in `demo/main.tsx`.
@@ -403,3 +403,31 @@ provide their router links, search, notifications, account actions, and controll
 `SkipLink` is an ordinary focusable anchor, shown on focus. Its default target is `#main-content`;
 provide localized children and a focusable main region (`id="main-content"`, `tabIndex={-1}`).
 It forwards native link attributes and a ref and respects reduced motion. Its hook is `skip-link`.
+
+## Shared page patterns
+
+- `SectionHeader` owns subsection title typography and responsive aside placement. Set `titleId`
+  for section labelling and `headingAs` for the correct heading level. Hosts own spacing around it.
+- `InputGroup` frames an `Input` with optional prefixes or actions. Pass disabled/invalid state to
+  both the group and its native control. `SearchField` adds a magnifier and a localized clear action
+  that returns focus to its input. Host input attributes apply to the input; `className` positions
+  the group. Supply an accessible input name.
+- `MetricList` accepts `{x, y}[]` and renders `bar` or `ranked` rows. The host owns fetching, order,
+  labels, URLs, and number formatting. `loadingCount` controls the matching row placeholders;
+  `error`, `emptyText`, and retained-data `notice` remain distinct.
+- `FallbackImage` immediately renders its fallback, fades in a successfully loaded image, and
+  keeps the fallback after failure. Specify slot dimensions in host styles. `fit` selects cover
+  or contain; `imageProps` carries native image attributes and events. `Avatar` uses the same
+  mechanism with an initial or custom fallback and a numeric or CSS-size `size`.
+- `CopyButton iconOnly` shares IconButton geometry and Hint feedback. `value` accepts text or a
+  stable function returning text or a promise. `useClipboard` and `writeClipboard` are root exports
+  for custom controls. Reset or unmount invalidates pending source resolution; deferred text should
+  be prefetched by the host so clipboard access retains the original user activation.
+
+Stable hooks additionally include `section-header`, `section-aside`, `input-group`, and
+`fallback-image`; `Avatar` retains `avatar`. `data-image-status` is loading, loaded, or error.
+
+Page spacing uses `--lk-page-padding-block` and `--lk-page-padding-inline`; section rhythm uses
+`--lk-space-section` and `--lk-space-section-header`. `--lk-font-size-meta` defines subsection aside
+text, `--lk-radius-xs` adds the 4px radius, and `--lk-transition` remains the shared brief interaction
+transition. Hosts may override these tokens without copying component rules.

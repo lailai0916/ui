@@ -5,6 +5,12 @@ import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import {
   Alert,
+  Avatar,
+  FallbackImage,
+  InputGroup,
+  MetricList,
+  SearchField,
+  SectionHeader,
   Button,
   ButtonLink,
   Checkbox,
@@ -523,6 +529,10 @@ test('controlled theme buttons support host theme managers and localized accessi
 test('new public component subpaths are available and old global styling is absent', async () => {
   for (const name of [
     'Avatar',
+    'FallbackImage',
+    'MetricList',
+    'SearchField',
+    'SectionHeader',
     'Brand',
     'EmptyState',
     'Divider',
@@ -551,6 +561,7 @@ test('new public component subpaths are available and old global styling is abse
     [...`${css}\n${theme}`.matchAll(/(--lk-[\w-]+)\s*:/g)].map((match) => match[1])
   );
   const withFallback = new Set([
+    '--lk-input-group-padding',
     '--lk-container-width',
     '--lk-stack-gap',
     '--lk-cluster-gap',
@@ -665,4 +676,100 @@ test('application surfaces preserve semantic roles and host routing', () => {
     ),
     /75%[\s\S]*After 24 hours/
   );
+});
+
+test('section headings delegate levels and preserve their labelled section target', () => {
+  const html = render(
+    h(SectionHeader, {
+      title: 'Traffic',
+      titleId: 'traffic',
+      headingAs: 'h3',
+      aside: h('a', { href: '/stats' }, 'Statistics'),
+    }),
+    {
+      headingComponent: ({ as, ...props }) => h(as, { ...props, 'data-host-heading': true }),
+    }
+  );
+  assert.match(html, /<header[^>]*data-lk="section-header"/);
+  assert.match(html, /<h3[^>]*id="traffic"[^>]*data-host-heading="true"/);
+  assert.match(html, /data-lk="section-aside"/);
+  assert.match(html, /href="\/stats"/);
+});
+
+test('fallback images reserve both states and expose one accessible image', () => {
+  const html = render(
+    h(FallbackImage, {
+      src: '/avatar.png',
+      alt: 'Author',
+      fallback: 'Fallback',
+      loading: 'eager',
+      imageProps: { 'data-link-icon': true },
+    })
+  );
+  assert.match(html, /role="img" aria-label="Author"/);
+  assert.match(html, /data-image-status="loading"/);
+  assert.match(html, /Fallback/);
+  assert.match(
+    html,
+    /<img[^>]*data-link-icon="true"[^>]*src="\/avatar.png"[^>]*alt=""[^>]*loading="eager"/
+  );
+  const avatar = render(h(Avatar, { alt: 'Reader', name: 'reader', size: 40, fallback: 'R' }));
+  assert.match(avatar, /data-lk="avatar"/);
+  assert.match(avatar, /data-image-status="error"/);
+  assert.match(avatar, /width:40px;height:40px/);
+  assert.doesNotMatch(avatar, /<img/);
+});
+
+test('search groups preserve input semantics and localized clear actions', () => {
+  const html = render(
+    h(SearchField, {
+      value: 'query',
+      onValueChange() {},
+      name: 'q',
+      'aria-label': 'Search resources',
+      invalid: true,
+    }),
+    { locale: 'zh-Hans', messages: { clearSearch: '清空' } }
+  );
+  assert.match(html, /data-lk="input-group" data-invalid="true"/);
+  assert.match(html, /type="search"/);
+  assert.match(html, /name="q"/);
+  assert.match(html, /aria-invalid="true"/);
+  assert.match(html, /aria-label="清空"/);
+  const empty = render(h(SearchField, { value: '', onValueChange() {}, 'aria-label': 'Search' }));
+  assert.doesNotMatch(empty, /<button/);
+  assert.match(
+    render(h(InputGroup, { disabled: true }, h(Input, { disabled: true }))),
+    /data-disabled="true"/
+  );
+});
+
+test('metric lists distinguish loading, error, empty and linked rankings', () => {
+  const props = { title: 'Pages', items: [], emptyText: 'No pages' };
+  const loading = render(h(MetricList, { ...props, loading: true, loadingCount: 5 }));
+  assert.equal((loading.match(/<li\b/g) ?? []).length, 5);
+  assert.match(loading, /aria-busy="true"/);
+  assert.doesNotMatch(loading, /No pages/);
+  assert.match(render(h(MetricList, props)), /No pages/);
+  assert.match(
+    render(
+      h(MetricList, { ...props, error: 'Unavailable', errorAction: h('button', null, 'Retry') })
+    ),
+    /Unavailable/
+  );
+  const ranked = render(
+    h(MetricList, {
+      ...props,
+      variant: 'ranked',
+      items: [
+        { x: 'First', y: 10 },
+        { x: 'Second', y: 5 },
+      ],
+      href: (x) => '/' + x,
+      formatValue: (n) => n + ' views',
+    })
+  );
+  assert.match(ranked, /href="\/First"/);
+  assert.match(ranked, /10 views/);
+  assert.match(ranked, /width:50%/);
 });

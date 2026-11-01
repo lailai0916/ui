@@ -20,9 +20,9 @@
 
 .linkCard .card {
   transition:
-    border-color 160ms ease,
-    box-shadow 160ms ease,
-    transform 160ms ease;
+    border-color var(--lk-transition),
+    box-shadow var(--lk-transition),
+    transform var(--lk-transition);
 }
 
 .linkCard:hover .card,

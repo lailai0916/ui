@@ -199,7 +199,7 @@ input[type='color'].fieldControl::-moz-color-swatch {
   place-content: center;
   appearance: none;
   border: 1px solid var(--lk-color-emphasis-400);
-  border-radius: 4px;
+  border-radius: var(--lk-radius-xs);
   background: var(--lk-card-background-color);
   cursor: inherit;
 }
@@ -255,6 +255,69 @@ input[type='color'].fieldControl::-moz-color-swatch {
 
 @media (max-width: 600px), (pointer: coarse) {
   .choice {
+    min-height: 44px;
+  }
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--lk-space-2);
+  min-width: 0;
+  min-height: var(--lk-control-height);
+  padding: var(--lk-input-group-padding, var(--lk-space-2) var(--lk-space-3));
+  border: 1px solid var(--lk-color-emphasis-300);
+  border-radius: var(--lk-radius-control);
+  background: var(--lk-card-background-color);
+  color: var(--lk-font-color-base);
+  font-size: 0.95rem;
+  transition:
+    border-color var(--lk-transition),
+    box-shadow var(--lk-transition);
+}
+
+.inputGroup:hover:not([data-disabled]) {
+  border-color: var(--lk-color-emphasis-400);
+}
+
+.inputGroup:focus-within {
+  border-color: var(--lk-color-primary);
+  box-shadow: var(--lk-focus-ring);
+}
+
+.inputGroup[data-invalid],
+.inputGroup:has([aria-invalid='true']) {
+  border-color: var(--lk-color-danger);
+}
+
+.inputGroup[data-invalid]:focus-within,
+.inputGroup:has([aria-invalid='true']):focus-within {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--lk-color-danger) 22%, transparent);
+}
+
+.inputGroup[data-disabled] {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.inputGroup .fieldControl,
+.inputGroup .fieldControl:hover,
+.inputGroup .fieldControl:focus-visible {
+  flex: 1;
+  min-width: 0;
+  min-height: 1.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: inherit;
+  line-height: 1.75rem;
+}
+
+@media (max-width: 600px), (pointer: coarse) {
+  .inputGroup {
     min-height: 44px;
   }
 }

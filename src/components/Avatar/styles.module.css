@@ -9,9 +9,3 @@
   color: var(--lk-color-primary);
   font-weight: 700;
 }
-
-.avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}

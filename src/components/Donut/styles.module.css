@@ -45,8 +45,8 @@
 .segment {
   cursor: default;
   transition:
-    stroke-width 160ms ease,
-    opacity 160ms ease;
+    stroke-width var(--lk-transition),
+    opacity var(--lk-transition);
 }
 
 .center {
@@ -95,13 +95,13 @@
   gap: 0.5rem;
   height: var(--donut-row);
   padding: 0 0.4rem;
-  border-radius: 8px;
+  border-radius: var(--lk-radius-sm);
   font-size: 0.85rem;
   line-height: 1.4;
   cursor: default;
   transition:
-    background 160ms ease,
-    opacity 160ms ease;
+    background var(--lk-transition),
+    opacity var(--lk-transition);
 }
 
 .legendRow:hover {

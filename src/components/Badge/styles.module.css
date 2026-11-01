@@ -11,9 +11,9 @@
   line-height: 1.15;
   text-decoration: none !important;
   transition:
-    background 160ms ease,
-    border-color 160ms ease,
-    color 160ms ease;
+    background var(--lk-transition),
+    border-color var(--lk-transition),
+    color var(--lk-transition);
 }
 
 .badgeActive {

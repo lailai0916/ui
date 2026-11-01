@@ -42,7 +42,7 @@
 .headerInner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 clamp(1rem, 3vw, 2rem);
+  padding: 0 var(--lk-page-padding-inline);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -70,5 +70,5 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: clamp(2rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
+  padding: var(--lk-page-padding-block) var(--lk-page-padding-inline);
 }

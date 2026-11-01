@@ -6,11 +6,11 @@
   background: var(--lk-color-emphasis-100);
   border-color: transparent;
   box-shadow: none;
-  border-radius: 12px;
+  border-radius: var(--lk-radius-md);
   overflow: hidden;
   transition:
-    background-color 160ms ease,
-    border-color 160ms ease;
+    background-color var(--lk-transition),
+    border-color var(--lk-transition);
 }
 
 @media (max-width: 480px) {
@@ -42,7 +42,7 @@
   align-self: center;
   width: 48px;
   height: 48px;
-  border-radius: 8px;
+  border-radius: var(--lk-radius-sm);
   overflow: hidden;
   background: var(--lk-color-emphasis-200);
   display: flex;
@@ -56,13 +56,6 @@
     width: 44px;
     height: 44px;
   }
-}
-
-.thumbImage {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .thumbFallback {

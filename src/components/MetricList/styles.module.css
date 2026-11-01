@@ -1,0 +1,241 @@
+.card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 360px) {
+  .card {
+    --card-padding: 1.1rem 0.7rem 0.7rem !important;
+  }
+}
+
+/* The placeholder text reserves the line box; both bars share the row bounds. */
+.skeletonBar,
+.bar {
+  position: absolute;
+  inset: 4px auto 4px 0;
+  border-radius: var(--lk-radius-sm);
+  pointer-events: none;
+}
+
+.skeletonBar {
+  right: 0;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.bar {
+  background: color-mix(in srgb, var(--lk-color-primary) 8%, transparent);
+  transition: width 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.label {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  color: var(--lk-color-emphasis-900);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.label > span:not([aria-hidden='true']) {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.value {
+  position: relative;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--lk-color-emphasis-700);
+  margin-left: 0.75rem;
+}
+
+.rowItem {
+  display: flex;
+  min-width: 0;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  padding: 0.42rem 0.75rem;
+  font-size: 0.92rem;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (max-width: 360px) {
+  .row {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Reserve icon height even at the smallest text preference. */
+.row::after {
+  content: '';
+  flex-shrink: 0;
+  width: 0;
+  height: 16px;
+}
+
+a.row:hover,
+a.row:focus-visible {
+  color: inherit;
+  text-decoration: none;
+}
+
+.row::before {
+  content: '';
+  position: absolute;
+  inset: 4px 0;
+  border-radius: var(--lk-radius-sm);
+  background: transparent;
+  pointer-events: none;
+  transition: background var(--lk-transition);
+}
+
+.row:hover::before {
+  background: var(--lk-color-emphasis-100);
+}
+
+.row:focus-visible {
+  outline: none;
+  border-radius: var(--lk-radius-sm);
+  box-shadow: var(--lk-focus-ring);
+}
+
+.ranked {
+  container-type: inline-size;
+  overflow: visible;
+}
+
+.ranked .list {
+  gap: var(--lk-space-1);
+}
+
+.ranked .rowItem {
+  display: block;
+}
+
+.ranked .row {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  align-items: start;
+  gap: var(--lk-space-3);
+  min-height: 3.75rem;
+  padding: var(--lk-space-3) var(--lk-space-2);
+  border-radius: var(--lk-radius-sm);
+  color: var(--lk-font-color-base);
+  font-size: inherit;
+  text-decoration: none;
+  transition:
+    color var(--lk-transition),
+    background-color var(--lk-transition);
+}
+
+@container (max-width: 520px) {
+  .ranked .row {
+    gap: var(--lk-space-2);
+    padding-inline: 0;
+  }
+}
+
+.ranked .row::before,
+.ranked .row::after {
+  display: none;
+}
+
+.ranked a.row:hover {
+  color: var(--lk-color-primary-label);
+  background-color: var(--lk-color-emphasis-100);
+}
+
+.ranked a.row:active {
+  background-color: var(--lk-color-emphasis-200);
+}
+
+.rank {
+  color: var(--lk-color-emphasis-500);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4rem;
+  text-align: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lk-space-2);
+  min-width: 0;
+}
+
+.heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--lk-space-4);
+}
+
+@container (max-width: 520px) {
+  .heading {
+    gap: var(--lk-space-3);
+  }
+}
+
+.ranked .label {
+  display: block;
+  color: inherit;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@container (max-width: 520px) {
+  .ranked .label {
+    display: -webkit-box;
+    min-height: 2.8em;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+}
+
+.ranked .value {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.4rem;
+  white-space: nowrap;
+}
+
+.track {
+  height: 3px;
+  border-radius: 3px;
+  background: var(--lk-color-emphasis-100);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--lk-color-primary) 55%, var(--lk-card-background-color));
+}

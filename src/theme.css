@@ -26,6 +26,12 @@
   --lk-space-10: 2.5rem;
   --lk-space-12: 3rem;
   --lk-space-16: 4rem;
+  --lk-space-section: clamp(2rem, 4vw, 3rem);
+  --lk-space-section-header: 1.25rem;
+  --lk-page-padding-block: clamp(2rem, 4vw, 3rem);
+  --lk-page-padding-inline: clamp(1rem, 3vw, 2rem);
+  --lk-font-size-meta: 0.875rem;
+  --lk-radius-xs: 4px;
   --lk-control-height: 40px;
   --lk-control-height-compact: 32px;
   --lk-header-height: 56px;

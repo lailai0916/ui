@@ -3,6 +3,11 @@ import { createRoot } from 'react-dom/client';
 import {
   Alert,
   Avatar,
+  FallbackImage,
+  InputGroup,
+  MetricList,
+  SearchField,
+  SectionHeader,
   ButtonLink,
   Checkbox,
   CopyButton,
@@ -165,9 +170,12 @@ const copy = chinese
       hintDescription: 'Enter a display name; this does not change your account profile.',
     };
 
+const clipboardExample = () => 'https://lailai.one';
+
 function App() {
   const { resolvedTheme, setPreference } = useTheme();
   const [selected, setSelected] = useState('overview');
+  const [query, setQuery] = useState('');
   const [enabled, setEnabled] = useState(true);
   const [value, setValue] = useState(40);
   const [clicks, setClicks] = useState(0);
@@ -322,6 +330,22 @@ function App() {
                 <TitleCard title="Field">
                   <Stack>
                     <Input aria-label={copy.name} placeholder={copy.name} />
+                    <InputGroup>
+                      <span aria-hidden="true">#</span>
+                      <Input aria-label={copy.value} placeholder="1d9bf0" />
+                    </InputGroup>
+                    <SearchField
+                      value={query}
+                      onValueChange={setQuery}
+                      aria-label={chinese ? '搜索组件' : 'Search components'}
+                      placeholder={chinese ? '搜索组件' : 'Search components'}
+                    />
+                    <FallbackImage
+                      src="/missing-image.png"
+                      alt={copy.name}
+                      fallback={<Icon icon="lucide:user-round" />}
+                      style={{ width: 48, height: 48 }}
+                    />
                     <TextArea
                       aria-label={copy.descriptionLabel}
                       placeholder={copy.descriptionLabel}
@@ -409,6 +433,7 @@ function App() {
                       </Stack>
                     </Dialog>
                     <CopyButton value="https://lailai.one" />
+                    <CopyButton iconOnly value={clipboardExample} />
                     <ButtonLink href="https://lailai.one">{copy.source}</ButtonLink>
                   </Stack>
                 </TitleCard>
@@ -571,8 +596,26 @@ function App() {
               </div>
             </section>
             <section aria-labelledby="charts">
-              <h2 id="charts">{copy.charts}</h2>
+              <SectionHeader titleId="charts" title={copy.charts} aside={copy.note} />
               <div className="grid charts">
+                <MetricList
+                  title="MetricList / Bar"
+                  items={[
+                    { x: 'React', y: 60 },
+                    { x: 'CSS', y: 30 },
+                  ]}
+                  emptyText={copy.empty}
+                />
+                <MetricList
+                  title="MetricList / Ranked"
+                  variant="ranked"
+                  items={[
+                    { x: 'React', y: 60 },
+                    { x: 'CSS', y: 30 },
+                  ]}
+                  emptyText={copy.empty}
+                  href={(x) => '#' + x}
+                />
                 <Chart title="Chart / Bar" type="bar" data={data} emptyText={copy.empty} />
                 <Chart title="Chart / Line" type="line" data={data} emptyText={copy.empty} />
                 <Donut

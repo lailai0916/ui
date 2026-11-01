@@ -54,7 +54,7 @@
   border-radius: 3px 3px 0 0;
   background: var(--lk-color-primary);
   transform: translateX(-50%);
-  transition: background 160ms ease;
+  transition: background var(--lk-transition);
 }
 
 .barActive {

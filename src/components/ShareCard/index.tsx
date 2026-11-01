@@ -1,6 +1,6 @@
 import Icon from '../Icon/index.js';
 import Card from '../Card/index.js';
-import { useImageStatus } from '../../hooks/useImageStatus.js';
+import FallbackImage from '../FallbackImage/index.js';
 import styles from './styles.module.css';
 
 interface ShareSource {
@@ -86,9 +86,7 @@ function inferSource(url: string): ShareSource {
 }
 
 export default function ShareCard({ url, title, description, image }: ShareCardProps) {
-  const { imgRef, status, onLoad, onError } = useImageStatus(image);
   const resolvedSource = inferSource(url);
-  const showImage = !!image && status !== 'error';
 
   return (
     <Card
@@ -97,25 +95,18 @@ export default function ShareCard({ url, title, description, image }: ShareCardP
       wrapperClassName={styles.shareCardWrap}
       title={title}
     >
-      <div className={styles.thumb} data-empty={showImage ? undefined : ''}>
-        {showImage ? (
-          <img
-            ref={imgRef}
-            src={image}
-            alt={title}
-            className={styles.thumbImage}
-            loading="lazy"
-            onLoad={onLoad}
-            onError={onError}
-          />
-        ) : (
+      <FallbackImage
+        className={styles.thumb}
+        src={image}
+        alt={title}
+        fallback={
           <Icon
             icon={resolvedSource.icon ?? 'lucide:link'}
             className={styles.thumbFallback}
             aria-hidden
           />
-        )}
-      </div>
+        }
+      />
       <div className={styles.body}>
         <h4 className={styles.title}>{title}</h4>
         <div className={styles.meta}>

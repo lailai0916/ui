@@ -71,7 +71,7 @@
   gap: 2px;
   padding: 5px;
   border: 1px solid var(--lk-color-emphasis-300);
-  border-radius: 10px;
+  border-radius: var(--lk-radius-control);
   background: var(--lk-card-background-color);
   box-shadow: var(--lk-shadow-overlay);
   transform-origin: top right;
@@ -122,7 +122,7 @@
   gap: 2px;
   padding: 2px;
   border: 1px solid var(--lk-color-emphasis-300);
-  border-radius: 10px;
+  border-radius: var(--lk-radius-control);
   background: var(--lk-color-emphasis-100);
 }
 

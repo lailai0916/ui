@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
+  border-radius: var(--lk-radius-md);
   line-height: 1;
   overflow: hidden;
 }

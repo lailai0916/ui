@@ -12,9 +12,9 @@ const temporary = await mkdtemp(join(tmpdir(), 'laikit-interactions-'));
 const browser = process.env.CHROMIUM_PATH || 'google-chrome';
 const entry = join(temporary, 'fixture.jsx');
 const source = `
-import React, {useState} from ${JSON.stringify(join(root, 'node_modules/react/index.js'))};
+import React, {useState, useCallback} from ${JSON.stringify(join(root, 'node_modules/react/index.js'))};
 import {createRoot} from ${JSON.stringify(join(root, 'node_modules/react-dom/client.js'))};
-import {GitHub, Hint, IconButton, LaikitProvider, LinkCard, Segmented, Slider, TextField} from ${JSON.stringify(join(root, 'dist/index.js'))};
+import {CopyButton, FallbackImage, GitHub, Hint, IconButton, LaikitProvider, LinkCard, MetricList, SearchField, SectionHeader, Segmented, Slider, TextField} from ${JSON.stringify(join(root, 'dist/index.js'))};
 import ${JSON.stringify(join(root, 'dist/theme.css'))};
 import ${JSON.stringify(join(root, 'dist/styles.css'))};
 window.requests = 0;
@@ -32,7 +32,34 @@ window.fetch = (url, options = {}) => {
   }), {status: 200})), 350));
 };
 window.commits = [];
+window.clipboardWrites = [];
+window.copyMode = 'success';
+window.copyErrors = 0;
+Object.defineProperty(navigator, 'clipboard', {configurable:true, value:{writeText: async text => {
+  if(window.copyMode === 'fallback') throw new Error('Clipboard unavailable');
+  window.clipboardWrites.push(text);
+}}});
+document.execCommand = command => {
+  if(command !== 'copy') throw new Error('Unexpected command');
+  window.clipboardWrites.push(document.activeElement.value);
+  return true;
+};
 function App() {
+  const [query, setQuery] = useState('Initial query');
+  const [locked, setLocked] = useState(false);
+  const [imageSrc, setImageSrc] = useState(undefined);
+  const [metricsLoading, setMetricsLoading] = useState(true);
+  const [showCopy, setShowCopy] = useState(true);
+  window.setQuery = setQuery;
+  window.setLocked = setLocked;
+  window.setImageSrc = setImageSrc;
+  window.setMetricsLoading = setMetricsLoading;
+  window.setShowCopy = setShowCopy;
+  const copyValue = useCallback(() => {
+    if(window.copyMode === 'reject') return Promise.reject(undefined);
+    if(window.copyMode === 'defer') return new Promise(resolve => {window.resolveCopy = resolve;});
+    return 'Shared clipboard text';
+  }, []);
   const [selected, setSelected] = useState('a');
   const [value, setValue] = useState(50);
   const [hintText,setHintText] = useState('A deliberately long title that overflows its compact row');
@@ -59,6 +86,14 @@ function App() {
     <Slider label="Value" value={value} valueLabel={String(value)} min={0} max={100} onChange={setValue} onCommit={value => window.commits.push(value)} />
     <LaikitProvider locale="en"><GitHub repo="qa/recovery" /></LaikitProvider>
     <LaikitProvider locale="zh-Hans"><GitHub repo="qa/recovery" /></LaikitProvider>
+    <section id="shared-patterns">
+      <SectionHeader title="Traffic" titleId="shared-title" aside={<span>Statistics</span>} />
+      <LaikitProvider locale="zh-Hans"><SearchField id="shared-search" value={query} onValueChange={setQuery} disabled={locked} aria-label="Search examples" /></LaikitProvider>
+      <FallbackImage id="shared-image" src={imageSrc} loading="eager" alt="Example image" fallback={<span>Fallback</span>} style={{width:40,height:40}} />
+      {showCopy && <CopyButton id="shared-copy" iconOnly value={copyValue} onError={() => {window.copyErrors++;}} />}
+      <div id="ranked-metrics"><MetricList title="Pages" variant="ranked" loading={metricsLoading} loadingCount={2} emptyText="No pages" items={[{x:'A long article title that may wrap to two lines in compact cards',y:30},{x:'Second',y:15}]} href={x => '#after'} /></div>
+      <div id="bar-metrics"><MetricList title="Countries" loading={metricsLoading} loadingCount={2} emptyText="No countries" items={[{x:'Country',y:30},{x:'Other country',y:15}]} /></div>
+    </section>
     <a href="#after" id="after">After cards</a>
   </main>;
 }
@@ -420,6 +455,97 @@ try {
     ),
     true
   );
+  await evaluate(
+    `document.getElementById('shared-search').scrollIntoView({block:'center'}); document.querySelector('#shared-patterns button[aria-label="清除搜索"]').click()`
+  );
+  await waitFor(`document.getElementById('shared-search').value === ''`);
+  assert.equal(
+    await evaluate(`document.activeElement.id`),
+    'shared-search',
+    'Clear returns focus to the input'
+  );
+  await evaluate(`window.setQuery('Locked'); window.setLocked(true)`);
+  await waitFor(`document.getElementById('shared-search').disabled`);
+  assert.equal(
+    await evaluate(
+      `document.querySelector('#shared-patterns button[aria-label="清除搜索"]').disabled`
+    ),
+    true
+  );
+  await evaluate(`window.setLocked(false)`);
+
+  const image =
+    'data:image/svg+xml,' +
+    encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="40" height="40" fill="blue"/></svg>'
+    );
+  await evaluate(`window.setImageSrc(${JSON.stringify(image)})`);
+  await waitFor(`document.getElementById('shared-image').dataset.imageStatus === 'loaded'`);
+  await evaluate(`window.setImageSrc('/missing-image.png')`);
+  await waitFor(`document.getElementById('shared-image').dataset.imageStatus === 'error'`);
+  await waitFor(`getComputedStyle(document.querySelector('#shared-image > span')).opacity === '1'`);
+  await evaluate(`window.setImageSrc(${JSON.stringify(image)})`);
+  await waitFor(`document.getElementById('shared-image').dataset.imageStatus === 'loaded'`);
+  assert.equal(
+    await evaluate(`document.getElementById('shared-image').getBoundingClientRect().width`),
+    40
+  );
+
+  await evaluate(
+    `document.getElementById('shared-copy').focus(); document.getElementById('shared-copy').click()`
+  );
+  await waitFor(`document.getElementById('shared-copy').getAttribute('aria-label') === 'Copied'`);
+  assert.deepEqual(await evaluate(`window.clipboardWrites`), ['Shared clipboard text']);
+  await evaluate(`window.copyMode='fallback'; document.getElementById('shared-copy').click()`);
+  await waitFor(`window.clipboardWrites.length === 2`);
+  assert.equal(
+    await evaluate(`document.activeElement.id`),
+    'shared-copy',
+    'Fallback restores focus'
+  );
+  await evaluate(`window.copyMode='reject'; document.getElementById('shared-copy').click()`);
+  await waitFor(
+    `document.getElementById('shared-copy').getAttribute('aria-label') === 'Copy failed'`
+  );
+  assert.equal(
+    await evaluate(`window.copyErrors`),
+    1,
+    'Falsy rejected values still report failure'
+  );
+  await evaluate(`window.copyMode='defer'; document.getElementById('shared-copy').click()`);
+  await waitFor(`typeof window.resolveCopy === 'function'`);
+  await evaluate(`window.setShowCopy(false)`);
+  await waitFor(`!document.getElementById('shared-copy')`);
+  await evaluate(`window.resolveCopy('Stale source')`);
+  assert.equal(
+    await evaluate(`window.clipboardWrites.length`),
+    2,
+    'Unmounted deferred sources do not write'
+  );
+
+  for (const width of [1280, 375]) {
+    await command(
+      'Emulation.setDeviceMetricsOverride',
+      { width, height: 1000, deviceScaleFactor: 1, mobile: false },
+      sessionId
+    );
+    await evaluate(`window.setMetricsLoading(true)`);
+    await waitFor(`document.querySelector('#ranked-metrics [aria-busy=true]')`);
+    const heights = await evaluate(
+      `['ranked-metrics','bar-metrics'].map(id=>document.getElementById(id).getBoundingClientRect().height)`
+    );
+    await evaluate(`window.setMetricsLoading(false)`);
+    await waitFor(`document.querySelector('#ranked-metrics [aria-busy=false]')`);
+    const loadedHeights = await evaluate(
+      `['ranked-metrics','bar-metrics'].map(id=>document.getElementById(id).getBoundingClientRect().height)`
+    );
+    loadedHeights.forEach((height, index) =>
+      assert(
+        Math.abs(height - heights[index]) < 1,
+        'Metric loading and content heights match at ' + width
+      )
+    );
+  }
   console.log(
     JSON.stringify(
       {

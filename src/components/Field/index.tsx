@@ -2,6 +2,7 @@ import {
   forwardRef,
   useId,
   useState,
+  type HTMLAttributes,
   type InputHTMLAttributes,
   type ReactNode,
   type SelectHTMLAttributes,
@@ -42,6 +43,30 @@ export type TextFieldProps = InputProps & FieldCopy;
 export type TextAreaFieldProps = TextAreaProps & FieldCopy;
 export type SelectFieldProps = SelectProps & FieldCopy;
 export type PasswordFieldProps = PasswordInputProps & FieldCopy;
+
+export type InputGroupProps = HTMLAttributes<HTMLElement> & {
+  as?: 'div' | 'label';
+  invalid?: boolean;
+  disabled?: boolean;
+};
+
+export function InputGroup({
+  as: Tag = 'div',
+  className,
+  invalid,
+  disabled,
+  ...props
+}: InputGroupProps) {
+  return (
+    <Tag
+      {...props}
+      data-lk="input-group"
+      data-invalid={invalid || undefined}
+      data-disabled={disabled || undefined}
+      className={clsx(styles.inputGroup, className)}
+    />
+  );
+}
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   { className, invalid, monospace, ...props },

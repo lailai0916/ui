@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.17
+
+- Add SectionHeader, InputGroup, and SearchField with shared responsive title and input behavior.
+- Add MetricList with bar and ranked variants, aligned loading rows, and distinct data states.
+- Share fallback-first image presentation across Avatar, LinkCard, and ShareCard.
+- Add reusable clipboard helpers and an icon-only CopyButton with localized success and failure feedback.
+- Consolidate interaction, radius, page-spacing, section-spacing, and metadata typography tokens.
+
 ## 0.3.16
 
 - Center LinkCard icons beside the title and description, with consistent spacing between text lines.

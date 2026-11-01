@@ -1,0 +1,16 @@
+.search {
+  --lk-input-group-padding: var(--lk-space-3) var(--lk-space-4);
+  gap: 0.6rem;
+  border-radius: var(--lk-radius-lg);
+  box-shadow: var(--lk-shadow-md);
+}
+
+.icon {
+  flex: none;
+  color: var(--lk-color-emphasis-500);
+  font-size: 1.05rem;
+}
+
+.search input::-webkit-search-cancel-button {
+  display: none;
+}

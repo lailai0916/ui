@@ -4,7 +4,7 @@ import Card from '../Card/index.js';
 import Hint from '../Hint/index.js';
 import IconBlock from '../IconBlock/index.js';
 import Icon from '../Icon/index.js';
-import { useImageStatus } from '../../hooks/useImageStatus.js';
+import FallbackImage from '../FallbackImage/index.js';
 import styles from './styles.module.css';
 
 export type LinkCardLinkProps = { to: string; href?: never } | { href: string; to?: never };
@@ -32,40 +32,26 @@ export default function LinkCard({
   imageSlot,
   ...linkProps
 }: LinkCardProps) {
-  const { imgRef, status, onLoad, onError } = useImageStatus(imageSlot == null ? image : undefined);
-  const shouldLoadImage = !!image && status !== 'error';
-  const imageLoaded = status === 'loaded';
-
   return (
     <Card {...linkProps} className={styles.linkCard} wrapperClassName={styles.linkCardWrap}>
       <IconBlock variant="muted" size={ICON_BOX_SIZE} className={styles.imageBlock}>
         {imageSlot ?? (
-          <>
-            {fallbackIcon && (
-              <Icon
-                icon={fallbackIcon}
-                width={FALLBACK_ICON_SIZE}
-                height={FALLBACK_ICON_SIZE}
-                className={imageLoaded ? styles.fallbackIconHidden : styles.fallbackIcon}
-                aria-hidden="true"
-              />
-            )}
-            {shouldLoadImage && (
-              <img
-                ref={imgRef}
-                src={image}
-                alt={title}
-                className={clsx(
-                  imageVariant === 'avatar' ? styles.imageAvatar : styles.image,
-                  imageLoaded ? styles.imageLoaded : styles.imageLoading
-                )}
-                loading="lazy"
-                decoding="async"
-                onLoad={onLoad}
-                onError={onError}
-              />
-            )}
-          </>
+          <FallbackImage
+            src={image}
+            alt={title}
+            fit={imageVariant === 'avatar' ? 'cover' : 'contain'}
+            className={clsx(styles.imageSlot, imageVariant === 'avatar' && styles.imageAvatar)}
+            fallback={
+              fallbackIcon && (
+                <Icon
+                  icon={fallbackIcon}
+                  width={FALLBACK_ICON_SIZE}
+                  height={FALLBACK_ICON_SIZE}
+                  aria-hidden="true"
+                />
+              )
+            }
+          />
         )}
       </IconBlock>
       <div className={styles.body}>
