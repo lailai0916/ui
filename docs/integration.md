@@ -137,7 +137,8 @@ on their own styling contracts.
 
 - `Card` supplies a surface; `TitleCard` adds a header (`md`, `sm`, or `plain`). Use plain `Card`
   when there is no title. Cards deliberately do not clip focus rings; a full-bleed child may need
-  a clipping wrapper owned by the caller.
+  a clipping wrapper owned by the caller. `TitleCard.aside` places supplemental content at the
+  opposite end of the header using the shared metadata typography; `count` stays beside the title.
 - `Chart` receives preformatted time-series labels and numeric values. `Donut` receives `{x, y}`
   items; `maxSlices` groups a long tail into the configurable Other slice. `loading`, empty data,
   `error`, and retained-data `notice` remain separate states. Pass accessible empty/error labels.
