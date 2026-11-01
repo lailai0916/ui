@@ -24,6 +24,9 @@ published files. See `docs/releasing.md` for releases. Run checks before committ
 - `src/provider.tsx` connects native defaults to host routing, headings, and localization.
 - `src/theme.css` owns shared variables, light/dark palettes, and reduced motion.
 - `src/components/ThemeProvider/` owns optional standalone theme state; framework hosts may keep their own manager.
+- Theme controls and host adapters follow the [theme preference contract](docs/integration.md#theme-preference-contract):
+  system/light/dark preferences, system by default, and persistent manual choices that system changes
+  never override. Keep preference separate from the resolved light/dark palette and use one document owner.
 - Stable `data-lk` customization hooks and the former `ui` migration are documented in `docs/integration.md` and `docs/migrating-from-ui.md`.
 - `src/hooks/` and `src/utils/` contain public, framework-neutral helpers.
 - Public usage guides and MDX previews live in Home at `docs/project/ui/`, published in the [UI documentation](https://lailai.one/docs/project/ui). Update the matching guide when changing a public API; library-local `docs/` owns integration and release details.

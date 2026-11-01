@@ -174,6 +174,33 @@ saved preferences before paint using their own established mechanism.
 
 ## Standalone theme management
 
+### Theme preference contract
+
+Appearance has two rendered palettes and three mutually exclusive preferences:
+
+| Preference | Behavior                                                                                          |
+| ---------- | ------------------------------------------------------------------------------------------------- |
+| System     | Default when no valid preference is saved; resolve from the system and follow subsequent changes. |
+| Light      | Keep the light palette until the user changes the preference.                                     |
+| Dark       | Keep the dark palette until the user changes the preference.                                      |
+
+Save explicit choices across reloads and synchronize them across tabs on the same origin. A system
+change never replaces a manual choice, including when the system temporarily matches it. Selecting
+System immediately adopts the current system palette and resumes following it. Invalid or blocked
+storage falls back to System; blocked storage must not prevent a manual choice on the current page.
+Locale changes preserve the same preference and storage namespace.
+
+Keep the selected preference separate from the resolved palette. A System indicator represents
+the selected behavior even when the current palette is light or dark. Expose all three choices
+explicitly in a compact menu or settings control. Frameworks with an existing three-state cycle
+may retain it alongside an explicit three-option settings control.
+
+Use the host's pre-paint mechanism to resolve the same validated preference before first paint,
+including native `color-scheme` and an existing `theme-color` tag. Framework hosts keep their theme
+manager as the only document owner; do not mount a second `ThemeProvider` to connect a control.
+Verify both system palettes, manual choices, reloads, cross-tab changes, returning to System,
+blocked/invalid storage, keyboard operation, and narrow viewports when upgrading a host.
+
 Wrap a standalone app in `ThemeProvider` and pass translated `system`, `light`, and `dark` labels to
 `ThemeControl`. `useTheme()` exposes `preference`, `resolvedTheme`, and `setPreference`. The default
 storage key is `lailai.theme`; `storageKey` can isolate another application. `themeColors` optionally
@@ -189,16 +216,19 @@ independently and can be used alongside either theme owner.
 item, supports arrows, Home/End and Escape, closes on outside focus/click, and restores trigger focus
 after a selection. Tab leaves the menu normally.
 
-For a one-click appearance button, render controlled `ThemeButton` with `theme={resolvedTheme}`
+For an optional one-click appearance button, render controlled `ThemeButton` with `theme={resolvedTheme}`
 and `onThemeChange={setPreference}`. Its sun/moon icon shows the current resolved theme; clicking
 requests the other theme. Labels follow `LaikitProvider.locale`, or use `label` to override them.
 Hosts with an existing theme manager pass their own state and callback without adding a provider.
+This two-palette button does not expose the System preference; provide a separate three-option
+control when using it for document appearance.
 
-`ThemeProvider mode="system"` follows the operating system on mount and every system-theme change.
+The opt-in compatibility mode `ThemeProvider mode="system"` follows the operating system on mount and every system-theme change.
 Manual changes apply to the current page until the next system change or reload. This mode neither
 reads nor writes saved preferences and ignores cross-tab theme storage events. The default
 `mode="preference"` keeps the existing persistent three-mode behavior. Match the selected mode in
-the host's pre-paint script to avoid flashing an obsolete saved theme.
+the host's pre-paint script to avoid flashing an obsolete saved theme. This temporary-override mode
+does not implement the persistent preference contract above and is not the default for host websites.
 
 `LanguageButton` accepts controlled `locale="en" | "zh-Hans"` and `onLocaleChange`. It displays
 the current `EN` / `中` label and requests the other language on click. The host owns translation,
