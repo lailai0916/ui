@@ -25,6 +25,10 @@ jobs:
       - run: npm run check
       - run: npm run test:browser
       - run: npm run test:interaction
+      - name: Check React 18 interactions
+        run: |
+          npm install --prefix "$RUNNER_TEMP/react18" --no-package-lock --no-audit --no-fund react@18.3.1 react-dom@18.3.1
+          REACT_RUNTIME_PATH="$RUNNER_TEMP/react18/node_modules" npm run test:interaction
       - run: npm pack --dry-run
       - uses: actions/checkout@v7
         with:

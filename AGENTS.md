@@ -13,7 +13,8 @@ Use Node.js 24 and npm. `npm ci` installs development dependencies. `npm run dev
 React demo. `npm run check` runs formatting, lint, types, build, SSR/package tests, and demo build.
 `npm run test:browser` checks built control alignment in Chrome. `npm run test:interaction` checks
 responsive keyboard behavior, Slider hit areas, GitHub request recovery, search focus, clipboard recovery, image fallbacks, and metric loading geometry in Chrome. Set
-`CHROMIUM_PATH` for another Chrome binary.
+`CHROMIUM_PATH` for another Chrome binary. `REACT_RUNTIME_PATH` selects a node_modules directory
+containing React and React DOM for interaction checks; CI covers React 18.3.1 and 19.
 `npm run format` applies formatting. `npm run build` emits `dist/`; `npm pack --dry-run` inspects the
 published files. See `docs/releasing.md` for releases. Run checks before committing.
 

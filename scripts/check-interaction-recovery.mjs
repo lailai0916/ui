@@ -3,17 +3,20 @@ import { spawn } from 'node:child_process';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from 'vite';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
+const reactRuntime = resolve(process.env.REACT_RUNTIME_PATH || join(root, 'node_modules'));
 const temporary = await mkdtemp(join(tmpdir(), 'laikit-interactions-'));
 const browser = process.env.CHROMIUM_PATH || 'google-chrome';
 const entry = join(temporary, 'fixture.jsx');
+const rankedTitle =
+  'A deliberately long article title that must wrap on narrow screens and show its full text when truncated';
 const source = `
-import React, {useState, useCallback} from ${JSON.stringify(join(root, 'node_modules/react/index.js'))};
-import {createRoot} from ${JSON.stringify(join(root, 'node_modules/react-dom/client.js'))};
+import React, {forwardRef, useState, useCallback} from 'react';
+import {createRoot} from 'react-dom/client';
 import {CopyButton, FallbackImage, GitHub, Hint, IconButton, LaikitProvider, LinkCard, MetricList, SearchField, SectionHeader, Segmented, Slider, TextField} from ${JSON.stringify(join(root, 'dist/index.js'))};
 import ${JSON.stringify(join(root, 'dist/theme.css'))};
 import ${JSON.stringify(join(root, 'dist/styles.css'))};
@@ -35,6 +38,7 @@ window.commits = [];
 window.clipboardWrites = [];
 window.copyMode = 'success';
 window.copyErrors = 0;
+window.reactVersion = React.version;
 Object.defineProperty(navigator, 'clipboard', {configurable:true, value:{writeText: async text => {
   if(window.copyMode === 'fallback') throw new Error('Clipboard unavailable');
   window.clipboardWrites.push(text);
@@ -44,6 +48,10 @@ document.execCommand = command => {
   window.clipboardWrites.push(document.activeElement.value);
   return true;
 };
+const rankedTitle = ${JSON.stringify(rankedTitle)};
+const HostLink = forwardRef(function HostLink({to, href, ...props}, ref) {
+  return <a {...props} ref={ref} href={to ?? href} data-host-link />;
+});
 function App() {
   const [query, setQuery] = useState('Initial query');
   const [locked, setLocked] = useState(false);
@@ -91,7 +99,8 @@ function App() {
       <LaikitProvider locale="zh-Hans"><SearchField id="shared-search" value={query} onValueChange={setQuery} disabled={locked} aria-label="Search examples" /></LaikitProvider>
       <FallbackImage id="shared-image" src={imageSrc} loading="eager" alt="Example image" fallback={<span>Fallback</span>} style={{width:40,height:40}} />
       {showCopy && <CopyButton id="shared-copy" iconOnly value={copyValue} onError={() => {window.copyErrors++;}} />}
-      <div id="ranked-metrics"><MetricList title="Pages" variant="ranked" loading={metricsLoading} loadingCount={2} emptyText="No pages" items={[{x:'A long article title that may wrap to two lines in compact cards',y:30},{x:'Second',y:15}]} href={x => '#after'} /></div>
+      <div id="ranked-metrics"><MetricList title="Pages" variant="ranked" loading={metricsLoading} loadingCount={2} emptyText="No pages" items={[{x:rankedTitle,y:30},{x:'Second',y:15}]} href={x => '#after'} labelTitle={x => x} /></div>
+      <LaikitProvider linkComponent={HostLink}><div id="host-metrics"><MetricList title="Host pages" variant="ranked" emptyText="No pages" items={[{x:rankedTitle,y:30}]} href={x => '#after'} labelTitle={x => x} /></div></LaikitProvider>
       <div id="bar-metrics"><MetricList title="Countries" loading={metricsLoading} loadingCount={2} emptyText="No countries" items={[{x:'Country',y:30},{x:'Other country',y:15}]} /></div>
     </section>
     <a href="#after" id="after">After cards</a>
@@ -109,6 +118,12 @@ try {
   await build({
     configFile: false,
     logLevel: 'error',
+    resolve: {
+      alias: [
+        { find: /^react-dom(?=\/|$)/, replacement: join(reactRuntime, 'react-dom') },
+        { find: /^react(?=\/|$)/, replacement: join(reactRuntime, 'react') },
+      ],
+    },
     define: { 'process.env.NODE_ENV': JSON.stringify('production') },
     build: {
       outDir: output,
@@ -546,10 +561,54 @@ try {
       )
     );
   }
+  for (const id of ['ranked-metrics', 'host-metrics']) {
+    const title = await evaluate(`(() => {
+      const el = document.querySelector('#${id} [data-truncated-title]');
+      const child = el.firstElementChild;
+      return {
+        whiteSpace: getComputedStyle(child).whiteSpace,
+        width: el.clientWidth,
+        scrollWidth: el.scrollWidth,
+        height: el.clientHeight,
+        scrollHeight: el.scrollHeight,
+        lineHeight: parseFloat(getComputedStyle(el).lineHeight)
+      };
+    })()`);
+    assert.equal(title.whiteSpace, 'normal', 'Ranked label children must allow wrapping');
+    assert(title.scrollWidth <= title.width, 'Ranked titles wrap rather than overflowing sideways');
+    assert(Math.abs(title.height - title.lineHeight * 2) < 1, 'Compact titles reserve two lines');
+    assert(title.scrollHeight > title.height, 'The long title must be visibly truncated');
+    await evaluate(
+      `document.querySelector('#${id} a').scrollIntoView({block:'center'}); document.querySelector('#${id} a').focus()`
+    );
+    await waitFor(
+      `document.querySelector('[role=tooltip]')?.textContent === ${JSON.stringify(rankedTitle)}`
+    );
+    assert.equal(
+      await evaluate(
+        `document.querySelector('#${id} a').getAttribute('aria-describedby') === document.querySelector('[role=tooltip]').id`
+      ),
+      true,
+      'The native or host link retains the tooltip reference'
+    );
+    await command('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 1, y: 1 }, sessionId);
+    await evaluate(`document.querySelector('#hint-short').focus({preventScroll:true})`);
+    await waitFor(`!document.querySelector('[role=tooltip]')`);
+    const point = await evaluate(
+      `(() => {const r=document.querySelector('#${id} a').getBoundingClientRect(); return {x:r.x+r.width/2,y:r.y+r.height/2};})()`
+    );
+    await command('Input.dispatchMouseEvent', { type: 'mouseMoved', ...point }, sessionId);
+    await waitFor(
+      `document.querySelector('[role=tooltip]')?.textContent === ${JSON.stringify(rankedTitle)}`
+    );
+    await command('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 1, y: 1 }, sessionId);
+    await waitFor(`!document.querySelector('[role=tooltip]')`);
+  }
   console.log(
     JSON.stringify(
       {
         passed: true,
+        reactVersion: await evaluate('window.reactVersion'),
         orientations,
         slider,
         sliderValues,

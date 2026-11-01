@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.18
+
+- Forward link refs through native and host routing adapters so truncated-title hints work in React 18 and 19.
+- Preserve two-line wrapping for ranked metric labels with the default rendering.
+- Check ranked-title hover, keyboard hints, and wrapping with both supported React versions.
+
 ## 0.3.17
 
 - Add SectionHeader, InputGroup, and SearchField with shared responsive title and input behavior.

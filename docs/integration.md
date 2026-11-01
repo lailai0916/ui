@@ -24,13 +24,17 @@ Without a provider, links use native anchors and headings use native heading ele
 can supply the host's components. For example, Docusaurus hosts can define this adapter locally:
 
 ```tsx
+import { forwardRef } from 'react';
 import DocusaurusLink from '@docusaurus/Link';
 import DocusaurusHeading from '@theme/Heading';
 import { LaikitProvider, type LinkProps, type HeadingProps } from '@lailai0916/ui';
 
-function SiteLink({ to, href, ...props }: LinkProps) {
-  return <DocusaurusLink {...props} to={to ?? href} />;
-}
+const SiteLink = forwardRef<HTMLAnchorElement, LinkProps>(function SiteLink(
+  { to, href, ...props },
+  ref
+) {
+  return <DocusaurusLink {...props} ref={ref} to={to ?? href} />;
+});
 
 function SiteHeading(props: HeadingProps) {
   return <DocusaurusHeading {...props} />;
@@ -51,6 +55,8 @@ can delegate plural handling to a host. The default selector accepts pipe-separa
 `zero | one | two | few | many | other` order, including only categories used by the locale.
 Single-form labels pass through unchanged. Provider nesting inherits unspecified configuration;
 changing the locale selects that locale's default messages. Providers add no DOM wrapper.
+Link adapters must forward their ref to the underlying anchor so focus and truncated-title hints
+work in both React 18 and 19.
 
 ## Theme and base styles
 

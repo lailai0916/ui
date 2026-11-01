@@ -1,11 +1,13 @@
 import {
   createContext,
+  forwardRef,
   useContext,
   useMemo,
   type AnchorHTMLAttributes,
   type ComponentType,
   type HTMLAttributes,
   type ReactNode,
+  type RefAttributes,
 } from 'react';
 
 export interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -58,9 +60,12 @@ export const zhHansMessages: LaikitMessages = {
   clearSearch: '清除搜索',
 };
 
-function NativeLink({ to, href, ...props }: LinkProps) {
-  return <a {...props} href={to ?? href} />;
-}
+const NativeLink = forwardRef<HTMLAnchorElement, LinkProps>(function NativeLink(
+  { to, href, ...props },
+  ref
+) {
+  return <a {...props} ref={ref} href={to ?? href} />;
+});
 
 function NativeHeading({ as: Tag, ...props }: HeadingProps) {
   return <Tag {...props} />;
@@ -80,7 +85,7 @@ export function selectPluralMessage(count: number, label: string, locale = 'en')
 interface LaikitContextValue {
   locale: string;
   messages: LaikitMessages;
-  linkComponent: ComponentType<LinkProps>;
+  linkComponent: ComponentType<LinkProps & RefAttributes<HTMLAnchorElement>>;
   headingComponent: ComponentType<HeadingProps>;
   selectMessage: (count: number, label: string) => string;
 }
@@ -97,7 +102,7 @@ export interface LaikitProviderProps {
   children: ReactNode;
   locale?: string;
   messages?: Partial<LaikitMessages>;
-  linkComponent?: ComponentType<LinkProps>;
+  linkComponent?: ComponentType<LinkProps & RefAttributes<HTMLAnchorElement>>;
   headingComponent?: ComponentType<HeadingProps>;
   selectMessage?: (count: number, label: string) => string;
 }
@@ -135,10 +140,10 @@ export function useLaikit() {
   return useContext(LaikitContext);
 }
 
-export function Link(props: LinkProps) {
+export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(props, ref) {
   const { linkComponent: Component } = useLaikit();
-  return <Component {...props} />;
-}
+  return <Component {...props} ref={ref} />;
+});
 
 export function Heading(props: HeadingProps) {
   const { headingComponent: Component } = useLaikit();
