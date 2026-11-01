@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.16
+
+- Center LinkCard icons beside the title and description, with consistent spacing between text lines.
+- Give compact Chart headers more space above the plot while preserving other card header spacing.
+
 ## 0.3.15
 
 - Hide Chart's baseline while loading, preserving its plot and axis dimensions.
