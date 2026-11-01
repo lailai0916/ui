@@ -116,6 +116,24 @@ test('link cards accept a host-owned image slot without rendering their default 
   assert.match(defaults, /<svg/);
 });
 
+test('title cards preserve inline counts alongside supplemental header content', () => {
+  const html = render(
+    h(
+      TitleCard,
+      {
+        title: 'Views',
+        count: 0,
+        aside: h('a', { href: '/stats' }, 'Full report'),
+        size: 'sm',
+      },
+      'Content'
+    )
+  );
+  assert.match(html, /<h3[^>]*>Views<\/h3><span[^>]*>0<\/span>/);
+  assert.match(html, /<a href="\/stats">Full report<\/a>/);
+  assert.match(html, /Content/);
+});
+
 test('async icons reserve their SVG slot during server rendering', () => {
   for (const node of [
     h(Badge, { icon: 'lucide:flag' }, 'Country'),

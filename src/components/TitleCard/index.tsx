@@ -11,6 +11,7 @@ export interface TitleCardProps {
   description?: string;
   // Muted secondary count shown right after the title (e.g. item totals on blog panels).
   count?: number;
+  aside?: ReactNode;
   children: ReactNode;
   padding?: CSSProperties['padding'];
   bodyAlign?: 'top' | 'bottom';
@@ -18,9 +19,9 @@ export interface TitleCardProps {
    * Header scale.
    * - `md` (default): IconBlock accent chip + 1.25rem title. Settings-tile style.
    * - `sm`: inline primary-tinted icon + 0.95rem title. Compact panel header used
-   *   by the Insights cards (chart, metric lists, runtime snapshot).
+   *   by data panels.
    * - `plain`: bold body-size (1rem/700) title, no icon — the former `BlogCard`
-   *   look used by the blog sidebar/archive/selector panels.
+   *   look for simple panels with a bold body-size heading.
    */
   size?: 'md' | 'sm' | 'plain';
   className?: string;
@@ -31,6 +32,7 @@ export default function TitleCard({
   icon,
   description,
   count,
+  aside,
   children,
   padding = '1.5rem',
   bodyAlign = 'top',
@@ -61,6 +63,7 @@ export default function TitleCard({
           </div>
           {description && <span className={styles.description}>{description}</span>}
         </div>
+        {aside != null && <div className={styles.aside}>{aside}</div>}
       </div>
       <div className={clsx(styles.body, bodyAlign === 'bottom' && styles.bodyBottom)}>
         {children}

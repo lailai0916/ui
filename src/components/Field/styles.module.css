@@ -266,7 +266,7 @@ input[type='color'].fieldControl::-moz-color-swatch {
   min-width: 0;
   min-height: var(--lk-control-height);
   padding: var(--lk-input-group-padding, var(--lk-space-2) var(--lk-space-3));
-  border: 1px solid var(--lk-color-emphasis-300);
+  border: 1px solid var(--lk-input-group-border-color, var(--lk-color-emphasis-300));
   border-radius: var(--lk-radius-control);
   background: var(--lk-card-background-color);
   color: var(--lk-font-color-base);
@@ -276,8 +276,8 @@ input[type='color'].fieldControl::-moz-color-swatch {
     box-shadow var(--lk-transition);
 }
 
-.inputGroup:hover:not([data-disabled]) {
-  border-color: var(--lk-color-emphasis-400);
+.inputGroup:hover:where(:not([data-disabled])) {
+  border-color: var(--lk-input-group-hover-border-color, var(--lk-color-emphasis-400));
 }
 
 .inputGroup:focus-within {

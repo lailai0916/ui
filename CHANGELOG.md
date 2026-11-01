@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.19
+
+- Align SearchField borders with card surfaces while preserving shared field focus states.
+- Use the primary color for ranked progress bars and align rank and value typography.
+- Add supplemental TitleCard header content through the optional aside prop.
+
 ## 0.3.18
 
 - Forward link refs through native and host routing adapters so truncated-title hints work in React 18 and 19.

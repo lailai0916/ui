@@ -173,7 +173,8 @@ a.row:focus-visible {
 
 .rank {
   color: var(--lk-color-emphasis-500);
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
   line-height: 1.4rem;
   text-align: center;
@@ -222,8 +223,10 @@ a.row:focus-visible {
 
 .ranked .value {
   margin: 0;
-  font-size: 0.85rem;
-  line-height: 1.4rem;
+  font-family: inherit;
+  font-size: var(--lk-font-size-meta);
+  font-weight: 400;
+  line-height: 1.5;
   white-space: nowrap;
 }
 
@@ -237,5 +240,5 @@ a.row:focus-visible {
 .fill {
   height: 100%;
   border-radius: inherit;
-  background: color-mix(in srgb, var(--lk-color-primary) 55%, var(--lk-card-background-color));
+  background: var(--lk-color-primary);
 }

@@ -1,5 +1,7 @@
 .search {
   --lk-input-group-padding: var(--lk-space-3) var(--lk-space-4);
+  --lk-input-group-border-color: var(--lk-color-emphasis-200);
+  --lk-input-group-hover-border-color: var(--lk-color-emphasis-200);
   gap: 0.6rem;
   border-radius: var(--lk-radius-lg);
   box-shadow: var(--lk-shadow-md);
