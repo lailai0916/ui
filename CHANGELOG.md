@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.20
+
+- Keep SectionHeader titles and supplementary content on one row when space permits, wrapping with a compact gap when needed.
+- Constrain long section titles and supplementary content to the available width.
+
 ## 0.3.19
 
 - Align SearchField borders with card surfaces while preserving shared field focus states.
