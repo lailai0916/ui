@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.21
+
+- Constrain Tooltip widths to the visible viewport and wrap long labels and values.
+- Keep Tooltip positions within the viewport during resizing, including classic scrollbar layouts.
+
 ## 0.3.20
 
 - Keep SectionHeader titles and supplementary content on one row when space permits, wrapping with a compact gap when needed.

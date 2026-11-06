@@ -15,17 +15,24 @@ function Tooltip({ leftPct, className, style, children, ...rest }: TooltipProps)
   // centre to the viewport (it may overflow the narrow plot, just not the screen).
   const [leftPx, setLeftPx] = useState<number | null>(null);
 
-  // Re-clamp on every render: position depends on live layout (parent box, viewport
-  // width) that isn't expressible as a dependency list.
+  // Re-clamp on render and resize because the parent and viewport can move independently.
   useClientLayoutEffect(() => {
     const el = ref.current;
-    const parent = el?.offsetParent as HTMLElement | null;
-    if (leftPct == null || !el || !parent) return setLeftPx(null);
-    const { left } = parent.getBoundingClientRect();
-    const edge = el.offsetWidth / 2 + 8; // min gap from centre to screen edge
-    const want = left + (leftPct / 100) * parent.clientWidth;
-    const max = document.documentElement.clientWidth - edge;
-    setLeftPx(Math.min(Math.max(want, edge), max) - left);
+    if (!el) return;
+    const clamp = () => {
+      const viewportWidth = document.documentElement.clientWidth;
+      el.style.setProperty('--tooltip-viewport-width', `${viewportWidth}px`);
+      const parent = el.offsetParent as HTMLElement | null;
+      if (leftPct == null || !parent) return setLeftPx(null);
+      const { left } = parent.getBoundingClientRect();
+      const edge = el.offsetWidth / 2 + 8; // min gap from centre to screen edge
+      const want = left + (leftPct / 100) * parent.clientWidth;
+      const max = viewportWidth - edge;
+      setLeftPx(Math.min(Math.max(want, edge), max) - left);
+    };
+    clamp();
+    window.addEventListener('resize', clamp);
+    return () => window.removeEventListener('resize', clamp);
   });
 
   const finalStyle =
