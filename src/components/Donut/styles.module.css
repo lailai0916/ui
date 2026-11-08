@@ -90,6 +90,7 @@
 }
 
 .legendRow {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -102,6 +103,14 @@
   transition:
     background var(--lk-transition),
     opacity var(--lk-transition);
+}
+
+/* Keep the visual gap without interrupting pointer movement between rows. */
+.legendRow:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  inset: 100% 0 auto;
+  height: var(--donut-gap);
 }
 
 .legendRow:hover {

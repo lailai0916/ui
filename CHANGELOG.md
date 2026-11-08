@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.22
+
+- Keep Donut legend hover continuous across row gaps without changing chart or legend geometry.
+
 ## 0.3.21
 
 - Constrain Tooltip widths to the visible viewport and wrap long labels and values.
