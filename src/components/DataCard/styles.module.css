@@ -1,32 +1,56 @@
 .statCard {
-  min-width: 140px;
+  --card-padding: var(--lk-space-4);
+  display: flex;
+  flex-direction: column;
+  min-inline-size: var(--lk-data-card-min-width);
+}
+
+.statHeader {
   display: flex;
   align-items: center;
-  gap: 1rem;
-}
-
-.statContent {
-  flex: 1;
-}
-
-.statNumber {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--lk-color-primary);
-  line-height: 1;
-  margin: 0;
+  justify-content: space-between;
+  gap: var(--lk-space-2);
 }
 
 .statLabel {
-  font-size: 0.9rem;
-  color: var(--lk-color-emphasis-700);
-  margin-top: 0.25rem;
-  font-weight: 500;
+  composes: compactTitle from '../TitleCard/styles.module.css';
+  overflow-wrap: anywhere;
+}
+
+.statIcon {
+  flex: none;
+  width: var(--lk-icon-size-small);
+  height: var(--lk-icon-size-small);
+  color: var(--lk-color-primary);
+}
+
+.statNumber {
+  margin-top: var(--lk-space-2);
+  color: var(--lk-heading-color);
+  font-size: 1.75rem;
+  font-weight: 650;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -0.04em;
+  line-height: 2rem;
+  overflow-wrap: anywhere;
+}
+
+.statNumber[aria-busy='true'] {
+  display: flex;
+  align-items: center;
+  min-block-size: 2rem;
 }
 
 .statDescription {
   margin-top: var(--lk-space-2);
   color: var(--lk-font-color-secondary);
-  font-size: 13px;
+  font-size: 0.8125rem;
   line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.statTrend {
+  display: flex;
+  margin-top: auto;
+  padding-top: var(--lk-space-2);
 }

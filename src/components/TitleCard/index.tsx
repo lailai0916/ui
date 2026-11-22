@@ -58,7 +58,14 @@ export default function TitleCard({
           ))}
         <div className={styles.titleGroup}>
           <div className={styles.titleRow}>
-            <h3 className={styles.title}>{title}</h3>
+            <h3
+              className={clsx(
+                styles.title,
+                size === 'sm' ? styles.compactTitle : styles.defaultTitle
+              )}
+            >
+              {title}
+            </h3>
             {count !== undefined && <span className={styles.count}>{count}</span>}
           </div>
           {description && <span className={styles.description}>{description}</span>}

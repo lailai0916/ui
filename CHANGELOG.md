@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.23
+
+- Share compact title typography between DataCard and compact TitleCard panels.
+- Redesign DataCard around tabular values, theme-colored icons, and a shared minimum width.
+- Add optional value skeletons and trend content to DataCard.
+
 ## 0.3.22
 
 - Keep Donut legend hover continuous across row gaps without changing chart or legend geometry.

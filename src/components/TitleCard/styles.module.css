@@ -26,11 +26,25 @@
 }
 
 .title {
-  font-size: 1.25rem;
-  font-weight: 700;
   margin: 0;
+}
+
+.defaultTitle,
+.compactTitle {
   line-height: 1.3;
   color: var(--lk-font-color-base);
+}
+
+.defaultTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.compactTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-variant-numeric: normal;
+  letter-spacing: normal;
 }
 
 .count {
@@ -82,11 +96,6 @@
   flex-shrink: 0;
   font-size: 1.1rem;
   color: var(--lk-color-primary);
-}
-
-.sm .title {
-  font-size: 0.95rem;
-  font-weight: 600;
 }
 
 /* Plain size — bold body-size title, no icon (former BlogCard / blog panels). */
